@@ -1,0 +1,356 @@
+{"ts":"2026-03-10T06:51:45.752Z","where":"taskRunner","event":"enqueueTask.created","id":"03d1345d-5637-4023-9f76-ffb509c2ac80","imageCount":6,"hasStyleHint":true,"requirementLen":39}
+{"ts":"2026-03-10T06:51:45.796Z","where":"taskRunner","event":"runTask.start","id":"03d1345d-5637-4023-9f76-ffb509c2ac80"}
+{"ts":"2026-03-10T06:51:45.799Z","where":"taskRunner","event":"runTask.stage","id":"03d1345d-5637-4023-9f76-ffb509c2ac80","stage":"searching_images","queryPreview":"Inca livestream poster gallery and spec 文化 梯田 深色"}
+{"ts":"2026-03-10T06:51:45.800Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Inca livestream poster gallery and spec 文化 梯田 深色","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Inca+livestream+poster+gallery+and+spec+%E6%96%87%E5%8C%96+%E6%A2%AF%E7%94%B0+%E6%B7%B1%E8%89%B2&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T06:51:46.935Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":1135}
+{"ts":"2026-03-10T06:51:46.940Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":0}
+{"ts":"2026-03-10T06:51:46.947Z","where":"taskRunner","event":"runTask.stage","id":"03d1345d-5637-4023-9f76-ffb509c2ac80","stage":"generating_spec","imagesCount":0}
+{"ts":"2026-03-10T06:51:46.950Z","where":"taskRunner","event":"runTask.done","id":"03d1345d-5637-4023-9f76-ffb509c2ac80","status":"succeeded","durationMs":1153}
+{"ts":"2026-03-10T07:33:25.552Z","where":"taskRunner","event":"enqueueTask.created","id":"044b0d72-2b40-4c4e-adb0-77ccf48a6c04","imageCount":6,"hasStyleHint":true,"requirementLen":39}
+{"ts":"2026-03-10T07:33:25.596Z","where":"taskRunner","event":"runTask.start","id":"044b0d72-2b40-4c4e-adb0-77ccf48a6c04"}
+{"ts":"2026-03-10T07:33:25.599Z","where":"taskRunner","event":"runTask.stage","id":"044b0d72-2b40-4c4e-adb0-77ccf48a6c04","stage":"searching_images","queryPreview":"Inca livestream poster gallery and spec 文化 梯田 深色"}
+{"ts":"2026-03-10T07:33:25.600Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Inca livestream poster gallery and spec 文化 梯田 深色","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Inca+livestream+poster+gallery+and+spec+%E6%96%87%E5%8C%96+%E6%A2%AF%E7%94%B0+%E6%B7%B1%E8%89%B2&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T07:33:26.736Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":1136}
+{"ts":"2026-03-10T07:33:26.739Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":0,"qPreview":"Inca livestream poster gallery and spec 文化 梯田 深色"}
+{"ts":"2026-03-10T07:33:26.740Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"inca","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=inca&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T07:33:58.292Z","where":"taskRunner","event":"enqueueTask.created","id":"3d811252-16e8-49e2-8b1a-7b20afd75344","imageCount":6,"hasStyleHint":true,"requirementLen":39}
+{"ts":"2026-03-10T07:33:58.338Z","where":"taskRunner","event":"runTask.start","id":"3d811252-16e8-49e2-8b1a-7b20afd75344"}
+{"ts":"2026-03-10T07:33:58.341Z","where":"taskRunner","event":"runTask.stage","id":"3d811252-16e8-49e2-8b1a-7b20afd75344","stage":"searching_images","queryPreview":"Inca livestream poster gallery and spec 文化 梯田 深色"}
+{"ts":"2026-03-10T07:33:58.343Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Inca livestream poster gallery and spec 文化 梯田 深色","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Inca+livestream+poster+gallery+and+spec+%E6%96%87%E5%8C%96+%E6%A2%AF%E7%94%B0+%E6%B7%B1%E8%89%B2&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T07:33:59.032Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":690}
+{"ts":"2026-03-10T07:33:59.036Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":0,"qPreview":"Inca livestream poster gallery and spec 文化 梯田 深色"}
+{"ts":"2026-03-10T07:33:59.036Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"inca","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=inca&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T07:33:59.754Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":718}
+{"ts":"2026-03-10T07:33:59.761Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":6,"qPreview":"inca"}
+{"ts":"2026-03-10T07:33:59.763Z","where":"taskRunner","event":"runTask.stage","id":"3d811252-16e8-49e2-8b1a-7b20afd75344","stage":"generating_spec","imagesCount":6}
+{"ts":"2026-03-10T07:33:59.765Z","where":"taskRunner","event":"runTask.done","id":"3d811252-16e8-49e2-8b1a-7b20afd75344","status":"succeeded","durationMs":1427}
+{"ts":"2026-03-10T07:35:55.908Z","where":"Home","event":"submit","requirementLen":487,"styleHintLen":0,"imageCount":6}
+{"ts":"2026-03-10T07:35:55.939Z","where":"Home","event":"submit.created","taskId":"d0516f55-18b1-4b87-a94d-8eca598b2a1e"}
+{"ts":"2026-03-10T07:35:55.923Z","where":"taskRunner","event":"enqueueTask.created","id":"d0516f55-18b1-4b87-a94d-8eca598b2a1e","imageCount":6,"hasStyleHint":false,"requirementLen":487}
+{"ts":"2026-03-10T07:35:55.940Z","where":"Home","event":"poll.start","id":"d0516f55-18b1-4b87-a94d-8eca598b2a1e","timeoutMs":60000}
+{"ts":"2026-03-10T07:35:55.946Z","where":"Home","event":"poll.snapshot","id":"d0516f55-18b1-4b87-a94d-8eca598b2a1e","status":"queued","stage":"searching_images","imagesCount":0}
+{"ts":"2026-03-10T07:35:55.960Z","where":"taskRunner","event":"runTask.start","id":"d0516f55-18b1-4b87-a94d-8eca598b2a1e"}
+{"ts":"2026-03-10T07:35:55.961Z","where":"taskRunner","event":"runTask.stage","id":"d0516f55-18b1-4b87-a94d-8eca598b2a1e","stage":"searching_images","queryPreview":"For this edition, we would like to evolve the visual identity into a greener con"}
+{"ts":"2026-03-10T07:35:55.962Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"For this edition, we would like to evolve the visual identity into a greener con","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=For+this+edition%2C+we+would+like+to+evolve+the+visual+identity+into+a+greener+con&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T07:35:56.557Z","where":"Home","event":"poll.snapshot","id":"d0516f55-18b1-4b87-a94d-8eca598b2a1e","status":"running","stage":"searching_images","imagesCount":0}
+{"ts":"2026-03-10T07:35:57.275Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":1313}
+{"ts":"2026-03-10T07:36:56.671Z","where":"Home","event":"poll.timeout","id":"d0516f55-18b1-4b87-a94d-8eca598b2a1e","elapsedMs":60731}
+{"ts":"2026-03-10T07:46:08.245Z","where":"taskRunner","event":"enqueueTask.created","id":"faf70733-212e-4491-bf64-d114b64dc438","imageCount":6,"hasStyleHint":true,"requirementLen":39}
+{"ts":"2026-03-10T07:46:08.291Z","where":"taskRunner","event":"runTask.start","id":"faf70733-212e-4491-bf64-d114b64dc438"}
+{"ts":"2026-03-10T07:46:08.295Z","where":"taskRunner","event":"runTask.stage","id":"faf70733-212e-4491-bf64-d114b64dc438","stage":"searching_images","queryPreview":"Inca livestream poster gallery and spec 文化 梯田 深色"}
+{"ts":"2026-03-10T07:46:08.297Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Inca livestream poster gallery and spec 文化 梯田 深色","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Inca+livestream+poster+gallery+and+spec+%E6%96%87%E5%8C%96+%E6%A2%AF%E7%94%B0+%E6%B7%B1%E8%89%B2&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T07:46:09.370Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":1073}
+{"ts":"2026-03-10T07:46:09.373Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":0,"qPreview":"Inca livestream poster gallery and spec 文化 梯田 深色"}
+{"ts":"2026-03-10T07:46:09.374Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"inca","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=inca&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T07:53:51.755Z","where":"taskRunner","event":"enqueueTask.created","id":"b52b11d9-35ea-4cb1-9bd6-e266d5eadd91","imageCount":6,"hasStyleHint":true,"requirementLen":39}
+{"ts":"2026-03-10T07:53:51.807Z","where":"taskRunner","event":"runTask.start","id":"b52b11d9-35ea-4cb1-9bd6-e266d5eadd91"}
+{"ts":"2026-03-10T07:53:51.812Z","where":"taskRunner","event":"runTask.stage","id":"b52b11d9-35ea-4cb1-9bd6-e266d5eadd91","stage":"searching_images","queryPreview":"Inca livestream poster gallery and spec 文化 梯田 深色"}
+{"ts":"2026-03-10T07:53:51.813Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Inca livestream poster gallery and spec 文化 梯田 深色","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Inca+livestream+poster+gallery+and+spec+%E6%96%87%E5%8C%96+%E6%A2%AF%E7%94%B0+%E6%B7%B1%E8%89%B2&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T07:53:52.604Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":791}
+{"ts":"2026-03-10T07:53:52.609Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":0,"qPreview":"Inca livestream poster gallery and spec 文化 梯田 深色"}
+{"ts":"2026-03-10T07:53:52.610Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"inca","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=inca&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T07:56:40.476Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Machu Picchu terraces","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Machu+Picchu+terraces&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T07:56:43.863Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":3387}
+{"ts":"2026-03-10T07:56:43.872Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":6,"qPreview":"Machu Picchu terraces"}
+{"ts":"2026-03-10T07:57:38.738Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Machu Picchu terraces","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Machu+Picchu+terraces&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T07:57:39.980Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":1242}
+{"ts":"2026-03-10T07:57:40.011Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":6,"qPreview":"Machu Picchu terraces"}
+{"ts":"2026-03-10T07:58:52.718Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Inca livestream poster gallery and spec 文化 梯田 深色","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Inca+livestream+poster+gallery+and+spec+%E6%96%87%E5%8C%96+%E6%A2%AF%E7%94%B0+%E6%B7%B1%E8%89%B2&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T07:58:53.475Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":757}
+{"ts":"2026-03-10T07:58:53.478Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":0,"qPreview":"Inca livestream poster gallery and spec 文化 梯田 深色"}
+{"ts":"2026-03-10T07:58:53.479Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"inca","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=inca&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T07:58:54.285Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":806}
+{"ts":"2026-03-10T07:58:54.286Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":6,"qPreview":"inca"}
+{"ts":"2026-03-10T08:01:20.384Z","where":"taskRunner","event":"enqueueTask.created","id":"32610328-1361-4af1-8954-a65e0712b2ea","imageCount":6,"hasStyleHint":true,"requirementLen":39}
+{"ts":"2026-03-10T08:01:20.435Z","where":"taskRunner","event":"runTask.start","id":"32610328-1361-4af1-8954-a65e0712b2ea"}
+{"ts":"2026-03-10T08:01:20.439Z","where":"taskRunner","event":"runTask.stage","id":"32610328-1361-4af1-8954-a65e0712b2ea","stage":"searching_images","queryPreview":"Inca livestream poster gallery and spec 文化 梯田 深色"}
+{"ts":"2026-03-10T08:01:20.440Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Inca livestream poster gallery and spec 文化 梯田 深色","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Inca+livestream+poster+gallery+and+spec+%E6%96%87%E5%8C%96+%E6%A2%AF%E7%94%B0+%E6%B7%B1%E8%89%B2&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T08:01:21.123Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":683}
+{"ts":"2026-03-10T08:01:21.126Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":0,"qPreview":"Inca livestream poster gallery and spec 文化 梯田 深色"}
+{"ts":"2026-03-10T08:01:21.127Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"inca","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=inca&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T08:01:21.636Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":509}
+{"ts":"2026-03-10T08:01:21.641Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":6,"qPreview":"inca"}
+{"ts":"2026-03-10T08:01:21.644Z","where":"taskRunner","event":"runTask.stage","id":"32610328-1361-4af1-8954-a65e0712b2ea","stage":"generating_spec","imagesCount":6}
+{"ts":"2026-03-10T08:01:21.647Z","where":"taskRunner","event":"runTask.done","id":"32610328-1361-4af1-8954-a65e0712b2ea","status":"succeeded","durationMs":1212}
+{"ts":"2026-03-10T08:16:49.265Z","where":"taskRunner","event":"enqueueTask.created","id":"a3de8d65-cd2c-4a33-8126-2ad2f90ab4c9","imageCount":6,"hasStyleHint":true,"requirementLen":39}
+{"ts":"2026-03-10T08:16:49.306Z","where":"taskRunner","event":"runTask.start","id":"a3de8d65-cd2c-4a33-8126-2ad2f90ab4c9"}
+{"ts":"2026-03-10T08:16:49.309Z","where":"taskRunner","event":"runTask.stage","id":"a3de8d65-cd2c-4a33-8126-2ad2f90ab4c9","stage":"searching_images","queryPreview":"Inca livestream poster gallery and spec 文化 梯田 深色"}
+{"ts":"2026-03-10T08:16:49.310Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Inca livestream poster gallery and spec 文化 梯田 深色","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Inca+livestream+poster+gallery+and+spec+%E6%96%87%E5%8C%96+%E6%A2%AF%E7%94%B0+%E6%B7%B1%E8%89%B2&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T08:16:50.016Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":706}
+{"ts":"2026-03-10T08:16:50.023Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":0,"qPreview":"Inca livestream poster gallery and spec 文化 梯田 深色"}
+{"ts":"2026-03-10T08:16:50.024Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"inca","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=inca&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T08:16:50.604Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":580}
+{"ts":"2026-03-10T08:16:50.610Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":6,"qPreview":"inca"}
+{"ts":"2026-03-10T08:16:50.612Z","where":"taskRunner","event":"runTask.stage","id":"a3de8d65-cd2c-4a33-8126-2ad2f90ab4c9","stage":"generating_spec","imagesCount":6}
+{"ts":"2026-03-10T08:16:50.615Z","where":"taskRunner","event":"runTask.done","id":"a3de8d65-cd2c-4a33-8126-2ad2f90ab4c9","status":"succeeded","durationMs":1309}
+{"ts":"2026-03-10T08:21:54.413Z","where":"Home","event":"submit","requirementLen":487,"styleHintLen":0,"imageCount":6}
+{"ts":"2026-03-10T08:21:54.440Z","where":"Home","event":"submit.created","taskId":"fd2b52c2-fb6a-4854-9fcb-b5c12cb52844"}
+{"ts":"2026-03-10T08:21:54.425Z","where":"taskRunner","event":"enqueueTask.created","id":"fd2b52c2-fb6a-4854-9fcb-b5c12cb52844","imageCount":6,"hasStyleHint":false,"requirementLen":487}
+{"ts":"2026-03-10T08:21:54.440Z","where":"Home","event":"poll.start","id":"fd2b52c2-fb6a-4854-9fcb-b5c12cb52844","timeoutMs":60000}
+{"ts":"2026-03-10T08:21:54.446Z","where":"Home","event":"poll.snapshot","id":"fd2b52c2-fb6a-4854-9fcb-b5c12cb52844","status":"queued","stage":"searching_images","imagesCount":0}
+{"ts":"2026-03-10T08:21:54.456Z","where":"taskRunner","event":"runTask.start","id":"fd2b52c2-fb6a-4854-9fcb-b5c12cb52844"}
+{"ts":"2026-03-10T08:21:54.460Z","where":"taskRunner","event":"runTask.stage","id":"fd2b52c2-fb6a-4854-9fcb-b5c12cb52844","stage":"searching_images","queryPreview":"For this edition, we would like to evolve the visual identity into a greener con"}
+{"ts":"2026-03-10T08:21:54.461Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"For this edition, we would like to evolve the visual identity into a greener con","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=For+this+edition%2C+we+would+like+to+evolve+the+visual+identity+into+a+greener+con&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T08:21:55.056Z","where":"Home","event":"poll.snapshot","id":"fd2b52c2-fb6a-4854-9fcb-b5c12cb52844","status":"running","stage":"searching_images","imagesCount":0}
+{"ts":"2026-03-10T08:21:55.365Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":904}
+{"ts":"2026-03-10T08:21:55.452Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":6,"qPreview":"For this edition, we would like to evolve the visual identity into a greener con"}
+{"ts":"2026-03-10T08:21:55.454Z","where":"taskRunner","event":"runTask.stage","id":"fd2b52c2-fb6a-4854-9fcb-b5c12cb52844","stage":"generating_spec","imagesCount":6}
+{"ts":"2026-03-10T08:21:55.455Z","where":"taskRunner","event":"runTask.done","id":"fd2b52c2-fb6a-4854-9fcb-b5c12cb52844","status":"succeeded","durationMs":999}
+{"ts":"2026-03-10T08:21:55.663Z","where":"Home","event":"poll.snapshot","id":"fd2b52c2-fb6a-4854-9fcb-b5c12cb52844","status":"succeeded","imagesCount":6}
+{"ts":"2026-03-10T08:21:55.663Z","where":"Home","event":"poll.done","id":"fd2b52c2-fb6a-4854-9fcb-b5c12cb52844","status":"succeeded","elapsedMs":1223}
+{"ts":"2026-03-10T08:22:47.045Z","where":"Home","event":"submit","requirementLen":17,"styleHintLen":0,"imageCount":6}
+{"ts":"2026-03-10T08:22:47.075Z","where":"Home","event":"submit.created","taskId":"19f44a5b-7836-4b01-87d2-94f5988c7fae"}
+{"ts":"2026-03-10T08:22:47.060Z","where":"taskRunner","event":"enqueueTask.created","id":"19f44a5b-7836-4b01-87d2-94f5988c7fae","imageCount":6,"hasStyleHint":false,"requirementLen":16}
+{"ts":"2026-03-10T08:22:47.075Z","where":"Home","event":"poll.start","id":"19f44a5b-7836-4b01-87d2-94f5988c7fae","timeoutMs":60000}
+{"ts":"2026-03-10T08:22:47.089Z","where":"Home","event":"poll.snapshot","id":"19f44a5b-7836-4b01-87d2-94f5988c7fae","status":"queued","stage":"searching_images","imagesCount":0}
+{"ts":"2026-03-10T08:22:47.095Z","where":"taskRunner","event":"runTask.start","id":"19f44a5b-7836-4b01-87d2-94f5988c7fae"}
+{"ts":"2026-03-10T08:22:47.097Z","where":"taskRunner","event":"runTask.stage","id":"19f44a5b-7836-4b01-87d2-94f5988c7fae","stage":"searching_images","queryPreview":"泰国直播活动，主元素是一个麦克风"}
+{"ts":"2026-03-10T08:22:47.098Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"泰国直播活动，主元素是一个麦克风","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=%E6%B3%B0%E5%9B%BD%E7%9B%B4%E6%92%AD%E6%B4%BB%E5%8A%A8%EF%BC%8C%E4%B8%BB%E5%85%83%E7%B4%A0%E6%98%AF%E4%B8%80%E4%B8%AA%E9%BA%A6%E5%85%8B%E9%A3%8E&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T08:22:47.698Z","where":"Home","event":"poll.snapshot","id":"19f44a5b-7836-4b01-87d2-94f5988c7fae","status":"running","stage":"searching_images","imagesCount":0}
+{"ts":"2026-03-10T08:22:47.800Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":702}
+{"ts":"2026-03-10T08:22:47.802Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":0,"qPreview":"泰国直播活动，主元素是一个麦克风"}
+{"ts":"2026-03-10T08:22:47.802Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"poster design inspiration","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=poster+design+inspiration&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T08:22:48.966Z","where":"Home","event":"poll.error","id":"19f44a5b-7836-4b01-87d2-94f5988c7fae","error":"请求失败（HTTP 500）"}
+{"ts":"2026-03-10T08:24:29.612Z","where":"Home","event":"submit","requirementLen":17,"styleHintLen":0,"imageCount":6}
+{"ts":"2026-03-10T08:24:29.635Z","where":"taskRunner","event":"enqueueTask.created","id":"8a700c7c-0244-4054-93b1-a395f86f05c1","imageCount":6,"hasStyleHint":false,"requirementLen":16}
+{"ts":"2026-03-10T08:24:29.653Z","where":"Home","event":"submit.created","taskId":"8a700c7c-0244-4054-93b1-a395f86f05c1"}
+{"ts":"2026-03-10T08:24:29.653Z","where":"Home","event":"poll.start","id":"8a700c7c-0244-4054-93b1-a395f86f05c1","timeoutMs":60000}
+{"ts":"2026-03-10T08:24:29.658Z","where":"Home","event":"poll.snapshot","id":"8a700c7c-0244-4054-93b1-a395f86f05c1","status":"queued","stage":"searching_images","imagesCount":0}
+{"ts":"2026-03-10T08:24:29.678Z","where":"taskRunner","event":"runTask.start","id":"8a700c7c-0244-4054-93b1-a395f86f05c1"}
+{"ts":"2026-03-10T08:24:29.681Z","where":"taskRunner","event":"runTask.stage","id":"8a700c7c-0244-4054-93b1-a395f86f05c1","stage":"searching_images","queryPreview":"泰国直播活动，主元素是一个麦克风"}
+{"ts":"2026-03-10T08:24:29.682Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"泰国直播活动，主元素是一个麦克风","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=%E6%B3%B0%E5%9B%BD%E7%9B%B4%E6%92%AD%E6%B4%BB%E5%8A%A8%EF%BC%8C%E4%B8%BB%E5%85%83%E7%B4%A0%E6%98%AF%E4%B8%80%E4%B8%AA%E9%BA%A6%E5%85%8B%E9%A3%8E&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T08:24:30.277Z","where":"Home","event":"poll.snapshot","id":"8a700c7c-0244-4054-93b1-a395f86f05c1","status":"running","stage":"searching_images","imagesCount":0}
+{"ts":"2026-03-10T08:24:30.779Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":1097}
+{"ts":"2026-03-10T08:24:30.780Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":0,"qPreview":"泰国直播活动，主元素是一个麦克风"}
+{"ts":"2026-03-10T08:24:30.781Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"poster design inspiration","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=poster+design+inspiration&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T08:24:31.504Z","where":"Home","event":"poll.error","id":"8a700c7c-0244-4054-93b1-a395f86f05c1","error":"请求失败（HTTP 500）"}
+{"ts":"2026-03-10T08:24:45.077Z","where":"Home","event":"submit","requirementLen":84,"styleHintLen":14,"imageCount":6}
+{"ts":"2026-03-10T08:24:45.118Z","where":"Home","event":"submit.created","taskId":"befa4a78-225d-4243-9859-a16ceba8bd2f"}
+{"ts":"2026-03-10T08:24:45.118Z","where":"Home","event":"poll.start","id":"befa4a78-225d-4243-9859-a16ceba8bd2f","timeoutMs":60000}
+{"ts":"2026-03-10T08:24:45.099Z","where":"taskRunner","event":"enqueueTask.created","id":"befa4a78-225d-4243-9859-a16ceba8bd2f","imageCount":6,"hasStyleHint":true,"requirementLen":84}
+{"ts":"2026-03-10T08:24:45.126Z","where":"Home","event":"poll.snapshot","id":"befa4a78-225d-4243-9859-a16ceba8bd2f","status":"queued","stage":"searching_images","imagesCount":0}
+{"ts":"2026-03-10T08:24:45.140Z","where":"taskRunner","event":"runTask.start","id":"befa4a78-225d-4243-9859-a16ceba8bd2f"}
+{"ts":"2026-03-10T08:24:45.142Z","where":"taskRunner","event":"runTask.stage","id":"befa4a78-225d-4243-9859-a16ceba8bd2f","stage":"searching_images","queryPreview":"做一个“印加文明主题直播海报”的灵感收集与方案生成页面。 目标用户：直播运营与视觉设计。 需要展示参考图画廊、输出结构化设计方案（Markdown），并可生成分"}
+{"ts":"2026-03-10T08:24:45.142Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"做一个“印加文明主题直播海报”的灵感收集与方案生成页面。 目标用户：直播运营与视觉设计。 需要展示参考图画廊、输出结构化设计方案（Markdown），并可生成分","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=%E5%81%9A%E4%B8%80%E4%B8%AA%E2%80%9C%E5%8D%B0%E5%8A%A0%E6%96%87%E6%98%8E%E4%B8%BB%E9%A2%98%E7%9B%B4%E6%92%AD%E6%B5%B7%E6%8A%A5%E2%80%9D%E7%9A%84%E7%81%B5%E6%84%9F%E6%94%B6%E9%9B%86%E4%B8%8E%E6%96%B9%E6%A1%88%E7%94%9F%E6%88%90%E9%A1%B5%E9%9D%A2%E3%80%82+%E7%9B%AE%E6%A0%87%E7%94%A8%E6%88%B7%EF%BC%9A%E7%9B%B4%E6%92%AD%E8%BF%90%E8%90%A5%E4%B8%8E%E8%A7%86%E8%A7%89%E8%AE%BE%E8%AE%A1%E3%80%82+%E9%9C%80%E8%A6%81%E5%B1%95%E7%A4%BA%E5%8F%82%E8%80%83%E5%9B%BE%E7%94%BB%E5%BB%8A%E3%80%81%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%84%E5%8C%96%E8%AE%BE%E8%AE%A1%E6%96%B9%E6%A1%88%EF%BC%88Markdown%EF%BC%89%EF%BC%8C%E5%B9%B6%E5%8F%AF%E7%94%9F%E6%88%90%E5%88%86&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T08:24:45.735Z","where":"Home","event":"poll.snapshot","id":"befa4a78-225d-4243-9859-a16ceba8bd2f","status":"running","stage":"searching_images","imagesCount":0}
+{"ts":"2026-03-10T08:24:45.942Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":800}
+{"ts":"2026-03-10T08:24:45.943Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":0,"qPreview":"做一个“印加文明主题直播海报”的灵感收集与方案生成页面。 目标用户：直播运营与视觉设计。 需要展示参考图画廊、输出结构化设计方案（Markdown），并可生成分"}
+{"ts":"2026-03-10T08:24:45.943Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Markdown","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Markdown&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T08:24:46.955Z","where":"Home","event":"poll.error","id":"befa4a78-225d-4243-9859-a16ceba8bd2f","error":"请求失败（HTTP 500）"}
+{"ts":"2026-03-10T08:24:49.820Z","where":"Home","event":"poll.start","id":"befa4a78-225d-4243-9859-a16ceba8bd2f","timeoutMs":60000}
+{"ts":"2026-03-10T08:24:49.828Z","where":"Home","event":"poll.snapshot","id":"befa4a78-225d-4243-9859-a16ceba8bd2f","status":"running","stage":"searching_images","imagesCount":0}
+{"ts":"2026-03-10T08:25:50.673Z","where":"Home","event":"poll.timeout","id":"befa4a78-225d-4243-9859-a16ceba8bd2f","elapsedMs":60853}
+{"ts":"2026-03-10T08:33:25.776Z","where":"taskRunner","event":"enqueueTask.created","id":"8dcb8ff8-cbf0-45d0-a9ca-20ae2dfc18be","imageCount":6,"hasStyleHint":true,"requirementLen":39}
+{"ts":"2026-03-10T08:33:25.829Z","where":"taskRunner","event":"runTask.start","id":"8dcb8ff8-cbf0-45d0-a9ca-20ae2dfc18be"}
+{"ts":"2026-03-10T08:33:25.832Z","where":"taskRunner","event":"runTask.stage","id":"8dcb8ff8-cbf0-45d0-a9ca-20ae2dfc18be","stage":"searching_images","queryPreview":"Inca livestream poster gallery and spec 文化 梯田 深色"}
+{"ts":"2026-03-10T08:33:25.833Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Inca livestream poster gallery and spec 文化 梯田 深色","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Inca+livestream+poster+gallery+and+spec+%E6%96%87%E5%8C%96+%E6%A2%AF%E7%94%B0+%E6%B7%B1%E8%89%B2&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T08:33:26.731Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":898}
+{"ts":"2026-03-10T08:33:26.734Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":0,"qPreview":"Inca livestream poster gallery and spec 文化 梯田 深色"}
+{"ts":"2026-03-10T08:33:26.735Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"inca","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=inca&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T08:37:28.798Z","where":"taskRunner","event":"enqueueTask.created","id":"d741c6db-7895-4d39-b74e-48697a692494","imageCount":6,"hasStyleHint":true,"requirementLen":39}
+{"ts":"2026-03-10T08:37:28.850Z","where":"taskRunner","event":"runTask.start","id":"d741c6db-7895-4d39-b74e-48697a692494"}
+{"ts":"2026-03-10T08:37:28.853Z","where":"taskRunner","event":"runTask.stage","id":"d741c6db-7895-4d39-b74e-48697a692494","stage":"searching_images","queryPreview":"Inca livestream poster gallery and spec 文化 梯田 深色"}
+{"ts":"2026-03-10T08:37:28.855Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Inca livestream poster gallery and spec 文化 梯田 深色","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Inca+livestream+poster+gallery+and+spec+%E6%96%87%E5%8C%96+%E6%A2%AF%E7%94%B0+%E6%B7%B1%E8%89%B2&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T08:37:29.931Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":1076}
+{"ts":"2026-03-10T08:37:29.934Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":0,"qPreview":"Inca livestream poster gallery and spec 文化 梯田 深色"}
+{"ts":"2026-03-10T08:37:29.935Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"inca","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=inca&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T08:39:52.778Z","where":"taskRunner","event":"enqueueTask.created","id":"d18c9048-e6d4-4072-86d4-df288b964a59","imageCount":6,"hasStyleHint":true,"requirementLen":39}
+{"ts":"2026-03-10T08:39:52.823Z","where":"taskRunner","event":"runTask.start","id":"d18c9048-e6d4-4072-86d4-df288b964a59"}
+{"ts":"2026-03-10T08:39:52.828Z","where":"taskRunner","event":"runTask.stage","id":"d18c9048-e6d4-4072-86d4-df288b964a59","stage":"searching_images","queryPreview":"Inca livestream poster gallery and spec 文化 梯田 深色"}
+{"ts":"2026-03-10T08:39:52.829Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Inca livestream poster gallery and spec 文化 梯田 深色","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Inca+livestream+poster+gallery+and+spec+%E6%96%87%E5%8C%96+%E6%A2%AF%E7%94%B0+%E6%B7%B1%E8%89%B2&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T08:39:53.522Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":693}
+{"ts":"2026-03-10T08:39:53.525Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":0,"qPreview":"Inca livestream poster gallery and spec 文化 梯田 深色"}
+{"ts":"2026-03-10T08:39:53.525Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"inca","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=inca&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T08:39:54.271Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":746}
+{"ts":"2026-03-10T08:39:54.276Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":6,"qPreview":"inca"}
+{"ts":"2026-03-10T08:39:54.279Z","where":"taskRunner","event":"runTask.stage","id":"d18c9048-e6d4-4072-86d4-df288b964a59","stage":"generating_spec","imagesCount":6}
+{"ts":"2026-03-10T08:39:54.284Z","where":"taskRunner","event":"runTask.done","id":"d18c9048-e6d4-4072-86d4-df288b964a59","status":"succeeded","durationMs":1461}
+{"ts":"2026-03-10T08:43:39.661Z","where":"Home","event":"submit","requirementLen":84,"styleHintLen":14,"imageCount":6}
+{"ts":"2026-03-10T08:43:39.692Z","where":"Home","event":"submit.created","taskId":"d539d410-29c3-41dd-a86e-9f28e6fe7bb3"}
+{"ts":"2026-03-10T08:43:39.692Z","where":"Home","event":"poll.start","id":"d539d410-29c3-41dd-a86e-9f28e6fe7bb3","timeoutMs":60000}
+{"ts":"2026-03-10T08:43:39.677Z","where":"taskRunner","event":"enqueueTask.created","id":"d539d410-29c3-41dd-a86e-9f28e6fe7bb3","imageCount":6,"hasStyleHint":true,"requirementLen":84}
+{"ts":"2026-03-10T08:43:39.700Z","where":"Home","event":"poll.snapshot","id":"d539d410-29c3-41dd-a86e-9f28e6fe7bb3","status":"queued","stage":"searching_images","imagesCount":0}
+{"ts":"2026-03-10T08:43:39.709Z","where":"taskRunner","event":"runTask.start","id":"d539d410-29c3-41dd-a86e-9f28e6fe7bb3"}
+{"ts":"2026-03-10T08:43:39.710Z","where":"taskRunner","event":"runTask.stage","id":"d539d410-29c3-41dd-a86e-9f28e6fe7bb3","stage":"searching_images","queryPreview":"做一个“印加文明主题直播海报”的灵感收集与方案生成页面。 目标用户：直播运营与视觉设计。 需要展示参考图画廊、输出结构化设计方案（Markdown），并可生成分"}
+{"ts":"2026-03-10T08:43:39.711Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"做一个“印加文明主题直播海报”的灵感收集与方案生成页面。 目标用户：直播运营与视觉设计。 需要展示参考图画廊、输出结构化设计方案（Markdown），并可生成分","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=%E5%81%9A%E4%B8%80%E4%B8%AA%E2%80%9C%E5%8D%B0%E5%8A%A0%E6%96%87%E6%98%8E%E4%B8%BB%E9%A2%98%E7%9B%B4%E6%92%AD%E6%B5%B7%E6%8A%A5%E2%80%9D%E7%9A%84%E7%81%B5%E6%84%9F%E6%94%B6%E9%9B%86%E4%B8%8E%E6%96%B9%E6%A1%88%E7%94%9F%E6%88%90%E9%A1%B5%E9%9D%A2%E3%80%82+%E7%9B%AE%E6%A0%87%E7%94%A8%E6%88%B7%EF%BC%9A%E7%9B%B4%E6%92%AD%E8%BF%90%E8%90%A5%E4%B8%8E%E8%A7%86%E8%A7%89%E8%AE%BE%E8%AE%A1%E3%80%82+%E9%9C%80%E8%A6%81%E5%B1%95%E7%A4%BA%E5%8F%82%E8%80%83%E5%9B%BE%E7%94%BB%E5%BB%8A%E3%80%81%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%84%E5%8C%96%E8%AE%BE%E8%AE%A1%E6%96%B9%E6%A1%88%EF%BC%88Markdown%EF%BC%89%EF%BC%8C%E5%B9%B6%E5%8F%AF%E7%94%9F%E6%88%90%E5%88%86&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T08:43:40.313Z","where":"Home","event":"poll.snapshot","id":"d539d410-29c3-41dd-a86e-9f28e6fe7bb3","status":"running","stage":"searching_images","imagesCount":0}
+{"ts":"2026-03-10T08:43:40.772Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":1061}
+{"ts":"2026-03-10T08:43:40.774Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":0,"qPreview":"做一个“印加文明主题直播海报”的灵感收集与方案生成页面。 目标用户：直播运营与视觉设计。 需要展示参考图画廊、输出结构化设计方案（Markdown），并可生成分"}
+{"ts":"2026-03-10T08:43:40.774Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Markdown","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Markdown&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T08:44:39.837Z","where":"Home","event":"poll.timeout","id":"d539d410-29c3-41dd-a86e-9f28e6fe7bb3","elapsedMs":60145}
+{"ts":"2026-03-10T08:44:58.477Z","where":"Home","event":"poll.start","id":"d539d410-29c3-41dd-a86e-9f28e6fe7bb3","timeoutMs":60000}
+{"ts":"2026-03-10T08:44:58.482Z","where":"Home","event":"poll.snapshot","id":"d539d410-29c3-41dd-a86e-9f28e6fe7bb3","status":"running","stage":"searching_images","imagesCount":0}
+{"ts":"2026-03-10T08:45:07.565Z","where":"Home","event":"submit","requirementLen":84,"styleHintLen":14,"imageCount":6}
+{"ts":"2026-03-10T08:45:07.578Z","where":"taskRunner","event":"enqueueTask.created","id":"1eea2b08-e6cc-43db-88b9-1cf7126e3420","imageCount":6,"hasStyleHint":true,"requirementLen":84}
+{"ts":"2026-03-10T08:45:07.593Z","where":"Home","event":"submit.created","taskId":"1eea2b08-e6cc-43db-88b9-1cf7126e3420"}
+{"ts":"2026-03-10T08:45:07.593Z","where":"Home","event":"poll.start","id":"1eea2b08-e6cc-43db-88b9-1cf7126e3420","timeoutMs":60000}
+{"ts":"2026-03-10T08:45:07.597Z","where":"Home","event":"poll.snapshot","id":"1eea2b08-e6cc-43db-88b9-1cf7126e3420","status":"queued","stage":"searching_images","imagesCount":0}
+{"ts":"2026-03-10T08:45:07.622Z","where":"taskRunner","event":"runTask.start","id":"1eea2b08-e6cc-43db-88b9-1cf7126e3420"}
+{"ts":"2026-03-10T08:45:07.624Z","where":"taskRunner","event":"runTask.stage","id":"1eea2b08-e6cc-43db-88b9-1cf7126e3420","stage":"searching_images","queryPreview":"做一个“印加文明主题直播海报”的灵感收集与方案生成页面。 目标用户：直播运营与视觉设计。 需要展示参考图画廊、输出结构化设计方案（Markdown），并可生成分"}
+{"ts":"2026-03-10T08:45:07.624Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"做一个“印加文明主题直播海报”的灵感收集与方案生成页面。 目标用户：直播运营与视觉设计。 需要展示参考图画廊、输出结构化设计方案（Markdown），并可生成分","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=%E5%81%9A%E4%B8%80%E4%B8%AA%E2%80%9C%E5%8D%B0%E5%8A%A0%E6%96%87%E6%98%8E%E4%B8%BB%E9%A2%98%E7%9B%B4%E6%92%AD%E6%B5%B7%E6%8A%A5%E2%80%9D%E7%9A%84%E7%81%B5%E6%84%9F%E6%94%B6%E9%9B%86%E4%B8%8E%E6%96%B9%E6%A1%88%E7%94%9F%E6%88%90%E9%A1%B5%E9%9D%A2%E3%80%82+%E7%9B%AE%E6%A0%87%E7%94%A8%E6%88%B7%EF%BC%9A%E7%9B%B4%E6%92%AD%E8%BF%90%E8%90%A5%E4%B8%8E%E8%A7%86%E8%A7%89%E8%AE%BE%E8%AE%A1%E3%80%82+%E9%9C%80%E8%A6%81%E5%B1%95%E7%A4%BA%E5%8F%82%E8%80%83%E5%9B%BE%E7%94%BB%E5%BB%8A%E3%80%81%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%84%E5%8C%96%E8%AE%BE%E8%AE%A1%E6%96%B9%E6%A1%88%EF%BC%88Markdown%EF%BC%89%EF%BC%8C%E5%B9%B6%E5%8F%AF%E7%94%9F%E6%88%90%E5%88%86&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T08:45:08.208Z","where":"Home","event":"poll.snapshot","id":"1eea2b08-e6cc-43db-88b9-1cf7126e3420","status":"running","stage":"searching_images","imagesCount":0}
+{"ts":"2026-03-10T08:45:08.333Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":709}
+{"ts":"2026-03-10T08:45:08.335Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":0,"qPreview":"做一个“印加文明主题直播海报”的灵感收集与方案生成页面。 目标用户：直播运营与视觉设计。 需要展示参考图画廊、输出结构化设计方案（Markdown），并可生成分"}
+{"ts":"2026-03-10T08:45:08.335Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Markdown","limit":6,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Markdown&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T08:45:09.018Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":683}
+{"ts":"2026-03-10T08:45:09.020Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":6,"qPreview":"Markdown"}
+{"ts":"2026-03-10T08:45:09.021Z","where":"taskRunner","event":"runTask.stage","id":"1eea2b08-e6cc-43db-88b9-1cf7126e3420","stage":"generating_spec","imagesCount":6}
+{"ts":"2026-03-10T08:45:09.023Z","where":"taskRunner","event":"runTask.done","id":"1eea2b08-e6cc-43db-88b9-1cf7126e3420","status":"succeeded","durationMs":1401}
+{"ts":"2026-03-10T08:45:09.439Z","where":"Home","event":"poll.error","id":"1eea2b08-e6cc-43db-88b9-1cf7126e3420","error":"请求失败（HTTP 500）","consecutiveErrors":1}
+{"ts":"2026-03-10T08:45:10.254Z","where":"Home","event":"poll.snapshot","id":"1eea2b08-e6cc-43db-88b9-1cf7126e3420","status":"succeeded","imagesCount":6}
+{"ts":"2026-03-10T08:45:10.254Z","where":"Home","event":"poll.done","id":"1eea2b08-e6cc-43db-88b9-1cf7126e3420","status":"succeeded","elapsedMs":2661}
+{"ts":"2026-03-10T08:45:10.705Z","where":"Home","event":"poll.error","id":"d539d410-29c3-41dd-a86e-9f28e6fe7bb3","error":"请求失败（HTTP 500）","consecutiveErrors":1}
+{"ts":"2026-03-10T08:45:40.155Z","where":"Home","event":"poll.snapshot","id":"d539d410-29c3-41dd-a86e-9f28e6fe7bb3","status":"failed","imagesCount":0}
+{"ts":"2026-03-10T08:45:40.156Z","where":"Home","event":"poll.done","id":"d539d410-29c3-41dd-a86e-9f28e6fe7bb3","status":"failed","elapsedMs":41679,"errorMessage":"任务在运行中被中断（可能是服务重启或网络异常），请重试"}
+{"ts":"2026-03-10T08:52:27.711Z","where":"taskRunner","event":"enqueueTask.created","id":"079402e8-6259-46ac-81ff-50c24d4f88bd","imageCount":6,"hasStyleHint":true,"requirementLen":39}
+{"ts":"2026-03-10T08:52:27.755Z","where":"taskRunner","event":"runTask.start","id":"079402e8-6259-46ac-81ff-50c24d4f88bd"}
+{"ts":"2026-03-10T08:52:27.758Z","where":"taskRunner","event":"runTask.stage","id":"079402e8-6259-46ac-81ff-50c24d4f88bd","stage":"generating_spec"}
+{"ts":"2026-03-10T08:52:27.764Z","where":"taskRunner","event":"runTask.search","id":"079402e8-6259-46ac-81ff-50c24d4f88bd","direction":"Surging Terraces｜梯田浪涌","queryPreview":"Machu Picchu terraces"}
+{"ts":"2026-03-10T08:52:27.766Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Machu Picchu terraces","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Machu+Picchu+terraces&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T08:52:28.512Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":747}
+{"ts":"2026-03-10T08:52:28.515Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":3,"qPreview":"Machu Picchu terraces"}
+{"ts":"2026-03-10T08:52:28.518Z","where":"taskRunner","event":"runTask.search","id":"079402e8-6259-46ac-81ff-50c24d4f88bd","direction":"Sacred Textile｜圣织几何","queryPreview":"Inca textile pattern"}
+{"ts":"2026-03-10T08:52:28.518Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Inca textile pattern","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Inca+textile+pattern&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T08:58:11.710Z","where":"taskRunner","event":"enqueueTask.created","id":"3ee8a325-4195-4c85-ab03-ba1089b1d9ae","imageCount":6,"hasStyleHint":true,"requirementLen":39}
+{"ts":"2026-03-10T08:58:11.750Z","where":"taskRunner","event":"runTask.start","id":"3ee8a325-4195-4c85-ab03-ba1089b1d9ae"}
+{"ts":"2026-03-10T08:58:11.754Z","where":"taskRunner","event":"runTask.stage","id":"3ee8a325-4195-4c85-ab03-ba1089b1d9ae","stage":"generating_spec"}
+{"ts":"2026-03-10T08:58:11.759Z","where":"taskRunner","event":"runTask.search","id":"3ee8a325-4195-4c85-ab03-ba1089b1d9ae","direction":"Surging Terraces｜梯田浪涌","queryPreview":"Machu Picchu terraces"}
+{"ts":"2026-03-10T08:58:11.760Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Machu Picchu terraces","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Machu+Picchu+terraces&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T08:58:12.439Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":680}
+{"ts":"2026-03-10T08:58:12.444Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":3,"qPreview":"Machu Picchu terraces"}
+{"ts":"2026-03-10T08:58:12.445Z","where":"taskRunner","event":"runTask.search","id":"3ee8a325-4195-4c85-ab03-ba1089b1d9ae","direction":"Sacred Textile｜圣织几何","queryPreview":"Inca textile pattern"}
+{"ts":"2026-03-10T08:58:12.445Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Inca textile pattern","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Inca+textile+pattern&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T08:58:12.946Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":501}
+{"ts":"2026-03-10T08:58:12.952Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":3,"qPreview":"Inca textile pattern"}
+{"ts":"2026-03-10T08:58:12.952Z","where":"taskRunner","event":"runTask.search","id":"3ee8a325-4195-4c85-ab03-ba1089b1d9ae","direction":"Mist & Botany｜云雾植谱","queryPreview":"Cantuta flower"}
+{"ts":"2026-03-10T08:58:12.953Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Cantuta flower","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Cantuta+flower&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T09:03:04.576Z","where":"taskRunner","event":"enqueueTask.created","id":"b40f0b9b-e5f6-4db1-9a38-7c6c7c3ec105","imageCount":6,"hasStyleHint":true,"requirementLen":39}
+{"ts":"2026-03-10T09:03:04.625Z","where":"taskRunner","event":"runTask.start","id":"b40f0b9b-e5f6-4db1-9a38-7c6c7c3ec105"}
+{"ts":"2026-03-10T09:03:04.629Z","where":"taskRunner","event":"runTask.stage","id":"b40f0b9b-e5f6-4db1-9a38-7c6c7c3ec105","stage":"generating_spec"}
+{"ts":"2026-03-10T09:03:04.635Z","where":"taskRunner","event":"runTask.search","id":"b40f0b9b-e5f6-4db1-9a38-7c6c7c3ec105","direction":"Surging Terraces｜梯田浪涌","queryPreview":"Machu Picchu terraces"}
+{"ts":"2026-03-10T09:03:04.636Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Machu Picchu terraces","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Machu+Picchu+terraces&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T09:03:05.331Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":695}
+{"ts":"2026-03-10T09:03:05.335Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":3,"qPreview":"Machu Picchu terraces"}
+{"ts":"2026-03-10T09:03:05.336Z","where":"taskRunner","event":"runTask.search","id":"b40f0b9b-e5f6-4db1-9a38-7c6c7c3ec105","direction":"Sacred Textile｜圣织几何","queryPreview":"Inca textile pattern"}
+{"ts":"2026-03-10T09:03:05.337Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Inca textile pattern","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Inca+textile+pattern&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T09:03:06.158Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":821}
+{"ts":"2026-03-10T09:03:06.161Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":3,"qPreview":"Inca textile pattern"}
+{"ts":"2026-03-10T09:03:06.161Z","where":"taskRunner","event":"runTask.search","id":"b40f0b9b-e5f6-4db1-9a38-7c6c7c3ec105","direction":"Mist & Botany｜云雾植谱","queryPreview":"Cantuta flower"}
+{"ts":"2026-03-10T09:03:06.162Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Cantuta flower","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Cantuta+flower&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T09:07:29.006Z","where":"taskRunner","event":"enqueueTask.created","id":"294a0db4-b4dc-4de9-aed5-3942d8efbaa7","imageCount":6,"hasStyleHint":true,"requirementLen":39}
+{"ts":"2026-03-10T09:07:29.042Z","where":"taskRunner","event":"runTask.start","id":"294a0db4-b4dc-4de9-aed5-3942d8efbaa7"}
+{"ts":"2026-03-10T09:07:29.043Z","where":"taskRunner","event":"runTask.stage","id":"294a0db4-b4dc-4de9-aed5-3942d8efbaa7","stage":"generating_spec"}
+{"ts":"2026-03-10T09:07:29.044Z","where":"taskRunner","event":"runTask.search","id":"294a0db4-b4dc-4de9-aed5-3942d8efbaa7","direction":"Surging Terraces｜梯田浪涌","queryPreview":"Machu Picchu terraces"}
+{"ts":"2026-03-10T09:07:29.045Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Machu Picchu terraces","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Machu+Picchu+terraces&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T09:07:29.708Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":663}
+{"ts":"2026-03-10T09:07:29.711Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":3,"qPreview":"Machu Picchu terraces"}
+{"ts":"2026-03-10T09:07:29.711Z","where":"taskRunner","event":"runTask.search","id":"294a0db4-b4dc-4de9-aed5-3942d8efbaa7","direction":"Sacred Textile｜圣织几何","queryPreview":"Inca textile pattern"}
+{"ts":"2026-03-10T09:07:29.712Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Inca textile pattern","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Inca+textile+pattern&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T09:07:30.178Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":466}
+{"ts":"2026-03-10T09:07:30.184Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":3,"qPreview":"Inca textile pattern"}
+{"ts":"2026-03-10T09:07:30.185Z","where":"taskRunner","event":"runTask.search","id":"294a0db4-b4dc-4de9-aed5-3942d8efbaa7","direction":"Mist & Botany｜云雾植谱","queryPreview":"Cantuta flower"}
+{"ts":"2026-03-10T09:07:30.185Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Cantuta flower","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Cantuta+flower&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T09:12:35.297Z","where":"taskRunner","event":"enqueueTask.created","id":"94066852-625d-40e7-8551-343448ea393b","imageCount":6,"hasStyleHint":true,"requirementLen":39}
+{"ts":"2026-03-10T09:12:35.336Z","where":"taskRunner","event":"runTask.start","id":"94066852-625d-40e7-8551-343448ea393b"}
+{"ts":"2026-03-10T09:12:35.337Z","where":"taskRunner","event":"runTask.stage","id":"94066852-625d-40e7-8551-343448ea393b","stage":"generating_spec"}
+{"ts":"2026-03-10T09:12:35.339Z","where":"taskRunner","event":"runTask.search","id":"94066852-625d-40e7-8551-343448ea393b","direction":"Surging Terraces｜梯田浪涌","queryPreview":"Machu Picchu terraces"}
+{"ts":"2026-03-10T09:12:35.340Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Machu Picchu terraces","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Machu+Picchu+terraces&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T09:12:36.065Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":725}
+{"ts":"2026-03-10T09:12:36.067Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":3,"qPreview":"Machu Picchu terraces"}
+{"ts":"2026-03-10T09:12:36.068Z","where":"taskRunner","event":"runTask.search","id":"94066852-625d-40e7-8551-343448ea393b","direction":"Sacred Textile｜圣织几何","queryPreview":"Inca textile pattern"}
+{"ts":"2026-03-10T09:12:36.068Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Inca textile pattern","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Inca+textile+pattern&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T09:12:36.565Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":497}
+{"ts":"2026-03-10T09:12:36.566Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":3,"qPreview":"Inca textile pattern"}
+{"ts":"2026-03-10T09:12:36.566Z","where":"taskRunner","event":"runTask.search","id":"94066852-625d-40e7-8551-343448ea393b","direction":"Mist & Botany｜云雾植谱","queryPreview":"Cantuta flower"}
+{"ts":"2026-03-10T09:12:36.567Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Cantuta flower","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Cantuta+flower&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T09:18:07.064Z","where":"taskRunner","event":"enqueueTask.created","id":"19e0abe9-7efe-4d86-8a5e-6e5448aa1586","imageCount":6,"hasStyleHint":true,"requirementLen":39}
+{"ts":"2026-03-10T09:18:07.107Z","where":"taskRunner","event":"runTask.start","id":"19e0abe9-7efe-4d86-8a5e-6e5448aa1586"}
+{"ts":"2026-03-10T09:18:07.108Z","where":"taskRunner","event":"runTask.stage","id":"19e0abe9-7efe-4d86-8a5e-6e5448aa1586","stage":"generating_spec"}
+{"ts":"2026-03-10T09:18:07.112Z","where":"taskRunner","event":"runTask.search","id":"19e0abe9-7efe-4d86-8a5e-6e5448aa1586","direction":"Surging Terraces｜梯田浪涌","queryPreview":"Machu Picchu terraces"}
+{"ts":"2026-03-10T09:18:07.113Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Machu Picchu terraces","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Machu+Picchu+terraces&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T09:18:07.821Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":709}
+{"ts":"2026-03-10T09:18:07.825Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":3,"qPreview":"Machu Picchu terraces"}
+{"ts":"2026-03-10T09:18:07.826Z","where":"taskRunner","event":"runTask.search","id":"19e0abe9-7efe-4d86-8a5e-6e5448aa1586","direction":"Sacred Textile｜圣织几何","queryPreview":"Inca textile pattern"}
+{"ts":"2026-03-10T09:18:07.826Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Inca textile pattern","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Inca+textile+pattern&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T09:18:08.586Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":760}
+{"ts":"2026-03-10T09:18:08.587Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":3,"qPreview":"Inca textile pattern"}
+{"ts":"2026-03-10T09:18:08.588Z","where":"taskRunner","event":"runTask.search","id":"19e0abe9-7efe-4d86-8a5e-6e5448aa1586","direction":"Mist & Botany｜云雾植谱","queryPreview":"Cantuta flower"}
+{"ts":"2026-03-10T09:18:08.588Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Cantuta flower","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Cantuta+flower&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T09:18:09.031Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":442}
+{"ts":"2026-03-10T09:18:09.034Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":3,"qPreview":"Cantuta flower"}
+{"ts":"2026-03-10T09:18:09.034Z","where":"taskRunner","event":"runTask.stage","id":"19e0abe9-7efe-4d86-8a5e-6e5448aa1586","stage":"generating_spec","imagesCount":6}
+{"ts":"2026-03-10T09:18:09.035Z","where":"taskRunner","event":"runTask.done","id":"19e0abe9-7efe-4d86-8a5e-6e5448aa1586","status":"succeeded","durationMs":1928}
+{"ts":"2026-03-10T09:22:15.626Z","where":"taskRunner","event":"enqueueTask.created","id":"0f1d2425-183d-4c74-9f22-9c083d55efe4","imageCount":6,"hasStyleHint":true,"requirementLen":39}
+{"ts":"2026-03-10T09:22:15.656Z","where":"taskRunner","event":"runTask.start","id":"0f1d2425-183d-4c74-9f22-9c083d55efe4"}
+{"ts":"2026-03-10T09:22:15.657Z","where":"taskRunner","event":"runTask.stage","id":"0f1d2425-183d-4c74-9f22-9c083d55efe4","stage":"generating_spec"}
+{"ts":"2026-03-10T09:22:15.658Z","where":"taskRunner","event":"runTask.search","id":"0f1d2425-183d-4c74-9f22-9c083d55efe4","direction":"Surging Terraces｜梯田浪涌","queryPreview":"Machu Picchu terraces"}
+{"ts":"2026-03-10T09:22:15.658Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Machu Picchu terraces","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Machu+Picchu+terraces&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T09:22:16.398Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":740}
+{"ts":"2026-03-10T09:22:16.399Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":3,"qPreview":"Machu Picchu terraces"}
+{"ts":"2026-03-10T09:22:16.399Z","where":"taskRunner","event":"runTask.search","id":"0f1d2425-183d-4c74-9f22-9c083d55efe4","direction":"Sacred Textile｜圣织几何","queryPreview":"Inca textile pattern"}
+{"ts":"2026-03-10T09:22:16.399Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Inca textile pattern","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Inca+textile+pattern&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T09:22:17.140Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":741}
+{"ts":"2026-03-10T09:22:17.142Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":3,"qPreview":"Inca textile pattern"}
+{"ts":"2026-03-10T09:22:17.142Z","where":"taskRunner","event":"runTask.search","id":"0f1d2425-183d-4c74-9f22-9c083d55efe4","direction":"Mist & Botany｜云雾植谱","queryPreview":"Cantuta flower"}
+{"ts":"2026-03-10T09:22:17.142Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Cantuta flower","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Cantuta+flower&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T09:22:17.602Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":460}
+{"ts":"2026-03-10T09:22:17.604Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":3,"qPreview":"Cantuta flower"}
+{"ts":"2026-03-10T09:22:17.604Z","where":"taskRunner","event":"runTask.stage","id":"0f1d2425-183d-4c74-9f22-9c083d55efe4","stage":"generating_spec","imagesCount":6}
+{"ts":"2026-03-10T09:22:17.606Z","where":"taskRunner","event":"runTask.done","id":"0f1d2425-183d-4c74-9f22-9c083d55efe4","status":"succeeded","durationMs":1950}
+{"ts":"2026-03-10T09:23:32.214Z","where":"taskRunner","event":"enqueueTask.created","id":"59226365-d5ce-4609-b693-e2369f0242c0","imageCount":6,"hasStyleHint":true,"requirementLen":39}
+{"ts":"2026-03-10T09:23:32.261Z","where":"taskRunner","event":"runTask.start","id":"59226365-d5ce-4609-b693-e2369f0242c0"}
+{"ts":"2026-03-10T09:23:32.262Z","where":"taskRunner","event":"runTask.stage","id":"59226365-d5ce-4609-b693-e2369f0242c0","stage":"generating_spec"}
+{"ts":"2026-03-10T09:23:32.265Z","where":"taskRunner","event":"runTask.search","id":"59226365-d5ce-4609-b693-e2369f0242c0","direction":"Surging Terraces｜梯田浪涌","queryPreview":"Machu Picchu terraces"}
+{"ts":"2026-03-10T09:23:32.266Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Machu Picchu terraces","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Machu+Picchu+terraces&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T09:23:33.396Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":1131}
+{"ts":"2026-03-10T09:23:33.400Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":3,"qPreview":"Machu Picchu terraces"}
+{"ts":"2026-03-10T09:23:33.401Z","where":"taskRunner","event":"runTask.search","id":"59226365-d5ce-4609-b693-e2369f0242c0","direction":"Sacred Textile｜圣织几何","queryPreview":"Inca textile pattern"}
+{"ts":"2026-03-10T09:23:33.401Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Inca textile pattern","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Inca+textile+pattern&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T09:23:33.864Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":462}
+{"ts":"2026-03-10T09:23:33.865Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":3,"qPreview":"Inca textile pattern"}
+{"ts":"2026-03-10T09:23:33.866Z","where":"taskRunner","event":"runTask.search","id":"59226365-d5ce-4609-b693-e2369f0242c0","direction":"Sacred Textile｜圣织几何","queryPreview":"Tocapu pattern"}
+{"ts":"2026-03-10T09:23:33.866Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Tocapu pattern","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Tocapu+pattern&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T09:23:34.467Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":601}
+{"ts":"2026-03-10T09:23:34.474Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":3,"qPreview":"Tocapu pattern"}
+{"ts":"2026-03-10T09:23:34.475Z","where":"taskRunner","event":"runTask.search","id":"59226365-d5ce-4609-b693-e2369f0242c0","direction":"Mist & Botany｜云雾植谱","queryPreview":"Cantuta flower"}
+{"ts":"2026-03-10T09:23:34.475Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Cantuta flower","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Cantuta+flower&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T09:23:35.286Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":811}
+{"ts":"2026-03-10T09:23:35.289Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":3,"qPreview":"Cantuta flower"}
+{"ts":"2026-03-10T09:23:35.290Z","where":"taskRunner","event":"runTask.stage","id":"59226365-d5ce-4609-b693-e2369f0242c0","stage":"generating_spec","imagesCount":6}
+{"ts":"2026-03-10T09:23:35.292Z","where":"taskRunner","event":"runTask.done","id":"59226365-d5ce-4609-b693-e2369f0242c0","status":"succeeded","durationMs":3030}
+{"ts":"2026-03-10T09:48:12.710Z","where":"Home","event":"submit","requirementLen":84,"styleHintLen":14,"imageCount":6}
+{"ts":"2026-03-10T09:48:13.725Z","where":"Home","event":"submit","requirementLen":84,"styleHintLen":14,"imageCount":6}
+{"ts":"2026-03-10T09:48:15.050Z","where":"Home","event":"submit.error","error":"网络错误：Failed to fetch"}
+{"ts":"2026-03-10T09:48:15.331Z","where":"Home","event":"submit.error","error":"网络错误：Failed to fetch"}
+{"ts":"2026-03-10T09:48:18.214Z","where":"Home","event":"submit","requirementLen":84,"styleHintLen":14,"imageCount":6}
+{"ts":"2026-03-10T09:48:20.575Z","where":"Home","event":"submit.error","error":"网络错误：Failed to fetch"}
+{"ts":"2026-03-10T09:48:23.726Z","where":"Home","event":"submit","requirementLen":84,"styleHintLen":14,"imageCount":6}
+{"ts":"2026-03-10T09:48:26.061Z","where":"Home","event":"submit.error","error":"网络错误：Failed to fetch"}
+{"ts":"2026-03-10T10:12:59.310Z","where":"Home","event":"submit","requirementLen":84,"styleHintLen":14,"imageCount":6}
+{"ts":"2026-03-10T10:12:59.320Z","where":"taskRunner","event":"enqueueTask.created","id":"374dad26-04bf-4b5d-bc1b-aadad1478818","imageCount":6,"hasStyleHint":true,"requirementLen":84}
+{"ts":"2026-03-10T10:12:59.326Z","where":"Home","event":"submit.created","taskId":"374dad26-04bf-4b5d-bc1b-aadad1478818"}
+{"ts":"2026-03-10T10:12:59.327Z","where":"Home","event":"poll.start","id":"374dad26-04bf-4b5d-bc1b-aadad1478818","timeoutMs":60000}
+{"ts":"2026-03-10T10:12:59.334Z","where":"Home","event":"poll.snapshot","id":"374dad26-04bf-4b5d-bc1b-aadad1478818","status":"queued","stage":"generating_spec","imagesCount":0}
+{"ts":"2026-03-10T10:12:59.346Z","where":"taskRunner","event":"runTask.start","id":"374dad26-04bf-4b5d-bc1b-aadad1478818"}
+{"ts":"2026-03-10T10:12:59.346Z","where":"taskRunner","event":"runTask.stage","id":"374dad26-04bf-4b5d-bc1b-aadad1478818","stage":"generating_spec"}
+{"ts":"2026-03-10T10:12:59.347Z","where":"taskRunner","event":"runTask.search","id":"374dad26-04bf-4b5d-bc1b-aadad1478818","direction":"Surging Terraces｜梯田浪涌","queryPreview":"Machu Picchu terraces"}
+{"ts":"2026-03-10T10:12:59.348Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Machu Picchu terraces","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Machu+Picchu+terraces&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T10:12:59.941Z","where":"Home","event":"poll.snapshot","id":"374dad26-04bf-4b5d-bc1b-aadad1478818","status":"running","stage":"searching_images","imagesCount":0}
+{"ts":"2026-03-10T10:13:00.077Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":729}
+{"ts":"2026-03-10T10:13:00.078Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":3,"qPreview":"Machu Picchu terraces"}
+{"ts":"2026-03-10T10:13:00.079Z","where":"taskRunner","event":"runTask.search","id":"374dad26-04bf-4b5d-bc1b-aadad1478818","direction":"Sacred Textile｜圣织几何","queryPreview":"Inca textile pattern"}
+{"ts":"2026-03-10T10:13:00.079Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Inca textile pattern","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Inca+textile+pattern&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T10:13:00.629Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":550}
+{"ts":"2026-03-10T10:13:00.638Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":3,"qPreview":"Inca textile pattern"}
+{"ts":"2026-03-10T10:13:00.638Z","where":"taskRunner","event":"runTask.search","id":"374dad26-04bf-4b5d-bc1b-aadad1478818","direction":"Sacred Textile｜圣织几何","queryPreview":"Tocapu pattern"}
+{"ts":"2026-03-10T10:13:00.638Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Tocapu pattern","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Tocapu+pattern&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T10:13:01.087Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":449}
+{"ts":"2026-03-10T10:13:01.089Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":3,"qPreview":"Tocapu pattern"}
+{"ts":"2026-03-10T10:13:01.089Z","where":"taskRunner","event":"runTask.search","id":"374dad26-04bf-4b5d-bc1b-aadad1478818","direction":"Mist & Botany｜云雾植谱","queryPreview":"Cantuta flower"}
+{"ts":"2026-03-10T10:13:01.089Z","where":"wikimediaSearch","event":"fetch.start","qPreview":"Cantuta flower","limit":2,"url":"https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=Cantuta+flower&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=800&iiurlheight=800"}
+{"ts":"2026-03-10T10:13:01.550Z","where":"wikimediaSearch","event":"fetch.end","ok":true,"status":200,"durationMs":461}
+{"ts":"2026-03-10T10:13:01.553Z","where":"wikimediaSearch","event":"parse.pages","pagesCount":3,"qPreview":"Cantuta flower"}
+{"ts":"2026-03-10T10:13:01.553Z","where":"taskRunner","event":"runTask.stage","id":"374dad26-04bf-4b5d-bc1b-aadad1478818","stage":"generating_spec","imagesCount":6}
+{"ts":"2026-03-10T10:13:01.555Z","where":"taskRunner","event":"runTask.done","id":"374dad26-04bf-4b5d-bc1b-aadad1478818","status":"succeeded","durationMs":2209}
+{"ts":"2026-03-10T10:13:01.790Z","where":"Home","event":"poll.snapshot","id":"374dad26-04bf-4b5d-bc1b-aadad1478818","status":"succeeded","imagesCount":6}
+{"ts":"2026-03-10T10:13:01.790Z","where":"Home","event":"poll.done","id":"374dad26-04bf-4b5d-bc1b-aadad1478818","status":"succeeded","elapsedMs":2463}

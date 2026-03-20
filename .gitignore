@@ -1,0 +1,17 @@
+node_modules/
+dist/
+build/
+.env
+.env.local
+.env.*
+.DS_Store
+*.log
+*.tsbuildinfo
+.vite/
+.cache/
+.pnpm-store/
+.idea/
+.vscode/
+kv-platform/Assets_Library/
+ai-design-platform/api/data/
+*.zip

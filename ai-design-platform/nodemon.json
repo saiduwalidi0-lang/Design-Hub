@@ -1,0 +1,11 @@
+{
+  "watch": ["api/**/*.ts", "api/**/*.mts", "api/**/*.js"],
+  "ext": "ts,mts,js",
+  "ignore": ["api/dist/*"],
+  "exec": "tsx api/server.ts",
+  "env": {
+    "NODE_ENV": "development",
+    "PORT": "3002"
+  },
+  "delay": 1000
+}
