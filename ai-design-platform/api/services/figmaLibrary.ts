@@ -4,6 +4,7 @@ import { parseFigmaFileKey } from './figma.js'
 import { findFigmaCaptionByImageHash, getFigmaCaption, upsertFigmaCaption } from './figmaCaptionStore.js'
 import { downloadImageFromUrl } from './httpImage.js'
 import { sha256Hex } from './imageHash.js'
+import { ensureAssetFile } from './assetStore.js'
 import { normalizeQueryToEnTags } from './queryNormalize.js'
 
 function env(name: string): string | undefined {
@@ -208,6 +209,12 @@ export async function searchFigmaLibrary(input: {
       if (!img) continue
 
       const imageHash = sha256Hex(img.bytes)
+      const assetName = await ensureAssetFile({
+        nameBase: `figma_thumb_${imageHash.slice(0, 16)}`,
+        bytes: img.bytes,
+        contentType: img.contentType,
+      }).catch(() => undefined)
+
       const dup = await findFigmaCaptionByImageHash(imageHash).catch(() => null)
       if (dup?.caption) {
         await upsertFigmaCaption({
@@ -216,6 +223,7 @@ export async function searchFigmaLibrary(input: {
           projectName: x.project,
           fileUrl: x.fileUrl,
           thumbnailUrl: x.thumbnailUrl,
+          assetName: assetName ?? dup.assetName,
           lastModified: x.lastModified,
           imageHash,
           caption: dup.caption,
@@ -232,6 +240,7 @@ export async function searchFigmaLibrary(input: {
         projectName: x.project,
         fileUrl: x.fileUrl,
         thumbnailUrl: x.thumbnailUrl,
+        assetName,
         lastModified: x.lastModified,
         imageHash,
         caption: r.text,

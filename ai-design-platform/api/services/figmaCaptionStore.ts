@@ -8,6 +8,7 @@ type CaptionItem = {
   projectName?: string
   fileUrl: string
   thumbnailUrl?: string
+  assetName?: string
   lastModified?: string
   imageHash?: string
   caption: string
@@ -59,7 +60,10 @@ async function ensureLoaded(): Promise<Persisted> {
 async function flush(): Promise<void> {
   const current = await ensureLoaded()
   const run = async () => {
-    await fs.writeFile(dataFile, JSON.stringify(current, null, 2), 'utf8')
+    const keys = Object.keys(current.items).sort((a, b) => a.localeCompare(b))
+    const sorted: Persisted = { items: {} }
+    for (const k of keys) sorted.items[k] = current.items[k]
+    await fs.writeFile(dataFile, JSON.stringify(sorted, null, 2), 'utf8')
   }
 
   writing = (writing ?? Promise.resolve()).then(run).finally(() => {

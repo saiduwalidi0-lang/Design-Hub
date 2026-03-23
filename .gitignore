@@ -13,5 +13,13 @@ build/
 .idea/
 .vscode/
 kv-platform/Assets_Library/
-ai-design-platform/api/data/
+ai-design-platform/api/data/*
+!ai-design-platform/api/data/figma_captions.json
+!ai-design-platform/api/data/assets/
+ai-design-platform/api/data/assets/*
+!ai-design-platform/api/data/assets/.gitkeep
+!ai-design-platform/api/data/assets/figma_thumb_*.jpg
+!ai-design-platform/api/data/assets/figma_thumb_*.jpeg
+!ai-design-platform/api/data/assets/figma_thumb_*.png
+!ai-design-platform/api/data/assets/figma_thumb_*.webp
 *.zip

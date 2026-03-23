@@ -4,6 +4,7 @@ import { downloadImageFromUrl } from './httpImage.js'
 import { listProjectFiles, listTeamProjects } from './figmaLibrary.js'
 import { getFigmaIndexStatus, setFigmaIndexStatus } from './figmaIndexStore.js'
 import { sha256Hex } from './imageHash.js'
+import { ensureAssetFile } from './assetStore.js'
 
 function env(name: string): string | undefined {
   const v = process.env[name]
@@ -148,6 +149,12 @@ async function runIndex(input: {
         }
 
         const imageHash = sha256Hex(img.bytes)
+        const assetName = await ensureAssetFile({
+          nameBase: `figma_thumb_${imageHash.slice(0, 16)}`,
+          bytes: img.bytes,
+          contentType: img.contentType,
+        }).catch(() => undefined)
+
         const dup = await findFigmaCaptionByImageHash(imageHash).catch(() => null)
         if (dup?.caption) {
           await upsertFigmaCaption({
@@ -156,6 +163,7 @@ async function runIndex(input: {
             projectName: p.name,
             fileUrl: `https://www.figma.com/file/${f.key}/${encodeURIComponent(f.name)}`,
             thumbnailUrl: thumb,
+            assetName: assetName ?? dup.assetName,
             lastModified: f.last_modified,
             imageHash,
             caption: dup.caption,
@@ -179,6 +187,7 @@ async function runIndex(input: {
           projectName: p.name,
           fileUrl: `https://www.figma.com/file/${f.key}/${encodeURIComponent(f.name)}`,
           thumbnailUrl: thumb,
+          assetName,
           lastModified: f.last_modified,
           imageHash,
           caption: r.text,

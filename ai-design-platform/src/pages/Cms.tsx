@@ -8,6 +8,7 @@ type Item = {
   projectName?: string
   fileUrl: string
   thumbnailUrl?: string
+  assetName?: string
   lastModified?: string
   imageHash?: string
   caption: string
@@ -170,7 +171,15 @@ export default function Cms() {
                   return (
                     <tr key={it.fileKey} className="border-t border-white/10 align-top">
                       <td className="w-[140px] px-3 py-3">
-                        {it.thumbnailUrl ? (
+                        {it.assetName ? (
+                          <a href={it.fileUrl} target="_blank" rel="noreferrer" className="block">
+                            <img
+                              src={`/api/assets/${encodeURIComponent(it.assetName)}`}
+                              alt={it.fileName}
+                              className="h-20 w-32 rounded-md border border-white/10 object-cover"
+                            />
+                          </a>
+                        ) : it.thumbnailUrl ? (
                           <a href={it.fileUrl} target="_blank" rel="noreferrer" className="block">
                             <img
                               src={it.thumbnailUrl}
