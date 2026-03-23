@@ -65,6 +65,33 @@
   },
   "kvs": [
     {
+      "id": "17742661845150sd",
+      "published": false,
+      "title": "Test deliver url",
+      "date": "2026-03-23",
+      "region": "GLOBAL",
+      "level": "TOP",
+      "imageUrl": "https://deliver.bytedance.net/kv-platform/git-assets/test.png",
+      "isIP": false,
+      "type": "Key Visual",
+      "gameplay": "",
+      "figmaUrl": "",
+      "categories": {},
+      "images": {
+        "kv": [
+          {
+            "id": "mn349xs3egnpj",
+            "url": "https://deliver.bytedance.net/kv-platform/git-assets/test.png"
+          }
+        ],
+        "h5": [],
+        "banner1029x276": [],
+        "banner750x500": [],
+        "avatarFrame": [],
+        "icons": []
+      }
+    },
+    {
       "id": "1773200769432wz3",
       "published": false,
       "title": "Rising Star - MY",
