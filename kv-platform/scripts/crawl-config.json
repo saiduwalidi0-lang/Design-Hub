@@ -1,0 +1,21 @@
+{
+  "figmaToken": "在这里填入你的 Figma Personal Access Token",
+  "imageScale": 2,
+  "imageFormat": "png",
+  "outputDir": "./output",
+  "files": [
+    {
+      "url": "https://www.figma.com/file/你的FileKey/文件名",
+      "defaultTags": {
+        "theme": "节日",
+        "style": "2DFlat",
+        "colorTone": "Warm",
+        "vibe": "Happy",
+        "element": "Star",
+        "size": "900",
+        "ipCampaign": "NonIP",
+        "collaboration": "Non collaborate"
+      }
+    }
+  ]
+}

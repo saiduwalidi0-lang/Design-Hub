@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["@figma/plugin-typings"],
+    "lib": ["ES2020"],
+    "noEmit": true
+  },
+  "exclude": [],
+  "include": ["src/plugin/**/*.ts"]
+}

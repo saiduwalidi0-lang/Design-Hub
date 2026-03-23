@@ -1,0 +1,16 @@
+{
+  "name": "Design Tools Suite (Dev2)",
+  "api": "1.0.0",
+  "main": "dist/code.js",
+  "ui": "dist/index.html",
+  "editorType": ["figma"],
+  "networkAccess": {
+    "reasoning": "Sync exported assets from Figma to the CMS backend.",
+    "allowedDomains": ["none"],
+    "devAllowedDomains": [
+      "http://localhost:3001",
+      "http://localhost:3002",
+      "http://localhost:3010"
+    ]
+  }
+}
