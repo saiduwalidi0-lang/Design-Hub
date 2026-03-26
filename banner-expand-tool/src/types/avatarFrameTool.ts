@@ -1,5 +1,8 @@
 export type AvatarFrameElementId = "element1" | "element2" | "element3";
 
+/** Avatar auto-cutout after image generation */
+export type AvatarFrameCutoutMethod = "threshold" | "rmbgLocal" | "comfyuiRmbg" | "byteArtist";
+
 export type AvatarFrameElement = {
   id: AvatarFrameElementId;
   label: string;

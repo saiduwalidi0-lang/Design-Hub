@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Plus, Edit2, Trash2, ExternalLink, Settings as SettingsIcon, ChevronDown, Image, Frame, User, Eye, EyeOff, Upload } from 'lucide-react';
 import { AutoRatioImage } from '../components/AutoRatioImage';
+import { cmsApiUrl } from '../cmsApi';
 
 interface KV {
   id: string;
@@ -36,7 +37,7 @@ const KVListPage = () => {
   });
 
   const fetchKVs = () => {
-    fetch('http://localhost:3001/api/kvs')
+    fetch(cmsApiUrl('/api/kvs'))
       .then(res => res.json())
       .then(data => {
         setKvs(data);
@@ -45,7 +46,7 @@ const KVListPage = () => {
   };
 
   const fetchSettings = () => {
-    fetch('http://localhost:3001/api/settings')
+    fetch(cmsApiUrl('/api/settings'))
       .then(res => res.json())
       .then(data => {
         if (data.displayTags) {
@@ -71,7 +72,7 @@ const KVListPage = () => {
 
   const handleDelete = (id: string) => {
     if (window.confirm('Are you sure you want to delete this KV?')) {
-      fetch(`http://localhost:3001/api/kvs/${id}`, {
+      fetch(cmsApiUrl(`/api/kvs/${id}`), {
         method: 'DELETE',
       }).then(() => {
         fetchKVs();
@@ -80,7 +81,7 @@ const KVListPage = () => {
   };
 
   const handleTogglePublish = (id: string) => {
-    fetch(`http://localhost:3001/api/kvs/${id}/publish`, { method: 'PATCH' })
+    fetch(cmsApiUrl(`/api/kvs/${id}/publish`), { method: 'PATCH' })
       .then(res => res.json())
       .then(data => {
         setKvs(prev => prev.map(k => k.id === id ? { ...k, published: data.published } : k));
@@ -97,7 +98,7 @@ const KVListPage = () => {
     };
     setSettings(newSettings);
     
-    fetch('http://localhost:3001/api/settings', {
+    fetch(cmsApiUrl('/api/settings'), {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newSettings)
@@ -123,10 +124,11 @@ const KVListPage = () => {
           </button>
           <Link
             to="/batch-import"
+            title="按文件夹扫描素材，无需 JSON"
             className="bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors shadow-sm"
           >
             <Upload size={20} />
-            批量导入
+            文件夹导入
           </Link>
           <div className="relative" ref={addMenuRef}>
             <button 

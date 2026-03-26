@@ -45,6 +45,15 @@ export default function PageShell(props: PageShellProps) {
               >
                 设置
               </Link>
+              <Link
+                to="/avatar-frame"
+                className={cn(
+                  "rounded-md px-2 py-1 text-sm transition hover:bg-white/10",
+                  location.pathname === "/avatar-frame" && "bg-white/10"
+                )}
+              >
+                头像框
+              </Link>
             </div>
           </div>
 

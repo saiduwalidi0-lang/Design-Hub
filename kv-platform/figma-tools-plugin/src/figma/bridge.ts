@@ -10,18 +10,23 @@ export type PluginRequest =
   | {
       type: 'WRITE_AVATARFRAME_TO_CANVAS';
       frameSize: number;
+      /** 优先作为摆放参考的节点（通常为「读取选区」时的 KV 源）；缺省时用当前单选 */
+      anchorNodeId?: string;
+      boxes?: {
+        element1: { x: number; y: number; width: number; height: number };
+        element2: { x: number; y: number; width: number; height: number };
+        element3?: { x: number; y: number; width: number; height: number } | null;
+      };
       images: {
         element1Png: Uint8Array;
         element2Png: Uint8Array;
-        element3Png: Uint8Array;
-        compositePng: Uint8Array;
+        element3Png?: Uint8Array;
       };
       names?: {
         frame?: string;
         element1?: string;
         element2?: string;
         element3?: string;
-        composite?: string;
       };
     };
 

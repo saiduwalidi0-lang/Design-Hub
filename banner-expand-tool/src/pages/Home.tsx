@@ -7,6 +7,8 @@ import ResultPanel from "@/components/ResultPanel";
 import OutputSelectorPanel from "@/components/OutputSelectorPanel";
 import AvatarFrameEditorPanel from "@/components/AvatarFrameEditorPanel";
 import GeneratePanel from "@/components/GeneratePanel";
+import { MIN_GENERATION_PIXELS } from "@/config/generationLimits";
+import { BANNER_SIZE_OPTIONS, BANNER_SIZE_PRESET_ROWS } from "@/config/bannerSizePresets";
 import { isConfigReady, useBannerToolConfigStore } from "@/store/config";
 import { downloadBlob } from "@/utils/download";
 import {
@@ -23,6 +25,7 @@ import {
 import { AVATAR_FRAME_FIGMA_ALIGN, AVATAR_FRAME_FIGMA_TARGET_FRAME, getScaledFigmaBoxes } from "@/utils/avatarFrameFigmaSpec";
 import { cutoutWithByteArtistAFr } from "@/utils/byteArtistCutout";
 import { cutoutWithComfyUiRmbg } from "@/utils/comfyuiRmbgCutout";
+import { cutoutWithRmbgLocalServer } from "@/utils/rmbgLocalCutout";
 import type { ResultState, UploadState } from "@/types/bannerTool";
 import { generateBannerSet } from "@/utils/bannerGenerate";
 import { makeBannerFilename } from "@/utils/filenames";
@@ -33,9 +36,12 @@ import type { AvatarFrameElementId } from "@/types/avatarFrameTool";
 const DEFAULT_PROMPT =
   "向左扩图成 3000×800 banner，主体内容保持在右侧，左侧保持干净留白或纯背景，不要出现任何新元素/人物/文字；左右过渡自然；去除图中 logo 和标题；整体风格与原图一致，细节真实。";
 
-const SIZE_OPTIONS = ["3712x1000", "3920x944", "4488x824", "2560x1440", "3720x992"];
+type HomeProps = {
+  /** 从 /avatar-frame 进入时默认展开头像框工作流 */
+  initialAvatarFrame?: boolean;
+};
 
-export default function Home() {
+export default function Home({ initialAvatarFrame = false }: HomeProps) {
   const nav = useNavigate();
   const config = useBannerToolConfigStore((s) => s.config);
   const setWatermark = useBannerToolConfigStore((s) => s.setWatermark);
@@ -45,10 +51,12 @@ export default function Home() {
   const [prompt, setPrompt] = useState(DEFAULT_PROMPT);
   const [result, setResult] = useState<ResultState>({ status: "idle" });
   const [bannerCostMs, setBannerCostMs] = useState<number | null>(null);
-  const [selectedSizes, setSelectedSizes] = useState<string[]>(SIZE_OPTIONS);
-  const [chainConsistency, setChainConsistency] = useState(true);
-  const [outputBanner, setOutputBanner] = useState(true);
-  const [outputAvatarFrame, setOutputAvatarFrame] = useState(false);
+  const [bannerDownloadTotalMs, setBannerDownloadTotalMs] = useState<number | null>(null);
+  const [bannerDownloadMsBySize, setBannerDownloadMsBySize] = useState<Record<string, number>>({});
+  const [selectedSizes, setSelectedSizes] = useState<string[]>(BANNER_SIZE_OPTIONS);
+  const [chainConsistency, setChainConsistency] = useState(false);
+  const [outputBanner, setOutputBanner] = useState(!initialAvatarFrame);
+  const [outputAvatarFrame, setOutputAvatarFrame] = useState(initialAvatarFrame);
   const avatar = useAvatarFrameComposer();
   const [activeResultTab, setActiveResultTab] = useState<"banner" | "avatar">("banner");
 
@@ -111,7 +119,11 @@ export default function Home() {
       return;
     }
 
-    setResult((prev) => (outputBanner ? { status: "loading", total: selectedSizes.length, done: 0 } : prev));
+    setResult((prev) =>
+      outputBanner && ready
+        ? { status: "loading", total: selectedSizes.length, done: 0, partialItems: [] }
+        : prev
+    );
     avatar.setResult((prev) => (outputAvatarFrame ? { status: "loading" } : prev));
     setBannerCostMs(null);
     avatar.setCostMs(null);
@@ -119,36 +131,62 @@ export default function Home() {
     const bannerStart = performance.now();
     if (outputBanner) {
       if (!ready) {
-        nav("/settings");
-        return;
-      }
-      if (selectedSizes.length === 0) {
-        setResult({ status: "error", message: "请至少勾选一个输出尺寸" });
-        return;
-      }
+        if (!outputAvatarFrame) {
+          nav("/settings");
+          return;
+        }
+        // 同时勾了头像框：未配 Banner API 时跳过 Banner，仅合成头像框
+      } else {
+        if (selectedSizes.length === 0) {
+          setResult({ status: "error", message: "请至少勾选一个输出尺寸" });
+          return;
+        }
 
-      try {
-        const items = await generateBannerSet({
-          endpoint: config.endpoint,
-          apiKey: config.apiKey,
-          model: config.model,
-          referenceFieldName: config.referenceFieldName,
-          referenceEncoding: config.referenceEncoding,
-          watermark: config.watermark,
-          uploadDataUrl: upload.dataUrl,
-          prompt: prompt.trim().length > 0 ? prompt.trim() : DEFAULT_PROMPT,
-          selectedSizes,
-          chainConsistency,
-          onProgress: ({ total, done, currentSize }) => {
-            setResult({ status: "loading", total, done, currentSize });
-          },
-        });
-        setResult({ status: "success", items });
-        setBannerCostMs(Math.round(performance.now() - bannerStart));
-      } catch (e) {
-        const msg = e instanceof Error ? e.message : "生成失败";
-        setResult({ status: "error", message: msg });
-        setBannerCostMs(Math.round(performance.now() - bannerStart));
+        try {
+          const items = await generateBannerSet({
+            endpoint: config.endpoint,
+            apiKey: config.apiKey,
+            model: config.model,
+            referenceFieldName: config.referenceFieldName,
+            referenceEncoding: config.referenceEncoding,
+            watermark: config.watermark,
+            uploadDataUrl: upload.dataUrl,
+            prompt: prompt.trim().length > 0 ? prompt.trim() : DEFAULT_PROMPT,
+            selectedSizes,
+            chainConsistency,
+            onProgress: ({ total, done, currentSize }) => {
+              setResult((prev) => ({
+                status: "loading",
+                total,
+                done,
+                currentSize,
+                partialItems: prev.status === "loading" ? prev.partialItems : [],
+              }));
+            },
+            onItemComplete: (doneItems) => {
+              setResult((prev) =>
+                prev.status === "loading"
+                  ? { ...prev, partialItems: doneItems, done: doneItems.length }
+                  : prev
+              );
+            },
+          });
+          setResult({ status: "success", items });
+          setBannerCostMs(Math.round(performance.now() - bannerStart));
+          setBannerDownloadTotalMs(null);
+          setBannerDownloadMsBySize({});
+        } catch (e) {
+          const msg = e instanceof Error ? e.message : "生成失败";
+          setResult((prev) => {
+            if (prev.status === "loading" && prev.partialItems?.length) {
+              for (const it of prev.partialItems) {
+                if (it.previewUrl.startsWith("blob:")) URL.revokeObjectURL(it.previewUrl);
+              }
+            }
+            return { status: "error", message: msg };
+          });
+          setBannerCostMs(Math.round(performance.now() - bannerStart));
+        }
       }
     }
 
@@ -174,11 +212,10 @@ export default function Home() {
     }
     if (!w || !h) throw new Error("无法读取图片尺寸");
 
-    const minPixels = 3686400;
     const baseRequestW = 1024;
     const baseRequestH = Math.max(1, Math.round((baseRequestW * h) / Math.max(1, w)));
     const basePixels = baseRequestW * baseRequestH;
-    const scale = basePixels >= minPixels ? 1 : Math.sqrt(minPixels / Math.max(1, basePixels));
+    const scale = basePixels >= MIN_GENERATION_PIXELS ? 1 : Math.sqrt(MIN_GENERATION_PIXELS / Math.max(1, basePixels));
 
     const align = (n: number) => Math.max(64, Math.ceil(n / 64) * 64);
     const requestW = align(baseRequestW * scale);
@@ -209,7 +246,7 @@ export default function Home() {
       const sizeIssue = /`?size`?|pixels|\u50cf\u7d20|\u5c3a\u5bf8/i.test(msg);
       if (!sizeIssue) throw e;
 
-      const factor = Math.sqrt(minPixels / Math.max(1, w * h));
+      const factor = Math.sqrt(MIN_GENERATION_PIXELS / Math.max(1, w * h));
       const scaleUp = factor > 1 ? factor : 1;
       const fallbackW = align(w * scaleUp);
       const fallbackH = align(h * scaleUp);
@@ -236,6 +273,9 @@ export default function Home() {
     const resizedDataUrl = await resizeImageDataUrlExact(rawDataUrl, w, h);
     const dataUrl = await (async () => {
       if (!avatar.autoCutout) return resizedDataUrl;
+      if (avatar.cutoutMethod === "rmbgLocal") {
+        return await cutoutWithRmbgLocalServer(resizedDataUrl);
+      }
       if (avatar.cutoutMethod === "comfyuiRmbg") {
         return await cutoutWithComfyUiRmbg(resizedDataUrl, {
           model: avatar.comfyuiModel,
@@ -283,15 +323,26 @@ export default function Home() {
     );
   }
 
+  function bannerItemsForDownload() {
+    if (result.status === "success") return result.items;
+    if (result.status === "loading" && result.partialItems?.length) return result.partialItems;
+    return [];
+  }
+
   function onDownloadOne(size: string) {
-    if (result.status !== "success") return;
-    const item = result.items.find((it) => it.size === size);
+    const list = bannerItemsForDownload();
+    const item = list.find((it) => it.size === size);
     if (!item) return;
+    const start = performance.now();
     if (item.blob) {
       downloadBlob(item.blob, makeBannerFilename(item.size));
+      setBannerDownloadMsBySize((prev) => ({ ...prev, [size]: Math.round(performance.now() - start) }));
       return;
     }
-    if (item.remoteUrl) window.open(item.remoteUrl, "_blank", "noopener,noreferrer");
+    if (item.remoteUrl) {
+      window.open(item.remoteUrl, "_blank", "noopener,noreferrer");
+      setBannerDownloadMsBySize((prev) => ({ ...prev, [size]: Math.round(performance.now() - start) }));
+    }
   }
 
   function onDownloadAvatar(kind: "frame" | "composite") {
@@ -299,12 +350,17 @@ export default function Home() {
   }
 
   async function onDownloadAll() {
-    if (result.status !== "success") return;
-    for (const it of result.items) {
+    const list = bannerItemsForDownload();
+    if (list.length === 0) return;
+    const startAll = performance.now();
+    for (const it of list) {
+      const start = performance.now();
       if (it.blob) downloadBlob(it.blob, makeBannerFilename(it.size));
       else if (it.remoteUrl) window.open(it.remoteUrl, "_blank", "noopener,noreferrer");
+      setBannerDownloadMsBySize((prev) => ({ ...prev, [it.size]: Math.round(performance.now() - start) }));
       await new Promise((r) => setTimeout(r, 350));
     }
+    setBannerDownloadTotalMs(Math.round(performance.now() - startAll));
   }
 
   return (
@@ -345,7 +401,8 @@ export default function Home() {
             <ParamsPanel
               prompt={prompt}
               setPrompt={setPrompt}
-              sizeOptions={SIZE_OPTIONS}
+              sizeRows={BANNER_SIZE_PRESET_ROWS}
+              sizeOptions={BANNER_SIZE_OPTIONS}
               selectedSizes={selectedSizes}
               toggleSize={toggleSize}
               chainConsistency={chainConsistency}
@@ -420,6 +477,9 @@ export default function Home() {
           onDownloadOne={onDownloadOne}
           onDownloadAll={onDownloadAll}
           onDownloadAvatar={onDownloadAvatar}
+          bannerGenerateTotalMs={bannerCostMs}
+          bannerDownloadTotalMs={bannerDownloadTotalMs}
+          bannerDownloadMsBySize={bannerDownloadMsBySize}
         />
       </div>
     </PageShell>

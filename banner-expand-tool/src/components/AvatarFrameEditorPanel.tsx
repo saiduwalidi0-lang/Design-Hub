@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import AvatarFrameElementCard from "@/components/AvatarFrameElementCard";
 import AvatarFramePreviewCard from "@/components/AvatarFramePreviewCard";
-import type { AvatarFrameElement, AvatarFrameElementId } from "@/types/avatarFrameTool";
+import type { AvatarFrameCutoutMethod, AvatarFrameElement, AvatarFrameElementId } from "@/types/avatarFrameTool";
 import { fileToDataUrl } from "@/utils/image";
-git remote add origin https://github.com/saiduwalidi0-lang/Design-Hub.gitimport { dataUrlToBlob } from "@/utils/image";
+import { dataUrlToBlob } from "@/utils/image";
 import { renderAvatarFrameToCanvas } from "@/utils/avatarFrameRender";
 import Button from "@/components/Button";
 import { buildAvatarFrameCandidates } from "@/utils/avatarFramePresets";
@@ -38,8 +38,8 @@ type AvatarFrameEditorPanelProps = {
   onShowAvatarResult: () => void;
   autoCutout: boolean;
   setAutoCutout: (v: boolean) => void;
-  cutoutMethod: "threshold" | "comfyuiRmbg" | "byteArtist";
-  setCutoutMethod: (v: "threshold" | "comfyuiRmbg" | "byteArtist") => void;
+  cutoutMethod: AvatarFrameCutoutMethod;
+  setCutoutMethod: (v: AvatarFrameCutoutMethod) => void;
   cutoutThreshold: number;
   setCutoutThreshold: (v: number) => void;
 
@@ -273,21 +273,25 @@ export default function AvatarFrameEditorPanel(props: AvatarFrameEditorPanelProp
     props.setOrder(moveInArray(props.order, idx, nextIdx));
   }
 
-  async function runAiEdit(id: AvatarFrameElementId, instructionOverride?: string) {
+  async function runAiEdit(
+    id: AvatarFrameElementId,
+    instructionOverride?: string
+  ): Promise<{ ok: true } | { ok: false; message: string }> {
     const instruction = (instructionOverride ?? aiPrompts[id] ?? "").trim();
     if (!instruction) {
-      setAiError((m) => ({ ...m, [id]: "请输入描述词" }));
-      return false;
+      const msg = "请输入描述词";
+      setAiError((m) => ({ ...m, [id]: msg }));
+      return { ok: false, message: msg };
     }
     setAiError((m) => ({ ...m, [id]: undefined }));
     setAiLoading((m) => ({ ...m, [id]: true }));
     try {
       await props.onAiEditElement(id, instruction);
-      return true;
+      return { ok: true };
     } catch (e) {
       const msg = e instanceof Error ? e.message : "AI 编辑失败";
       setAiError((m) => ({ ...m, [id]: msg }));
-      return false;
+      return { ok: false, message: msg };
     } finally {
       setAiLoading((m) => ({ ...m, [id]: false }));
     }
@@ -311,13 +315,13 @@ export default function AvatarFrameEditorPanel(props: AvatarFrameEditorPanelProp
       let okAll = true;
       for (const id of targets) {
         const p = (aiPrompts[id] ?? "").trim();
-        const ok = await runAiEdit(id, p);
+        const r = await runAiEdit(id, p);
         done += 1;
         setAiBatchProgress({ done, total: targets.length });
-        if (!ok) {
+        if (r.ok === false) {
           okAll = false;
           const label = id === "element1" ? "主元素" : id === "element2" ? "环绕元素" : "顶部元素";
-          setAiBatchError(`${label} 生成失败，请展开查看错误信息`);
+          setAiBatchError(`${label} 生成失败：${r.message}`);
           break;
         }
       }
@@ -517,16 +521,17 @@ export default function AvatarFrameEditorPanel(props: AvatarFrameEditorPanelProp
               <select
                 value={props.cutoutMethod}
                 onChange={(e) => {
-                  const v = e.target.value;
-                  if (v === "byteArtist") props.setCutoutMethod("byteArtist");
-                  else if (v === "comfyuiRmbg") props.setCutoutMethod("comfyuiRmbg");
-                  else props.setCutoutMethod("threshold");
+                  const v = e.target.value as AvatarFrameCutoutMethod;
+                  if (v === "byteArtist" || v === "comfyuiRmbg" || v === "rmbgLocal" || v === "threshold") {
+                    props.setCutoutMethod(v);
+                  }
                 }}
                 disabled={props.disabled}
                 className="w-full rounded-md border border-white/15 bg-zinc-950 px-3 py-2 text-sm text-zinc-50 outline-none transition focus:border-indigo-500/60"
               >
                 <option value="threshold">去黑底（快速）</option>
-                <option value="comfyuiRmbg">本地 ComfyUI RMBG-2.0（推荐）</option>
+                <option value="rmbgLocal">本地 RMBG-2.0（Python 服务，无 ComfyUI）</option>
+                <option value="comfyuiRmbg">本地 ComfyUI RMBG-2.0</option>
                 <option value="byteArtist">ByteArtist 背景移除（AFR / image_clip）</option>
               </select>
             </label>
@@ -544,6 +549,27 @@ export default function AvatarFrameEditorPanel(props: AvatarFrameEditorPanelProp
                   disabled={props.disabled}
                 />
                 <div className="w-10 text-right text-xs text-zinc-200">{props.cutoutThreshold}</div>
+              </div>
+            ) : props.cutoutMethod === "rmbgLocal" ? (
+              <div className="grid gap-2 text-xs text-zinc-500">
+                <p>
+                  需另开终端启动仓库内 Python 服务（默认{" "}
+                  <code className="rounded bg-black/40 px-1 text-zinc-300">127.0.0.1:8765</code>
+                  ）。模型在 Hugging Face 为<strong className="text-zinc-300">门控仓库</strong>
+                  ，须先在网页同意访问并用 <code className="text-zinc-400">hf auth login</code> 或{" "}
+                  <code className="text-zinc-400">HF_TOKEN</code> 登录后再启动服务。
+                </p>
+                <pre className="overflow-x-auto rounded-md border border-white/10 bg-black/30 p-2 text-[11px] leading-relaxed text-zinc-400">
+                  {`cd rmbg-local-server
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+python server.py`}
+                </pre>
+                <p className="text-zinc-500">
+                  前端通过 Vite 将 <code className="text-zinc-400">/api/rmbg-local</code> 代理到该端口；可在{" "}
+                  <code className="text-zinc-400">.env.local</code> 中设置{" "}
+                  <code className="text-zinc-400">VITE_RMBG_LOCAL_SERVER</code>。
+                </p>
               </div>
             ) : props.cutoutMethod === "comfyuiRmbg" ? (
               <div className="grid gap-2">
@@ -664,7 +690,9 @@ export default function AvatarFrameEditorPanel(props: AvatarFrameEditorPanelProp
                 setAiPrompt={(v) => setAiPrompts((m) => ({ ...m, [id]: v }))}
                 aiLoading={aiLoading[id] ?? false}
                 aiError={aiError[id]}
-                onAiEdit={() => void runAiEdit(id)}
+                onAiEdit={() => {
+                  void runAiEdit(id);
+                }}
                 disableTransforms={strictMode}
                 onExpand={() => setExpanded(id)}
                 onMoveUp={() => moveLayer(id, -1)}

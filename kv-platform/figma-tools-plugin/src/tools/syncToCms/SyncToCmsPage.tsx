@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, CloudUpload, Loader2, RefreshCw } from 'lucide-react';
 import { onPluginMessage, postToPlugin, type ExportMode, type ExportedNodeMeta } from '@/figma/bridge';
+import { useNavigation } from '@/router';
 import { useCmsSettings } from '@/stores/cmsSettings';
 import { buildImportPayload, type ExportedItem } from '@/tools/syncToCms/buildImportPayload';
 
@@ -12,6 +13,7 @@ type ExportState =
   | { status: 'error'; message: string };
 
 export function SyncToCmsPage() {
+  const { navigate } = useNavigation();
   const { baseUrl, token, setBaseUrl, setToken } = useCmsSettings();
   const [mode, setMode] = useState<ExportMode>('selection');
   const [scale, setScale] = useState<number>(2);
@@ -149,9 +151,14 @@ export function SyncToCmsPage() {
   return (
     <div className="min-h-screen bg-white">
       <div className="px-4 py-3 border-b border-gray-200 flex items-center gap-2">
-        <a href="#/" className="p-1.5 rounded-md hover:bg-gray-100 text-gray-700">
+        <button
+          type="button"
+          aria-label="返回"
+          onClick={() => navigate('/')}
+          className="p-1.5 rounded-md hover:bg-gray-100 text-gray-700"
+        >
           <ArrowLeft size={16} />
-        </a>
+        </button>
         <div className="min-w-0">
           <div className="text-sm font-semibold text-gray-900">同步到 CMS</div>
           <div className="text-[11px] text-gray-500 truncate">{fileKey ? `Figma file: ${fileKey}` : '未获取到 fileKey（本地预览可忽略）'}</div>

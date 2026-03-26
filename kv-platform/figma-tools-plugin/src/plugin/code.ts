@@ -10,18 +10,23 @@ type PluginRequest =
   | {
       type: 'WRITE_AVATARFRAME_TO_CANVAS';
       frameSize: number;
+      anchorNodeId?: string;
+      /** 270 坐标系下的矩形；缺省用 L 档默认框位 */
+      boxes?: {
+        element1: { x: number; y: number; width: number; height: number };
+        element2: { x: number; y: number; width: number; height: number };
+        element3?: { x: number; y: number; width: number; height: number } | null;
+      };
       images: {
         element1Png: Uint8Array;
         element2Png: Uint8Array;
-        element3Png: Uint8Array;
-        compositePng: Uint8Array;
+        element3Png?: Uint8Array;
       };
       names?: {
         frame?: string;
         element1?: string;
         element2?: string;
         element3?: string;
-        composite?: string;
       };
     };
 
@@ -111,6 +116,12 @@ function isFrameLike(node: SceneNode): node is FrameLikeNode {
   return node.type === 'FRAME' || node.type === 'COMPONENT' || node.type === 'INSTANCE' || node.type === 'GROUP';
 }
 
+/** 任意可 exportAsync(PNG) 的图层均可作为 KV 源，不限制比例与是否 Frame */
+function isKvExportRoot(node: SceneNode): boolean {
+  const ex = node as unknown as { exportAsync?: (s: ExportSettings) => Promise<Uint8Array> };
+  return typeof ex.exportAsync === 'function';
+}
+
 function buildKvSpec(root: SceneNode) {
   const out: KvNode[] = [];
   const rootPos = root as unknown as { x?: number; y?: number; width?: number; height?: number };
@@ -168,13 +179,16 @@ function buildKvSpec(root: SceneNode) {
 async function exportKvFromSelection(scale: number) {
   const selection = figma.currentPage.selection;
   if (!selection || selection.length !== 1) {
-    figma.ui.postMessage({ type: 'KV_EXPORT_ERROR', message: '请选择一个 Frame/Group（仅支持单选）' } satisfies PluginResponse);
+    figma.ui.postMessage({ type: 'KV_EXPORT_ERROR', message: '请选择一个图层（仅支持单选）' } satisfies PluginResponse);
     return;
   }
 
   const node = selection[0];
-  if (!isFrameLike(node)) {
-    figma.ui.postMessage({ type: 'KV_EXPORT_ERROR', message: '选中节点需为 Frame/Group/Component/Instance' } satisfies PluginResponse);
+  if (!isKvExportRoot(node)) {
+    figma.ui.postMessage({
+      type: 'KV_EXPORT_ERROR',
+      message: '当前选中节点无法导出为 PNG，请选 Frame、编组、组件实例、形状、矢量、图片、文本等可导出图层',
+    } satisfies PluginResponse);
     return;
   }
 
@@ -228,9 +242,14 @@ function setImageFill(node: GeometryMixin, bytes: Uint8Array) {
 function createAvatarFrame(spec: {
   frameName: string;
   frameSize: number;
-  elementNames: { element1: string; element2: string; element3: string; composite: string };
-  images: { element1Png: Uint8Array; element2Png: Uint8Array; element3Png: Uint8Array; compositePng: Uint8Array };
+  elementNames: { element1: string; element2: string; element3: string };
+  images: { element1Png: Uint8Array; element2Png: Uint8Array; element3Png?: Uint8Array };
   anchorNode: SceneNode | null;
+  boxes?: {
+    element1: { x: number; y: number; width: number; height: number };
+    element2: { x: number; y: number; width: number; height: number };
+    element3?: { x: number; y: number; width: number; height: number } | null;
+  };
 }) {
   const size = Math.max(1, Math.round(spec.frameSize));
   const frame = figma.createFrame();
@@ -246,39 +265,43 @@ function createAvatarFrame(spec: {
     frame.y = Math.round(a.y ?? 0);
   }
 
-  const element1 = figma.createRectangle();
-  element1.name = spec.elementNames.element1;
-  element1.x = 87;
-  element1.y = 171;
-  element1.resize(96, 96);
-  setImageFill(element1, spec.images.element1Png);
-  safeAppend(frame, element1);
+  const bx = spec.boxes;
+  const b1 = bx?.element1 ?? { x: 87, y: 171, width: 96, height: 96 };
+  const b2 = bx?.element2 ?? { x: 15, y: 171, width: 240, height: 96 };
+  const b3 = bx?.element3;
 
+  // 子图层顺序 = 从下到上：环绕 -> 主元素 -> 顶部（最顶层）
   const element2 = figma.createRectangle();
   element2.name = spec.elementNames.element2;
-  element2.x = 15;
-  element2.y = 171;
-  element2.resize(240, 96);
+  element2.x = b2.x;
+  element2.y = b2.y;
+  element2.resize(Math.max(1, b2.width), Math.max(1, b2.height));
   setImageFill(element2, spec.images.element2Png);
   safeAppend(frame, element2);
 
-  const element3 = figma.createRectangle();
-  element3.name = spec.elementNames.element3;
-  element3.x = 75;
-  element3.y = 3;
-  element3.resize(120, 42);
-  setImageFill(element3, spec.images.element3Png);
-  safeAppend(frame, element3);
+  const element1 = figma.createRectangle();
+  element1.name = spec.elementNames.element1;
+  element1.x = b1.x;
+  element1.y = b1.y;
+  element1.resize(Math.max(1, b1.width), Math.max(1, b1.height));
+  setImageFill(element1, spec.images.element1Png);
+  safeAppend(frame, element1);
 
-  const composite = figma.createRectangle();
-  composite.name = spec.elementNames.composite;
-  composite.x = 0;
-  composite.y = 0;
-  composite.resize(size, size);
-  setImageFill(composite, spec.images.compositePng);
-  composite.opacity = 0.25;
-  composite.locked = true;
-  safeAppend(frame, composite);
+  const hasTop =
+    b3 &&
+    b3.width >= 1 &&
+    b3.height >= 1 &&
+    spec.images.element3Png &&
+    spec.images.element3Png.byteLength > 0;
+  if (hasTop && b3) {
+    const element3 = figma.createRectangle();
+    element3.name = spec.elementNames.element3;
+    element3.x = b3.x;
+    element3.y = b3.y;
+    element3.resize(Math.max(1, b3.width), Math.max(1, b3.height));
+    setImageFill(element3, spec.images.element3Png as Uint8Array);
+    safeAppend(frame, element3);
+  }
 
   return frame;
 }
@@ -437,7 +460,16 @@ figma.ui.onmessage = async (msg: PluginRequest) => {
     }
     if (msg.type === 'WRITE_AVATARFRAME_TO_CANVAS') {
       const selection = figma.currentPage.selection;
-      const anchor = selection && selection.length === 1 ? selection[0] : null;
+      let anchor: SceneNode | null = null;
+      if (msg.anchorNodeId) {
+        try {
+          const n = figma.getNodeById(msg.anchorNodeId);
+          if (n && n.type !== 'DOCUMENT' && n.type !== 'PAGE') anchor = n as SceneNode;
+        } catch {
+          anchor = null;
+        }
+      }
+      if (!anchor && selection && selection.length === 1) anchor = selection[0];
       const parentNode = anchor?.parent;
       const parent = (parentNode && 'appendChild' in parentNode ? (parentNode as BaseNode & ChildrenMixin) : figma.currentPage) as BaseNode & ChildrenMixin;
       const names = msg.names || {};
@@ -449,10 +481,10 @@ figma.ui.onmessage = async (msg: PluginRequest) => {
           element1: names.element1 || '主元素',
           element2: names.element2 || '环绕元素',
           element3: names.element3 || '顶部元素',
-          composite: names.composite || '_合成参考',
         },
         images: msg.images,
         anchorNode: anchor,
+        boxes: msg.boxes,
       });
 
       safeAppend(parent, frame);

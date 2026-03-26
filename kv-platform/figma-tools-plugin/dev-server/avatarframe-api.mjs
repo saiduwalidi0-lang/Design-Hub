@@ -74,25 +74,41 @@ function makeElementPng(w, h, baseColor, accentColor) {
   return png;
 }
 
-function makeCompositePng(size, boxes, images) {
-  const png = new PNG({ width: size, height: size });
+function scaleBox(box, sx, sy) {
+  return {
+    x: Math.round(box.x * sx),
+    y: Math.round(box.y * sy),
+    width: Math.round(box.width * sx),
+    height: Math.round(box.height * sy),
+  };
+}
+
+/** boxes 为 Figma 270 画布坐标；composite 为 target×target 时先按比例放大框 */
+function makeCompositePng(targetSize, boxesLogical, images, scaleFromFigma = { w: 270, h: 270 }) {
+  const png = new PNG({ width: targetSize, height: targetSize });
   fill(png, rgba(0, 0, 0, 0));
-  const order = ['element2', 'element3', 'element1'];
+  const sx = targetSize / Math.max(1, scaleFromFigma.w);
+  const sy = targetSize / Math.max(1, scaleFromFigma.h);
+  const boxes = {};
+  for (const id of ['element1', 'element2', 'element3']) {
+    if (boxesLogical[id]) boxes[id] = scaleBox(boxesLogical[id], sx, sy);
+  }
+  const order = ['element2', 'element1', 'element3'];
   for (const id of order) {
     const box = boxes[id];
     const src = images[id];
-    if (!box || !src) continue;
+    if (!box || !src || box.width < 1 || box.height < 1) continue;
     const srcPng = PNG.sync.read(Buffer.from(src, 'base64'));
-    const sx = srcPng.width;
-    const sy = srcPng.height;
+    const sw = srcPng.width;
+    const sh = srcPng.height;
     for (let y = 0; y < box.height; y += 1) {
       for (let x = 0; x < box.width; x += 1) {
         const tx = box.x + x;
         const ty = box.y + y;
         if (tx < 0 || ty < 0 || tx >= png.width || ty >= png.height) continue;
-        const px = Math.min(sx - 1, Math.max(0, Math.round((x / box.width) * (sx - 1))));
-        const py = Math.min(sy - 1, Math.max(0, Math.round((y / box.height) * (sy - 1))));
-        const si = (sx * py + px) << 2;
+        const px = Math.min(sw - 1, Math.max(0, Math.round((x / box.width) * (sw - 1))));
+        const py = Math.min(sh - 1, Math.max(0, Math.round((y / box.height) * (sh - 1))));
+        const si = (sw * py + px) << 2;
         const sr = srcPng.data[si];
         const sg = srcPng.data[si + 1];
         const sb = srcPng.data[si + 2];
@@ -117,7 +133,8 @@ function makeCompositePng(size, boxes, images) {
   return png;
 }
 
-const PORT = 3001;
+// 与 cms-admin / CMS 的 3001 错开；插件默认 baseUrl 为 http://localhost:3010
+const PORT = 3010;
 
 const server = http.createServer(async (req, res) => {
   if (req.method === 'OPTIONS') {
@@ -139,15 +156,29 @@ const server = http.createServer(async (req, res) => {
     const body = await parseJsonBody(req);
     const spec = body?.spec;
     const target = spec?.targetFrame?.width || 1024;
-    const boxes = spec?.boxes || {
-      element1: { x: 330, y: 649, width: 364, height: 364 },
-      element2: { x: 57, y: 649, width: 910, height: 364 },
-      element3: { x: 284, y: 11, width: 455, height: 159 },
+    const ff = spec?.figmaFrame || { width: 270, height: 270 };
+    const def = {
+      element1: { x: 87, y: 171, width: 96, height: 96 },
+      element2: { x: 15, y: 171, width: 240, height: 96 },
+      element3: { x: 75, y: 3, width: 120, height: 42 },
+    };
+    const raw = spec?.boxes || {};
+    const boxes = {
+      element1: raw.element1 || def.element1,
+      element2: raw.element2 || def.element2,
+      element3: raw.element3 !== undefined && raw.element3 !== null ? raw.element3 : { x: 0, y: 0, width: 0, height: 0 },
     };
 
     const e1 = makeElementPng(boxes.element1.width, boxes.element1.height, rgba(255, 64, 64), rgba(255, 180, 64));
     const e2 = makeElementPng(boxes.element2.width, boxes.element2.height, rgba(64, 128, 255), rgba(64, 220, 255));
-    const e3 = makeElementPng(boxes.element3.width, boxes.element3.height, rgba(144, 64, 255), rgba(255, 64, 200));
+    const e3 =
+      boxes.element3.width > 0 && boxes.element3.height > 0
+        ? makeElementPng(boxes.element3.width, boxes.element3.height, rgba(144, 64, 255), rgba(255, 64, 200))
+        : (() => {
+            const p = new PNG({ width: 1, height: 1 });
+            fill(p, rgba(0, 0, 0, 0));
+            return p;
+          })();
 
     const element1DataUrl = dataUrlFromPng(e1);
     const element2DataUrl = dataUrlFromPng(e2);
@@ -159,7 +190,7 @@ const server = http.createServer(async (req, res) => {
       element3: Buffer.from(element3DataUrl.split(',')[1] || '', 'base64').toString('base64'),
     };
 
-    const composite = makeCompositePng(target, boxes, images);
+    const composite = makeCompositePng(target, boxes, images, { w: ff.width || 270, h: ff.height || 270 });
     const compositeDataUrl = dataUrlFromPng(composite);
 
     sendJson(res, 200, { element1DataUrl, element2DataUrl, element3DataUrl, compositeDataUrl });

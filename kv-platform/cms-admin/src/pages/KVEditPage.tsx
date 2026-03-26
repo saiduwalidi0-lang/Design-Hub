@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Save, Plus, X, Loader2, Check, Trash2 } from 'lucide-react';
 import { ImageUploadGroup, FileUploadButton, type ImageItem } from '../components/ImageUploadGroup';
 import { AutoRatioImage } from '../components/AutoRatioImage';
+import { cmsApiUrl, readCMSJson } from '../cmsApi';
 
 interface TagOptions {
   [key: string]: string[];
@@ -109,12 +110,12 @@ const KVEditPage = () => {
   const [figmaFileName, setFigmaFileName] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/tag-options')
+    fetch(cmsApiUrl('/api/tag-options'))
       .then(res => res.json())
       .then(data => setTagOptions(data));
 
     if (isEditing) {
-      fetch(`http://localhost:3001/api/kvs/${id}`)
+      fetch(cmsApiUrl(`/api/kvs/${id}`))
         .then(res => res.json())
         .then(data => {
           setFormData({
@@ -146,12 +147,12 @@ const KVEditPage = () => {
     localStorage.setItem('figma_token', figmaToken);
 
     try {
-      const res = await fetch('http://localhost:3001/api/figma-sync', {
+      const res = await fetch(cmsApiUrl('/api/figma-sync'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ figmaUrl: figmaInput, token: figmaToken })
       });
-      const data = await res.json();
+      const data = await readCMSJson<{ error?: string; frames?: FigmaFrame[]; fileName?: string }>(res);
       if (!res.ok) { setSyncError(data.error || 'Sync failed'); return; }
       setFigmaFrames(data.frames || []);
       setFigmaFileName(data.fileName || '');
@@ -185,8 +186,8 @@ const KVEditPage = () => {
     if (files.length === 0) return [];
     const formData = new FormData();
     files.forEach(f => formData.append('files', f));
-    const res = await fetch('http://localhost:3001/api/upload', { method: 'POST', body: formData });
-    const data = await res.json();
+    const res = await fetch(cmsApiUrl('/api/upload'), { method: 'POST', body: formData });
+    const data = await readCMSJson<{ urls?: string[] }>(res);
     return data.urls || [];
   }, []);
 
@@ -225,7 +226,7 @@ const KVEditPage = () => {
     const primaryImage = images.kv[0]?.url || '';
     const payload = { ...formData, imageUrl: primaryImage, images };
 
-    const url = isEditing ? `http://localhost:3001/api/kvs/${id}` : 'http://localhost:3001/api/kvs';
+    const url = isEditing ? cmsApiUrl(`/api/kvs/${id}`) : cmsApiUrl('/api/kvs');
     const method = isEditing ? 'PUT' : 'POST';
     fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
       .then(() => navigate('/'));
@@ -245,7 +246,7 @@ const KVEditPage = () => {
 
   const handleAddNewTag = (category: string) => {
     if (!newValue.trim()) return;
-    fetch(`http://localhost:3001/api/tag-options/${category}`, {
+    fetch(cmsApiUrl(`/api/tag-options/${category}`), {
       method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ value: newValue.trim() })
     })
       .then(res => res.json())

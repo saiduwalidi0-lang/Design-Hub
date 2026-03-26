@@ -4,6 +4,7 @@ build/
 .env
 .env.local
 .env.*
+.feishu-bot.env
 .DS_Store
 *.log
 *.tsbuildinfo

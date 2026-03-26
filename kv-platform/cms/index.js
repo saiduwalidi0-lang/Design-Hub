@@ -20,6 +20,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 
+const PNG = require('pngjs').PNG;
+
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => cb(null, uploadsDir),
   filename: (_req, file, cb) => {
@@ -675,6 +677,207 @@ function classifyBySize(width, height) {
   }
   return null;
 }
+
+// ── 从本地 git-assets 导入（与 Figma 爬取输出目录结构一致）────────────────
+
+const KNOWN_CMS_REGIONS = new Set(['GLOBAL', 'US', 'EU', 'SEA', 'NEA', 'CN', 'LATAM', 'MENA', 'ANZ']);
+
+function normalizeCmsRegion(r) {
+  const u = String(r || '').trim().toUpperCase();
+  if (!u) return 'GLOBAL';
+  if (KNOWN_CMS_REGIONS.has(u)) return u;
+  if (['MY', 'TH', 'PH', 'VN', 'ID', 'SG'].includes(u)) return 'SEA';
+  return 'SEA';
+}
+
+function normActivityTitle(s) {
+  return String(s || '').replace(/\s+/g, ' ').trim();
+}
+
+function readGitAssetsManifestMap(gitRoot) {
+  const p = path.join(gitRoot, 'manifest.json');
+  const map = {};
+  if (!fs.existsSync(p)) return map;
+  try {
+    const m = JSON.parse(fs.readFileSync(p, 'utf8'));
+    for (const it of m.items || []) {
+      const k = normActivityTitle(it.title);
+      if (k) map[k] = it;
+    }
+  } catch (e) {
+    console.warn('git-assets manifest.json skipped:', e.message);
+  }
+  return map;
+}
+
+function findSubdirCaseInsensitive(activityPath, targetName) {
+  if (!fs.existsSync(activityPath)) return null;
+  const want = String(targetName || '').toLowerCase();
+  const entries = fs.readdirSync(activityPath, { withFileTypes: true });
+  const hit = entries.find((d) => d.isDirectory() && d.name.toLowerCase() === want);
+  return hit ? path.join(activityPath, hit.name) : null;
+}
+
+function listPngsInDir(dir) {
+  if (!dir || !fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) return [];
+  return fs
+    .readdirSync(dir)
+    .filter((f) => /\.png$/i.test(f))
+    .map((f) => path.join(dir, f))
+    .sort();
+}
+
+function copyGitAssetToUploads(srcPath) {
+  const ext = path.extname(srcPath) || '.png';
+  const destName = `ga-${Date.now()}-${Math.random().toString(36).slice(2, 10)}${ext}`;
+  fs.copyFileSync(srcPath, path.join(uploadsDir, destName));
+  return `http://localhost:${PORT}/uploads/${destName}`;
+}
+
+function newKvImageItem(url) {
+  return { id: Date.now().toString(36) + Math.random().toString(36).slice(2, 12), url };
+}
+
+function classifyGitAssetBannerSlot(filePath, baseName) {
+  const compact = baseName.replace(/\s/g, '');
+  if (/1029.*276|1029_276/i.test(compact)) return 'banner1029x276';
+  if (/750.*200|750_200/i.test(compact)) return 'banner750x500';
+  const dim = getPngDimensions(filePath);
+  if (dim) {
+    const t = classifyBySize(dim.width, dim.height);
+    if (t === 'banner1029x276' || t === 'banner750x500') return t;
+    const r = dim.width / Math.max(1, dim.height);
+    if (r >= 3.2 && dim.height <= 420) return 'banner750x500';
+    if (r >= 2.4 && dim.height <= 360) return 'banner1029x276';
+  }
+  return 'banner1029x276';
+}
+
+function parseGitAssetAvatarMeta(baseName) {
+  const type = /viewer/i.test(baseName) ? 'Viewer' : 'Creator';
+  let level = 'LV1';
+  if (/LV3\s*&\s*4|LV3&4/i.test(baseName)) level = 'LV3&4';
+  else if (/LV2/i.test(baseName)) level = 'LV2';
+  return { type, level };
+}
+
+/** POST body: { root?: string, mergeManifest?: boolean } — root 相对 cms 目录，默认 ../git-assets；mergeManifest 为 true 时才读 manifest.json 合并元数据 */
+app.post('/api/import-git-assets', (req, res) => {
+  try {
+    const rel = (req.body && req.body.root) || '../git-assets';
+    const gitRoot = path.isAbsolute(rel) ? rel : path.resolve(__dirname, rel);
+    if (!fs.existsSync(gitRoot)) {
+      return res.status(400).json({ error: `目录不存在: ${gitRoot}（请确认已拉取 kv-platform/git-assets）` });
+    }
+
+    const mergeManifest = req.body && req.body.mergeManifest === true;
+    const manifestMap = mergeManifest ? readGitAssetsManifestMap(gitRoot) : {};
+    const dirNames = fs
+      .readdirSync(gitRoot, { withFileTypes: true })
+      .filter((d) => d.isDirectory() && !d.name.startsWith('.'))
+      .map((d) => d.name);
+
+    const db = readDB();
+    const imported = [];
+
+    for (const folderName of dirNames) {
+      const activityPath = path.join(gitRoot, folderName);
+      const meta = manifestMap[normActivityTitle(folderName)] || {};
+
+      const kvPaths = listPngsInDir(findSubdirCaseInsensitive(activityPath, 'KV'));
+      const h5Paths = listPngsInDir(findSubdirCaseInsensitive(activityPath, 'H5'));
+      const bannerPaths = listPngsInDir(findSubdirCaseInsensitive(activityPath, 'banner'));
+      const afPaths = listPngsInDir(findSubdirCaseInsensitive(activityPath, 'AvatarFrame'));
+      const iconsPaths = listPngsInDir(findSubdirCaseInsensitive(activityPath, 'icons'));
+
+      if (
+        kvPaths.length === 0 &&
+        h5Paths.length === 0 &&
+        bannerPaths.length === 0 &&
+        afPaths.length === 0 &&
+        iconsPaths.length === 0
+      ) {
+        continue;
+      }
+
+      const images = {
+        kv: [],
+        h5: [],
+        banner1029x276: [],
+        banner750x500: [],
+        avatarFrame: [],
+        icons: [],
+      };
+
+      for (const p of kvPaths) {
+        const url = copyGitAssetToUploads(p);
+        images.kv.push(newKvImageItem(url));
+      }
+      for (const p of h5Paths) {
+        const url = copyGitAssetToUploads(p);
+        images.h5.push(newKvImageItem(url));
+      }
+      for (const p of bannerPaths) {
+        const base = path.basename(p);
+        const slot = classifyGitAssetBannerSlot(p, base);
+        const url = copyGitAssetToUploads(p);
+        images[slot].push(newKvImageItem(url));
+      }
+      for (const p of afPaths) {
+        const base = path.basename(p);
+        const { type, level } = parseGitAssetAvatarMeta(base);
+        const url = copyGitAssetToUploads(p);
+        images.avatarFrame.push({
+          id: Date.now().toString(36) + Math.random().toString(36).slice(2, 12),
+          url,
+          type,
+          level,
+        });
+      }
+      for (const p of iconsPaths) {
+        const url = copyGitAssetToUploads(p);
+        images.icons.push(newKvImageItem(url));
+      }
+
+      const mainUrl = images.kv[0]?.url || images.h5[0]?.url || '';
+      const titleFromFolder = folderName;
+      const kv = {
+        id: `ga-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        published: meta.published ?? false,
+        designer: meta.designer || '',
+        title: meta.title || titleFromFolder,
+        date: meta.date || new Date().toISOString().slice(0, 10),
+        region: normalizeCmsRegion(meta.region || parseRegionFromTitle(titleFromFolder)),
+        level: meta.level || 'TOP',
+        imageUrl: mainUrl,
+        isIP: !!meta.isIP,
+        type: meta.type || 'Key Visual',
+        gameplay: meta.gameplay || '',
+        figmaUrl: meta.figmaUrl || '',
+        categories: {
+          theme: meta.categories?.theme ?? '',
+          style: meta.categories?.style ?? '',
+          colorTone: meta.categories?.colorTone ?? '',
+          vibe: meta.categories?.vibe ?? '',
+          element: meta.categories?.element ?? '',
+          size: meta.categories?.size ?? '',
+          ipCampaign: meta.categories?.ipCampaign ?? 'NonIP',
+          collaboration: meta.categories?.collaboration ?? 'Non collaborate',
+        },
+        images,
+      };
+
+      db.kvs.unshift(kv);
+      imported.push({ id: kv.id, title: kv.title });
+    }
+
+    writeDB(db);
+    res.json({ imported: imported.length, items: imported, root: gitRoot });
+  } catch (error) {
+    console.error('import-git-assets:', error);
+    res.status(500).json({ error: error.message || String(error) });
+  }
+});
 
 const KNOWN_LEVELS_CRAWL = ['TOP', 'MATURE', 'MID', 'LOW'];
 const KNOWN_REGIONS_CRAWL = ['GLOBAL', 'SEA', 'NEA', 'EU', 'MENA', 'LATAM', 'US', 'ANZ', 'CN'];

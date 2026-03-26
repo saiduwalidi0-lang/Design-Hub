@@ -1,10 +1,10 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tsconfigPaths from "vite-tsconfig-paths";
-import { traeBadgePlugin } from 'vite-plugin-trae-solo-badge';
 import { viteSingleFile } from 'vite-plugin-singlefile';
 
 // https://vite.dev/config/
+// 注意：不要在此加入会请求外域的插件；Figma 插件 UI 受 manifest networkAccess 约束，外链易导致白屏或加载失败。
 export default defineConfig({
   base: './',
   build: {
@@ -23,15 +23,6 @@ export default defineConfig({
         plugins: [
         ],
       },
-    }),
-    traeBadgePlugin({
-      variant: 'dark',
-      position: 'bottom-right',
-      prodOnly: true,
-      clickable: true,
-      clickUrl: 'https://www.trae.ai/solo?showJoin=1',
-      autoTheme: true,
-      autoThemeTarget: '#root'
     }),
     viteSingleFile(),
     tsconfigPaths()

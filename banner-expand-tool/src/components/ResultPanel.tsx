@@ -1,5 +1,6 @@
 import { Download, ImageIcon, Layers, UploadCloud } from "lucide-react";
 import Button from "@/components/Button";
+import BannerResultCards from "@/components/BannerResultCards";
 import type { ResultState } from "@/types/bannerTool";
 import type { AvatarFrameResultState } from "@/types/avatarFrameTool";
 
@@ -11,6 +12,9 @@ type ResultPanelProps = {
   onDownloadOne: (size: string) => void;
   onDownloadAll: () => void;
   onDownloadAvatar: (kind: "frame" | "composite") => void;
+  bannerGenerateTotalMs?: number | null;
+  bannerDownloadTotalMs?: number | null;
+  bannerDownloadMsBySize?: Record<string, number>;
 };
 
 export default function ResultPanel({
@@ -21,36 +25,46 @@ export default function ResultPanel({
   onDownloadOne,
   onDownloadAll,
   onDownloadAvatar,
+  bannerGenerateTotalMs,
+  bannerDownloadTotalMs,
+  bannerDownloadMsBySize,
 }: ResultPanelProps) {
+  const canDownloadAllBanner =
+    (result.status === "success" && result.items.length > 0) ||
+    (result.status === "loading" && (result.partialItems?.length ?? 0) > 0);
+
   return (
     <div className="rounded-xl border border-white/10 bg-white/5 p-4">
       <div className="mb-3 flex items-center justify-between">
         <div>
           <div className="text-sm font-semibold">结果预览</div>
-          <div className="mt-0.5 text-xs text-zinc-400">点击图片可在新窗口打开</div>
+          <div className="mt-0.5 text-xs text-zinc-400">
+            {activeTab === "banner" ? "点击图片可在新窗口打开" : "头像框仅提供下载，不展示大图预览"}
+          </div>
         </div>
         <div className="flex items-center gap-2">
           {activeTab === "banner" ? (
             <Button
               variant="primary"
               onClick={onDownloadAll}
-              disabled={result.status !== "success" || (result.status === "success" && result.items.length === 0)}
+              disabled={!canDownloadAllBanner}
               type="button"
             >
               <Download className="h-4 w-4" />
               下载全部
             </Button>
-          ) : (
-            <Button
-              variant="primary"
-              onClick={() => onDownloadAvatar("frame")}
-              disabled={avatarResult.status !== "success"}
-              type="button"
-            >
-              <Download className="h-4 w-4" />
-              下载透明 PNG
-            </Button>
-          )}
+          ) : avatarResult.status === "success" ? (
+            <div className="flex flex-wrap items-center justify-end gap-2">
+              <Button variant="primary" type="button" onClick={() => onDownloadAvatar("frame")}>
+                <Download className="h-4 w-4" />
+                透明 PNG
+              </Button>
+              <Button variant="secondary" type="button" onClick={() => onDownloadAvatar("composite")}>
+                <Download className="h-4 w-4" />
+                占位合并
+              </Button>
+            </div>
+          ) : null}
         </div>
       </div>
 
@@ -84,15 +98,32 @@ export default function ResultPanel({
         <div className="flex h-[320px] flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-white/15 bg-zinc-950/40 text-center">
           <ImageIcon className="h-6 w-6 text-zinc-400" />
           <div className="text-sm text-zinc-300">上传头图并点击“生成 Banner”</div>
-          <div className="text-xs text-zinc-500">可一次性输出多个尺寸</div>
+          <div className="text-xs text-zinc-500">多尺寸会逐项生成，无需等全部完成即可预览已出图</div>
         </div>
         ) : result.status === "loading" ? (
-          <div className="flex h-[320px] flex-col items-center justify-center gap-2 rounded-lg border border-white/10 bg-zinc-950/40 text-center">
-            <UploadCloud className="h-6 w-6 text-zinc-300" />
-            <div className="text-sm text-zinc-200">正在生成{result.currentSize ? `（${result.currentSize}）` : ""}…</div>
-            <div className="text-xs text-zinc-500">
-              {Math.min(result.total, Math.max(0, result.done))}/{Math.max(1, result.total)}
+          <div className="grid gap-3">
+            <div className="flex flex-wrap items-center gap-3 rounded-lg border border-white/10 bg-zinc-950/40 px-3 py-2.5">
+              <UploadCloud className="h-5 w-5 shrink-0 text-zinc-300" />
+              <div className="min-w-0 flex-1 text-left">
+                <div className="text-sm text-zinc-200">
+                  正在生成{result.currentSize ? ` ${result.currentSize}` : ""}…
+                </div>
+                <div className="text-xs text-zinc-500">
+                  {Math.min(result.total, Math.max(0, result.done))}/{Math.max(1, result.total)} · 已完成会先出现在下方
+                </div>
+              </div>
             </div>
+            {result.partialItems && result.partialItems.length > 0 ? (
+              <BannerResultCards
+                items={result.partialItems}
+                onDownloadOne={onDownloadOne}
+                bannerDownloadMsBySize={bannerDownloadMsBySize}
+              />
+            ) : (
+              <div className="flex min-h-[120px] items-center justify-center rounded-lg border border-dashed border-white/10 bg-zinc-950/30 px-4 text-center text-xs text-zinc-500">
+                首张出图后会自动显示在这里，可先点开预览或下载
+              </div>
+            )}
           </div>
         ) : result.status === "error" ? (
           <div className="flex h-[320px] flex-col items-center justify-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 text-center">
@@ -101,104 +132,38 @@ export default function ResultPanel({
           </div>
         ) : (
           <div className="grid gap-3">
-            <div className="grid gap-3 sm:grid-cols-2">
-              {result.items.map((it) => (
-                <div key={it.size} className="rounded-lg border border-white/10 bg-zinc-950/40 p-2">
-                  <button
-                    type="button"
-                    className="group relative block w-full overflow-hidden rounded-md border border-white/10 bg-zinc-950"
-                    onClick={() => window.open(it.previewUrl, "_blank", "noopener,noreferrer")}
-                  >
-                    <div className="aspect-[3/1] w-full">
-                      <img src={it.previewUrl} alt={it.size} className="h-full w-full object-cover transition group-hover:scale-[1.01]" />
-                    </div>
-                  </button>
-                  <div className="mt-2 flex items-center justify-between gap-2">
-                    <div className="text-xs text-zinc-300">{it.size}</div>
-                    <Button variant="secondary" size="sm" type="button" onClick={() => onDownloadOne(it.size)}>
-                      下载
-                    </Button>
-                  </div>
-                </div>
-              ))}
+            <div className="rounded-md border border-white/10 bg-black/20 p-2 text-xs text-zinc-300">
+              <div>生成总耗时：{bannerGenerateTotalMs != null ? `${bannerGenerateTotalMs} ms` : "-"}</div>
+              <div>批量下载总耗时：{bannerDownloadTotalMs != null ? `${bannerDownloadTotalMs} ms` : "-"}</div>
             </div>
+            <BannerResultCards
+              items={result.items}
+              onDownloadOne={onDownloadOne}
+              bannerDownloadMsBySize={bannerDownloadMsBySize}
+            />
             <div className="text-xs text-zinc-500">若浏览器拦截批量下载，请允许此站点进行多个下载</div>
           </div>
         )
       ) : avatarResult.status === "idle" ? (
-        <div className="flex h-[320px] flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-white/15 bg-zinc-950/40 text-center">
-          <Layers className="h-6 w-6 text-zinc-400" />
-          <div className="text-sm text-zinc-300">上传三元素并点击“开始生成”</div>
-          <div className="text-xs text-zinc-500">当前为本地合成占位（无真实抠图）</div>
+        <div className="flex flex-col items-center justify-center gap-1 rounded-lg border border-dashed border-white/15 bg-zinc-950/40 px-4 py-6 text-center">
+          <Layers className="h-5 w-5 text-zinc-400" />
+          <div className="text-sm text-zinc-300">上传三元素并点击「开始生成」</div>
+          <div className="text-xs text-zinc-500">合成完成后在此用按钮下载，不再展示大图预览以节省空间</div>
         </div>
       ) : avatarResult.status === "loading" ? (
-        <div className="flex h-[320px] flex-col items-center justify-center gap-2 rounded-lg border border-white/10 bg-zinc-950/40 text-center">
-          <UploadCloud className="h-6 w-6 text-zinc-300" />
+        <div className="flex flex-col items-center justify-center gap-1 rounded-lg border border-white/10 bg-zinc-950/40 px-4 py-8 text-center">
+          <UploadCloud className="h-5 w-5 text-zinc-300" />
           <div className="text-sm text-zinc-200">正在合成头像框…</div>
-          <div className="text-xs text-zinc-500">本地合成中</div>
         </div>
       ) : avatarResult.status === "error" ? (
-        <div className="flex h-[320px] flex-col items-center justify-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 text-center">
+        <div className="flex flex-col items-center justify-center gap-1 rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-8 text-center">
           <div className="text-sm font-medium text-red-200">合成失败</div>
           <div className="max-w-[560px] text-xs text-red-200/80">{avatarResult.message}</div>
         </div>
       ) : (
-        <div className="grid gap-3">
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-lg border border-white/10 bg-zinc-950/40 p-2">
-              <button
-                type="button"
-                className="group relative block w-full overflow-hidden rounded-md border border-white/10"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(45deg, rgba(255,255,255,0.08) 25%, transparent 25%), linear-gradient(-45deg, rgba(255,255,255,0.08) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.08) 75%), linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.08) 75%)",
-                  backgroundSize: "24px 24px",
-                  backgroundPosition: "0 0, 0 12px, 12px -12px, -12px 0px",
-                }}
-                onClick={() => window.open(avatarResult.framePngDataUrl, "_blank", "noopener,noreferrer")}
-              >
-                <div className="aspect-square w-full">
-                  <img
-                    src={avatarResult.framePngDataUrl}
-                    alt="avatar_frame_transparent"
-                    className="h-full w-full object-contain transition group-hover:scale-[1.01]"
-                  />
-                </div>
-              </button>
-              <div className="mt-2 flex items-center justify-between gap-2">
-                <div className="text-xs text-zinc-300">透明 PNG（仅框）</div>
-                <Button variant="secondary" size="sm" type="button" onClick={() => onDownloadAvatar("frame")}
-                >
-                  下载
-                </Button>
-              </div>
-            </div>
-
-            <div className="rounded-lg border border-white/10 bg-zinc-950/40 p-2">
-              <button
-                type="button"
-                className="group relative block w-full overflow-hidden rounded-md border border-white/10 bg-zinc-950"
-                onClick={() => window.open(avatarResult.compositePngDataUrl, "_blank", "noopener,noreferrer")}
-              >
-                <div className="aspect-square w-full">
-                  <img
-                    src={avatarResult.compositePngDataUrl}
-                    alt="avatar_frame_composite"
-                    className="h-full w-full object-contain transition group-hover:scale-[1.01]"
-                  />
-                </div>
-              </button>
-              <div className="mt-2 flex items-center justify-between gap-2">
-                <div className="text-xs text-zinc-300">占位合并预览图</div>
-                <Button variant="secondary" size="sm" type="button" onClick={() => onDownloadAvatar("composite")}
-                >
-                  下载
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          <div className="text-xs text-zinc-500">透明 PNG 用于上脸合成；占位图用于快速验收效果</div>
+        <div className="rounded-lg border border-white/10 bg-zinc-950/40 px-3 py-3 text-xs text-zinc-400">
+          已合成。使用右上角按钮下载：<span className="text-zinc-300">透明 PNG</span> 用于上脸；
+          <span className="text-zinc-300">占位合并</span> 用于快速验收（无大图预览）。
         </div>
       )}
     </div>

@@ -55,3 +55,21 @@ export default tseslint.config({
   },
 })
 ```
+
+## Figma 插件：头像框生成 API（本地默认）
+
+- 仅启动 API（端口 **3004**，与 `figma-tools-plugin` 默认 Base URL 一致）：
+
+  ```bash
+  # 在 ai-design-platform 目录：
+  npm run dev:avatar-frame-api
+  # 或在仓库根目录 Design-Hub：
+  npm run avatar-frame-api
+  ```
+
+  使用 Cursor / VS Code 打开本仓库时，已配置 **打开工作区自动运行** 该任务（见根目录 `.vscode/tasks.json`）；若未自动启动，命令面板执行 **「Tasks: Run Task」→「Avatar Frame API」**。
+
+- 接口：`POST http://localhost:3004/api/avatar-frame/generate`（body 需含 `kvPngDataUrl`）。请求/响应字段说明见源码 `api/contracts/avatarFrameGenerate.ts`（与 Figma 插件 `KvToAvatarFramePage` 对齐）。
+- **Ark 配置**（图生图与官方 `POST …/api/v3/images/generations` 对齐）：`.env` / `.env.local` 里通常只设 **`ARK_API_KEY`** 即可；未配置时 **图生图** 会使用代码内默认：`doubao-seedream-5-0-260128`、`size=2K`、`response_format=url`、北京 `api/v3` 等（见 `api/services/arkImageProvider.ts`）。需要换模型或尺寸时再设 `ARK_MODEL`、`ARK_I2I_SIZE` 等；仍兼容 `ARK_I2I_*` / `ARK_IMAGE_*`。
+- **未配置** Ark 时，开发环境自动返回占位图层；`NODE_ENV=production` 且无 Ark 时返回 `ark_i2i_not_configured`。
+- **抠图（仅 RMBG）**：Ark 三张出图后，默认调用根目录 **`rmbg-local-server`**（`POST /cutout`，默认 `http://127.0.0.1:8765`）。可用 `RMBG_LOCAL_URL` / `RMBG_LOCAL_SERVER` 覆盖。不需要 ComfyUI。若需跳过抠图（调试）：`AVATARFRAME_CUTOUT=0`。

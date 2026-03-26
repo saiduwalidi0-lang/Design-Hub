@@ -1,0 +1,32 @@
+{
+  "crawledAt": "2026-03-11T03:45:02.335Z",
+  "totalFiles": 1,
+  "items": [
+    {
+      "title": "Rising Star - MY",
+      "date": "2026-03-11",
+      "designer": "Yangqing",
+      "region": "MY",
+      "level": "TOP",
+      "figmaUrl": "https://www.figma.com/file/PyYlZeYQxL6tUBEHlC6esA",
+      "categories": {
+        "theme": "",
+        "style": "3DCartoon",
+        "colorTone": "Dark",
+        "vibe": "Colorful",
+        "element": "Character",
+        "size": "",
+        "collaboration": "Non collaborate"
+      },
+      "localFolder": "D:\\trae\\kv-platform\\Assets_Library\\Rising Star - MY",
+      "images": {
+        "kv": 2,
+        "h5": 1,
+        "banner1029x276": 1,
+        "banner750x500": 2,
+        "avatarFrame": 0,
+        "icons": 0
+      }
+    }
+  ]
+}

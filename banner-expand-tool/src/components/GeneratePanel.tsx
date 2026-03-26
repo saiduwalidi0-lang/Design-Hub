@@ -17,19 +17,24 @@ type GeneratePanelProps = {
 };
 
 export default function GeneratePanel(props: GeneratePanelProps) {
+  const bannerReady =
+    props.outputBanner && props.readyForBanner && props.canGenerateBanner;
+  const avatarReady = props.outputAvatarFrame && props.canGenerateAvatarFrame;
+  /** 至少有一种输出当前可执行（未配 Banner API 时仍可只跑头像框） */
   const canSubmit =
     !props.isGenerating &&
     props.hasUpload &&
     (props.outputBanner || props.outputAvatarFrame) &&
-    (!props.outputBanner || props.readyForBanner) &&
-    (!props.outputBanner || props.canGenerateBanner) &&
-    (!props.outputAvatarFrame || props.canGenerateAvatarFrame);
+    (!props.outputAvatarFrame || props.canGenerateAvatarFrame) &&
+    ((!props.outputBanner) || bannerReady || avatarReady);
 
   return (
     <div className="rounded-xl border border-white/10 bg-white/5 p-4">
       <div className="mb-3">
         <div className="text-sm font-semibold">生成</div>
-        <div className="mt-0.5 text-xs text-zinc-400">当前仅实现头像框的本地合成占位，不接入真实 AI 抠图</div>
+        <div className="mt-0.5 text-xs text-zinc-400">
+          Banner 需配置 API；头像框为本地合成。可同时勾选或只勾头像框试抠图。
+        </div>
       </div>
 
       <div className="grid gap-3">
@@ -56,7 +61,9 @@ export default function GeneratePanel(props: GeneratePanelProps) {
         {!props.hasUpload ? <div className="text-xs text-zinc-400">请先上传 KV</div> : null}
 
         {props.outputBanner && !props.readyForBanner ? (
-          <div className="text-xs text-zinc-400">未配置 API Key：如需生成 Banner，请先前往设置页完成配置</div>
+          <div className="text-xs text-zinc-400">
+            未配置 API Key 时将跳过 Banner；请取消「生成 Banner」或前往设置配置。仅勾「生成头像框」可直接点「开始生成」。
+          </div>
         ) : null}
 
         {props.outputAvatarFrame && !props.canGenerateAvatarFrame ? (

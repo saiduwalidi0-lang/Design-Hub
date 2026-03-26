@@ -1,3 +1,4 @@
+import { MIN_GENERATION_PIXELS } from "@/config/generationLimits";
 import { arkGenerateImage } from "@/utils/ark";
 import { blobToDataUrl, base64ToBlob } from "@/utils/image";
 import { normalizeBannerGenerationSize } from "@/utils/size";
@@ -7,6 +8,8 @@ export type BannerGenerateItem = {
   previewUrl: string;
   remoteUrl?: string;
   blob?: Blob;
+  generateMs?: number;
+  referenceUpdateMs?: number;
 };
 
 type BannerGenerateParams = {
@@ -21,6 +24,8 @@ type BannerGenerateParams = {
   selectedSizes: string[];
   chainConsistency: boolean;
   onProgress: (p: { total: number; done: number; currentSize?: string }) => void;
+  /** 每完成一个尺寸后回调（含当前已累计的全部条目） */
+  onItemComplete?: (items: BannerGenerateItem[]) => void;
 };
 
 function parseSize(size: string) {
@@ -49,8 +54,9 @@ function orderSizesForConsistency(sizes: string[]) {
 }
 
 export async function generateBannerSet(params: BannerGenerateParams): Promise<BannerGenerateItem[]> {
-  const minPixels = 3686400;
-  const normalizedSelected = params.selectedSizes.map((s) => normalizeBannerGenerationSize(s, minPixels));
+  const normalizedSelected = params.selectedSizes.map((s) =>
+    normalizeBannerGenerationSize(s, MIN_GENERATION_PIXELS)
+  );
   const uniqueSelected = Array.from(new Set(normalizedSelected));
   const { wide, tall } = orderSizesForConsistency(uniqueSelected);
   const groups = [wide, tall].filter((g) => g.length > 0);
@@ -63,6 +69,7 @@ export async function generateBannerSet(params: BannerGenerateParams): Promise<B
     let referenceDataUrl = params.uploadDataUrl;
     for (const size of group) {
       params.onProgress({ total, done, currentSize: size });
+      const startGen = performance.now();
       const res = await arkGenerateImage({
         endpoint: params.endpoint,
         apiKey: params.apiKey,
@@ -77,6 +84,7 @@ export async function generateBannerSet(params: BannerGenerateParams): Promise<B
         referenceEncoding: params.referenceEncoding,
         referenceImageDataUrl: referenceDataUrl,
       });
+      const generateMs = Math.round(performance.now() - startGen);
 
       let blob: Blob | undefined;
       let previewUrl: string;
@@ -89,11 +97,18 @@ export async function generateBannerSet(params: BannerGenerateParams): Promise<B
         throw new Error("未获取到结果图片");
       }
 
-      items.push({ size, previewUrl, remoteUrl: res.url, blob });
-      done += 1;
+      let referenceUpdateMs = 0;
+      if (params.chainConsistency && blob) {
+        const startRef = performance.now();
+        referenceDataUrl = await blobToDataUrl(blob);
+        referenceUpdateMs = Math.round(performance.now() - startRef);
+      } else {
+        referenceDataUrl = params.uploadDataUrl;
+      }
 
-      if (params.chainConsistency && blob) referenceDataUrl = await blobToDataUrl(blob);
-      else referenceDataUrl = params.uploadDataUrl;
+      items.push({ size, previewUrl, remoteUrl: res.url, blob, generateMs, referenceUpdateMs });
+      done += 1;
+      params.onItemComplete?.(items.slice());
     }
   }
 

@@ -5,6 +5,7 @@ import {
   Settings2, Zap, Download, Fingerprint,
 } from 'lucide-react';
 import { ImageUploadGroup, type ImageItem } from '../components/ImageUploadGroup';
+import { cmsApiUrl, readCMSJson } from '../cmsApi';
 
 interface CrawlEvent {
   type: 'progress' | 'done' | 'error';
@@ -34,7 +35,7 @@ interface PreviewItem {
   level: string;
   figmaUrl?: string;
   categories?: Record<string, string>;
-  tagMeta?: { source?: string; error?: string; raw?: string };
+  tagMeta?: { source?: string; error?: string; raw?: string; model?: string; usedImage?: boolean };
   isIP?: boolean;
   imageUrl?: string;
   images: {
@@ -117,7 +118,7 @@ const FigmaCrawlPage = () => {
   const sessionIdRef = useRef<string | null>(null);
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/tag-options')
+    fetch(cmsApiUrl('/api/tag-options'))
       .then(r => r.json()).then(setTagOptions).catch(() => {});
   }, []);
 
@@ -152,7 +153,7 @@ const FigmaCrawlPage = () => {
       const controller = new AbortController();
       abortRef.current = controller;
 
-      const resp = await fetch('http://localhost:3001/api/figma-crawl', {
+      const resp = await fetch(cmsApiUrl('/api/figma-crawl'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         signal: controller.signal,
@@ -162,6 +163,24 @@ const FigmaCrawlPage = () => {
           localSavePath: localSavePath || undefined,
         }),
       });
+
+      if (!resp.ok) {
+        const t = await resp.text();
+        const tr = t.trim();
+        if (tr.startsWith('<!DOCTYPE') || tr.startsWith('<html') || tr.startsWith('<!doctype')) {
+          throw new Error(
+            '接口返回了网页而不是数据。请先在本机启动 CMS：进入 kv-platform/cms 执行 node index.js（默认端口 3001），再重试爬取。'
+          );
+        }
+        let msg = `爬取请求失败（HTTP ${resp.status}）`;
+        try {
+          const j = JSON.parse(t) as { error?: string };
+          if (j?.error) msg = j.error;
+        } catch {
+          if (tr) msg = tr.slice(0, 200);
+        }
+        throw new Error(msg);
+      }
 
       const reader = resp.body?.getReader();
       if (!reader) throw new Error('No response stream');
@@ -211,7 +230,7 @@ const FigmaCrawlPage = () => {
     const sid = sessionIdRef.current;
     if (sid) {
       // 显式通知后端停止，不断开连接以接收已下载的素材
-      fetch('http://localhost:3001/api/figma-cancel', {
+      fetch(cmsApiUrl('/api/figma-cancel'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sessionId: sid }),
@@ -239,8 +258,7 @@ const FigmaCrawlPage = () => {
       level: 'LV1'    // Default for avatarFrame
     }));
 
-    // @ts-expect-error dynamic push
-    targetItem.images[category].push(...newImages);
+    (targetItem.images[category] as typeof newImages).push(...newImages);
     setPreviewItems(newItems);
   };
 
@@ -271,23 +289,7 @@ const FigmaCrawlPage = () => {
       // But standard way is FormData with JSON + Files.
       
       const formData = new FormData();
-      const itemsPayload = previewItems.map(item => {
-        // Clone item to avoid mutating state
-        const itemCopy = JSON.parse(JSON.stringify(item));
-        
-        // Replace file objects with placeholders or indices?
-        // Actually, let's strip the 'file' property from JSON and rely on IDs mapping if needed.
-        // But simpler: just upload everything.
-        
-        // Wait, standard 'figma-import' API might expect just paths.
-        // If we have local files, we need to upload them.
-        return itemCopy;
-      });
 
-      // We need a robust way to send files. 
-      // Let's modify the payload to include markers for local files.
-      // And append files to formData.
-      
       let fileIndex = 0;
       const cleanItems = previewItems.map(item => {
         const newItem = { ...item, images: { ...item.images } };
@@ -312,13 +314,17 @@ const FigmaCrawlPage = () => {
 
       formData.append('items', JSON.stringify(cleanItems));
 
-      const resp = await fetch('http://localhost:3001/api/figma-import', {
+      const resp = await fetch(cmsApiUrl('/api/figma-import'), {
         method: 'POST',
         // headers: { 'Content-Type': 'multipart/form-data' }, // Browser sets this automatically with boundary
         body: formData,
       });
       
-      const data = await resp.json();
+      const data = await readCMSJson<{
+        error?: string;
+        imported?: number;
+        items?: { id?: string; title: string }[];
+      }>(resp);
       if (!resp.ok) throw new Error(data?.error || 'Import failed');
       
       setResult(prev => ({

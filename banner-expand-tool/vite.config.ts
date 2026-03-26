@@ -10,34 +10,29 @@ export default defineConfig(({ mode }) => {
   const saliencyEndpoint = (env.VITE_SALIENCY_SEG_ENDPOINT ?? '').trim()
   const saliencyAppKey = (env.VITE_SALIENCY_SEG_APP_KEY ?? '').trim()
   const saliencyAppSecret = (env.VITE_SALIENCY_SEG_APP_SECRET ?? '').trim()
+  const rmbgLocalServer = (env.VITE_RMBG_LOCAL_SERVER ?? 'http://127.0.0.1:8765').trim()
 
-  const proxy = (() => {
-    const proxyRules: Record<string, unknown> = {}
+  const proxyRules: Record<string, unknown> = {}
 
-    try {
-      const comfyUrl = new URL(comfyuiEndpoint)
-      proxyRules['/api/comfyui'] = {
-        target: `${comfyUrl.protocol}//${comfyUrl.host}`,
-        changeOrigin: true,
-        secure: false,
-        headers: {
-          origin: comfyUrl.origin,
-          referer: `${comfyUrl.origin}/`,
-        },
-        rewrite: (path: string) => path.replace(/^\/api\/comfyui/, ''),
-      }
-    } catch {
-      // ignore
+  try {
+    const comfyUrl = new URL(comfyuiEndpoint)
+    proxyRules['/api/comfyui'] = {
+      target: `${comfyUrl.protocol}//${comfyUrl.host}`,
+      changeOrigin: true,
+      secure: false,
+      headers: {
+        origin: comfyUrl.origin,
+        referer: `${comfyUrl.origin}/`,
+      },
+      rewrite: (path: string) => path.replace(/^\/api\/comfyui/, ''),
     }
+  } catch {
+    // ignore invalid comfy URL
+  }
 
-    if (saliencyEndpoint) {
-      let url: URL
-      try {
-        url = new URL(saliencyEndpoint)
-      } catch {
-        return Object.keys(proxyRules).length ? proxyRules : undefined
-      }
-
+  if (saliencyEndpoint) {
+    try {
+      const url = new URL(saliencyEndpoint)
       const headers: Record<string, string> = {}
       if (saliencyAppKey) headers['x-app-key'] = saliencyAppKey
       if (saliencyAppSecret) headers['x-app-secret'] = saliencyAppSecret
@@ -55,16 +50,37 @@ export default defineConfig(({ mode }) => {
         secure: false,
         rewrite: () => url.pathname,
       }
+    } catch {
+      // ignore invalid saliency URL
     }
+  }
 
-    return Object.keys(proxyRules).length ? proxyRules : undefined
-  })()
+  try {
+    const rmbgUrl = new URL(rmbgLocalServer)
+    proxyRules['/api/rmbg-local'] = {
+      target: `${rmbgUrl.protocol}//${rmbgUrl.host}`,
+      changeOrigin: true,
+      secure: false,
+      rewrite: (path: string) => {
+        const next = path.replace(/^\/api\/rmbg-local/, '')
+        return next.length > 0 ? next : '/'
+      },
+    }
+  } catch {
+    // ignore invalid RMBG server URL
+  }
+
+  const server = {
+    port: 5188,
+    strictPort: false,
+    ...(Object.keys(proxyRules).length > 0 ? { proxy: proxyRules } : {}),
+  }
 
   return {
     build: {
       sourcemap: 'hidden',
     },
-    server: proxy ? { proxy } : undefined,
+    server,
     plugins: [
       react({
         babel: {

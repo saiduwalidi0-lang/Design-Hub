@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect, useMemo, Fragment } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Upload, FileJson, FolderOpen, Loader2, CheckCircle2, AlertCircle, Info, ChevronDown, ChevronRight, X, Plus } from 'lucide-react';
+import { ArrowLeft, Upload, FileJson, FolderOpen, FolderInput, Loader2, CheckCircle2, AlertCircle, Info, ChevronDown, ChevronRight, X, Plus } from 'lucide-react';
 import { AutoRatioImage } from '../components/AutoRatioImage';
+import { cmsApiUrl, readCMSJson } from '../cmsApi';
 
 interface ManifestItem {
   title?: string;
@@ -24,6 +25,7 @@ interface ManifestItem {
 interface ImportResult {
   imported: number;
   items: { id: string; title: string }[];
+  root?: string;
 }
 
 const EXAMPLE_JSON = `{
@@ -59,6 +61,11 @@ const EXAMPLE_JSON = `{
   ]
 }`;
 
+function defaultFolderRootFromEnv(): string {
+  const v = (import.meta.env.VITE_IMPORT_FOLDER_ROOT as string | undefined)?.trim();
+  return v || '';
+}
+
 const BatchImportPage = () => {
   const jsonInputRef = useRef<HTMLInputElement>(null);
   const imagesInputRef = useRef<HTMLInputElement>(null);
@@ -67,6 +74,9 @@ const BatchImportPage = () => {
   const [jsonFileName, setJsonFileName] = useState('');
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [importing, setImporting] = useState(false);
+  const [gitImporting, setGitImporting] = useState(false);
+  const [folderRoot, setFolderRoot] = useState(defaultFolderRootFromEnv);
+  const [mergeManifest, setMergeManifest] = useState(false);
   const [result, setResult] = useState<ImportResult | null>(null);
   const [error, setError] = useState('');
   const [showExample, setShowExample] = useState(false);
@@ -157,20 +167,49 @@ const BatchImportPage = () => {
         formData.append('images', file);
       }
 
-      const res = await fetch('http://localhost:3001/api/batch-import', {
+      const res = await fetch(cmsApiUrl('/api/batch-import'), {
         method: 'POST',
         body: formData,
       });
-      const data = await res.json();
+      const data = await readCMSJson<ImportResult & { error?: string }>(res);
       if (!res.ok) {
         setError(data.error || 'Import failed');
         return;
       }
-      setResult(data);
+      setResult(data as ImportResult);
     } catch (err: unknown) {
       setError('Network error: ' + (err instanceof Error ? err.message : String(err)));
     } finally {
       setImporting(false);
+    }
+  };
+
+  const handleGitAssetsImport = async () => {
+    setGitImporting(true);
+    setError('');
+    setResult(null);
+    try {
+      const body: { root?: string; mergeManifest: boolean } = {
+        mergeManifest,
+      };
+      const trimmed = folderRoot.trim();
+      if (trimmed) body.root = trimmed;
+
+      const res = await fetch(cmsApiUrl('/api/import-git-assets'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const data = await readCMSJson<ImportResult & { error?: string }>(res);
+      if (!res.ok) {
+        setError(data.error || '从 git-assets 导入失败');
+        return;
+      }
+      setResult(data as ImportResult);
+    } catch (err: unknown) {
+      setError('Network error: ' + (err instanceof Error ? err.message : String(err)));
+    } finally {
+      setGitImporting(false);
     }
   };
 
@@ -240,11 +279,106 @@ const BatchImportPage = () => {
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="p-6 border-b border-gray-200 bg-gray-50">
-          <h1 className="text-xl font-bold text-gray-900">批量导入 Batch Import</h1>
-          <p className="text-sm text-gray-500 mt-1">上传 JSON 配置文件 + 图片文件夹，一次性导入多条 KV 数据</p>
+          <h1 className="text-xl font-bold text-gray-900">素材导入</h1>
+          <p className="text-sm text-gray-500 mt-1">按文件夹扫描 PNG 入库，无需 JSON；标签请在列表中进入编辑页手动填写</p>
         </div>
 
         <div className="p-8 space-y-8">
+
+          <div className="rounded-xl border-2 border-violet-300 bg-gradient-to-b from-violet-50 to-white p-6 shadow-sm">
+            <h2 className="text-base font-semibold text-violet-950 flex items-center gap-2">
+              <FolderOpen size={22} className="text-violet-600 shrink-0" />
+              按文件夹导入（推荐）
+            </h2>
+            <p className="text-sm text-violet-900/85 mt-2 leading-relaxed">
+              每个<strong>一级子文件夹</strong> = 一条 KV。其下需有爬取工具同款子目录（名称不区分大小写）：
+              <code className="mx-1 text-xs bg-violet-100 px-1.5 py-0.5 rounded">KV</code>
+              <code className="text-xs bg-violet-100 px-1.5 py-0.5 rounded">H5</code>
+              <code className="text-xs bg-violet-100 px-1.5 py-0.5 rounded">banner</code>
+              <code className="text-xs bg-violet-100 px-1.5 py-0.5 rounded">AvatarFrame</code>
+              <code className="text-xs bg-violet-100 px-1.5 py-0.5 rounded">Icons</code>
+              。留空路径则默认使用仓库内 <code className="text-xs bg-violet-100 px-1.5 py-0.5 rounded">kv-platform/git-assets</code>（相对 CMS 后端的 <code className="text-xs bg-violet-100 px-1.5 py-0.5 rounded">../git-assets</code>）。
+            </p>
+
+            <div className="mt-4 space-y-3">
+              <div>
+                <label className="block text-xs font-medium text-violet-900/80 mb-1.5">素材根目录（可选）</label>
+                <input
+                  type="text"
+                  value={folderRoot}
+                  onChange={(e) => setFolderRoot(e.target.value)}
+                  placeholder="留空 = 默认 git-assets；或填写绝对路径，如 /Users/you/project/kv-platform/git-assets"
+                  className="w-full px-3 py-2.5 text-sm border border-violet-200 rounded-lg bg-white placeholder:text-gray-400 focus:ring-2 focus:ring-violet-400 focus:border-violet-400 outline-none"
+                />
+              </div>
+              <label className="flex items-start gap-2.5 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={mergeManifest}
+                  onChange={(e) => setMergeManifest(e.target.checked)}
+                  className="mt-1 rounded border-violet-300 text-violet-600 focus:ring-violet-500"
+                />
+                <span className="text-sm text-violet-900/90">
+                  同时读取该目录下的 <code className="text-xs bg-violet-100 px-1 rounded">manifest.json</code> 合并元数据（爬取摘要 JSON，与「批量 JSON 导入」不是同一种格式）。不勾选则<strong>完全忽略 manifest</strong>，仅用语义化默认值，方便你之后手动打标。
+                </span>
+              </label>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleGitAssetsImport}
+              disabled={gitImporting}
+              className="mt-5 inline-flex items-center gap-2 px-6 py-3 bg-violet-600 hover:bg-violet-700 disabled:bg-violet-300 text-white rounded-lg text-sm font-semibold transition-colors shadow-md"
+            >
+              {gitImporting ? (
+                <span className="flex items-center gap-2">
+                  <Loader2 size={18} className="animate-spin" /> 正在扫描并导入…
+                </span>
+              ) : (
+                <span className="flex items-center gap-2">
+                  <FolderInput size={18} /> 扫描文件夹并导入
+                </span>
+              )}
+            </button>
+          </div>
+
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-red-700">
+              <AlertCircle size={15} className="inline mr-1.5 -mt-0.5" /> {error}
+            </div>
+          )}
+
+          {result && (
+            <div className="bg-green-50 border border-green-200 rounded-xl p-6">
+              <div className="flex items-center gap-2 text-green-800 font-semibold mb-3">
+                <CheckCircle2 size={20} /> 导入成功！共导入 {result.imported} 条记录
+              </div>
+              {result.root && (
+                <p className="text-xs text-green-700/90 font-mono mb-3 break-all">源目录: {result.root}</p>
+              )}
+              <div className="space-y-1">
+                {result.items.map(item => (
+                  <div key={item.id} className="text-sm text-green-700 flex items-center gap-2">
+                    <span className="font-mono text-xs text-green-500">{item.id}</span>
+                    <span>{item.title}</span>
+                  </div>
+                ))}
+              </div>
+              <Link to="/" className="inline-flex items-center gap-1.5 mt-4 text-sm font-medium text-blue-600 hover:text-blue-700">
+                去列表里编辑打标 →
+              </Link>
+            </div>
+          )}
+
+          <details className="group rounded-xl border border-gray-200 bg-gray-50/60 open:bg-white open:shadow-sm">
+            <summary className="cursor-pointer list-none px-5 py-4 font-medium text-gray-700 flex items-center justify-between gap-2">
+              <span className="flex items-center gap-2">
+                <FileJson size={18} className="text-gray-500" />
+                高级：JSON + 图片文件批量导入（可选）
+              </span>
+              <ChevronRight size={18} className="text-gray-400 group-open:rotate-90 transition-transform shrink-0" />
+            </summary>
+            <div className="px-5 pb-8 pt-2 space-y-8 border-t border-gray-100">
 
           {/* Step 1: JSON */}
           <div>
@@ -527,7 +661,12 @@ const BatchImportPage = () => {
               </div>
             )}
 
-            <div className="ml-9">
+            <div className="ml-9 space-y-2">
+              {!manifest && (
+                <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                  此方式需要专用批量 JSON（含 items 与文件名引用），与爬取摘要 manifest.json 不同。仅文件夹素材请用上方「按文件夹导入」。
+                </p>
+              )}
               <button
                 type="button"
                 onClick={handleImport}
@@ -547,32 +686,8 @@ const BatchImportPage = () => {
             </div>
           </div>
 
-          {/* Error */}
-          {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-red-700">
-              <AlertCircle size={15} className="inline mr-1.5 -mt-0.5" /> {error}
             </div>
-          )}
-
-          {/* Result */}
-          {result && (
-            <div className="bg-green-50 border border-green-200 rounded-xl p-6">
-              <div className="flex items-center gap-2 text-green-800 font-semibold mb-3">
-                <CheckCircle2 size={20} /> 导入成功！共导入 {result.imported} 条记录
-              </div>
-              <div className="space-y-1">
-                {result.items.map(item => (
-                  <div key={item.id} className="text-sm text-green-700 flex items-center gap-2">
-                    <span className="font-mono text-xs text-green-500">{item.id}</span>
-                    <span>{item.title}</span>
-                  </div>
-                ))}
-              </div>
-              <Link to="/" className="inline-flex items-center gap-1.5 mt-4 text-sm font-medium text-blue-600 hover:text-blue-700">
-                返回列表查看 →
-              </Link>
-            </div>
-          )}
+          </details>
 
         </div>
       </div>

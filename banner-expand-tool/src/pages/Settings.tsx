@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import PageShell from "@/components/PageShell";
 import Button from "@/components/Button";
 import TextField from "@/components/TextField";
+import { MIN_GENERATION_PIXELS } from "@/config/generationLimits";
 import { isConfigReady, useBannerToolConfigStore } from "@/store/config";
 import { arkGenerateImage } from "@/utils/ark";
 import { normalizeBannerGenerationSize } from "@/utils/size";
@@ -27,8 +28,7 @@ export default function Settings() {
     setTesting(true);
     setTestResult(null);
     try {
-      const minPixels = 3686400;
-      const size = normalizeBannerGenerationSize(config.generationSize, minPixels);
+      const size = normalizeBannerGenerationSize(config.generationSize, MIN_GENERATION_PIXELS);
       await arkGenerateImage({
         endpoint: config.endpoint,
         apiKey: config.apiKey,
@@ -147,8 +147,8 @@ export default function Settings() {
               label="生成尺寸"
               value={config.generationSize}
               onChange={(e) => setGenerationSize(e.target.value)}
-              helperText="用于满足接口最小像素，最终仍导出 3000×800（建议 3840x1024 或 2K）"
-              placeholder="3840x1024"
+              helperText="用于满足接口最小像素；不足时会自动抬到 2560×1440（≈368 万总像素下限）"
+              placeholder="2560x1440"
             />
           </div>
         </div>

@@ -16,7 +16,7 @@ export const useAvatarFrameSettings = create<AvatarFrameSettingsState>()(
   persist(
     (set) => ({
       mode: 'http',
-      baseUrl: 'http://localhost:3010',
+      baseUrl: 'http://localhost:3004',
       token: '',
       generatePath: '/api/avatar-frame/generate',
       setMode: (v) => set({ mode: v }),
@@ -25,7 +25,7 @@ export const useAvatarFrameSettings = create<AvatarFrameSettingsState>()(
       setGeneratePath: (v) => set({ generatePath: v }),
     }),
     {
-      name: 'dtsuite_avatarframe_settings',
+      name: 'dtsuite_avatarframe_settings_v6',
       storage: createJSONStorage(() => {
         const memory = new Map<string, string>();
         return {

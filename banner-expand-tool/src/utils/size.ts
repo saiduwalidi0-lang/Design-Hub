@@ -1,3 +1,5 @@
+import { BANNER_UNDER_MIN_FALLBACK_SIZE } from "@/config/bannerSizePresets";
+
 export function parseWxH(size: string) {
   const m = /^\s*(\d+)\s*[xX]\s*(\d+)\s*$/.exec(size);
   if (!m) return null;
@@ -16,6 +18,6 @@ export function pixelCountFromSize(size: string) {
 export function normalizeBannerGenerationSize(input: string, minPixels: number) {
   const v = typeof input === "string" ? input.trim() : "";
   const px = pixelCountFromSize(v);
-  if (px !== null && px < minPixels) return "3840x1024";
-  return v.length > 0 ? v : "3840x1024";
+  if (px !== null && px < minPixels) return BANNER_UNDER_MIN_FALLBACK_SIZE;
+  return v.length > 0 ? v : BANNER_UNDER_MIN_FALLBACK_SIZE;
 }

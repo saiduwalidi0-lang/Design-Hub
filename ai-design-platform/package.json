@@ -11,6 +11,8 @@
     "check": "tsc --noEmit",
     "server:dev": "tsx watch api/server.ts",
     "dev": "concurrently \"npm run client:dev\" \"npm run server:dev\"",
+    "dev:3003": "API_PORT=3003 PORT=3003 concurrently \"npm run client:dev\" \"npm run server:dev\"",
+    "dev:avatar-frame-api": "PORT=3004 API_PORT=3004 tsx watch api/server.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },
@@ -27,7 +29,8 @@
     "tailwind-merge": "^3.0.2",
     "zustand": "^5.0.3",
     "express": "^4.21.2",
-    "@larksuiteoapi/node-sdk": "^1.40.0"
+    "@larksuiteoapi/node-sdk": "^1.40.0",
+    "pngjs": "^7.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",

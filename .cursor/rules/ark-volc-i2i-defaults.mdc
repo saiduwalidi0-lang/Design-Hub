@@ -1,0 +1,19 @@
+---
+description: 火山方舟 Ark 图生图与本仓库默认参数（减少重复配置）
+alwaysApply: true
+---
+
+# Ark 图生图默认（本仓库）
+
+在 `ai-design-platform` 里，**图生图（i2i）** 若未设 `ARK_MODEL`、`ARK_I2I_SIZE` 等，代码默认对齐官方 `POST …/api/v3/images/generations` 常用写法：
+
+- **Base**：`https://ark.cn-beijing.volces.com/api/v3`（有 `ARK_API_KEY` 且能解析出 model 时自动补全）
+- **Model**：`doubao-seedream-5-0-260128`
+- **Size**：`2K`
+- **response_format**：`url`（环境未覆盖时）
+- **sequential_image_generation**：`disabled`
+- **watermark**：`true`
+- **stream**：`false`
+- 多图字段名：**`image`**
+
+本地/部署通常只需配置 **`ARK_API_KEY`**（或 `ARK_I2I_API_KEY`）；**不要把 API Key 写进仓库或规则文件**。

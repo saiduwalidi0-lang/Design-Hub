@@ -6,6 +6,13 @@ function env(name: string): string | undefined {
   return v && v.trim() ? v.trim() : undefined
 }
 
+/** 与官方 curl 一致：仅填 ARK_API_KEY 时可省略 MODEL / BASE_URL / SIZE 等（图生图默认值见下） */
+const DEFAULT_VOLC_ARK_BASE = 'https://ark.cn-beijing.volces.com/api/v3'
+
+/** 图生图（i2i）未配置环境变量时的默认，对齐 `images/generations` 常用参数 */
+const DEFAULT_I2I_MODEL = 'doubao-seedream-5-0-260128'
+const DEFAULT_I2I_SIZE = '2K'
+
 function normalizeBaseUrl(baseUrl: string): string {
   const u = baseUrl.replace(/\/+$/, '')
   if (u.endsWith('/images/generations')) return u
@@ -56,14 +63,24 @@ function mapSize(size: KvImageSize): string {
 function getConfig(mode: ArkMode, sizeHint: KvImageSize): ArkConfig {
   const prefix = mode === 't2i' ? 'ARK_T2I_' : 'ARK_I2I_'
 
-  const apiKey = env(`${prefix}API_KEY`) ?? env('ARK_IMAGE_API_KEY')
-  const model = env(`${prefix}MODEL`) ?? env('ARK_IMAGE_MODEL')
-  const base = env(`${prefix}BASE_URL`) ?? env('ARK_IMAGE_BASE_URL')
+  const apiKey = env(`${prefix}API_KEY`) ?? env('ARK_IMAGE_API_KEY') ?? env('ARK_API_KEY')
+  const model =
+    env(`${prefix}MODEL`) ??
+    env('ARK_IMAGE_MODEL') ??
+    env('ARK_MODEL') ??
+    (mode === 'i2i' ? DEFAULT_I2I_MODEL : undefined)
+  let base = env(`${prefix}BASE_URL`) ?? env('ARK_IMAGE_BASE_URL') ?? env('ARK_BASE_URL')
+  if (!base && apiKey && model) base = DEFAULT_VOLC_ARK_BASE
   if (!apiKey || !model || !base) throw new Error('ark_image_missing_env')
 
   const url = normalizeBaseUrl(base)
   const configuredSize = env(`${prefix}SIZE`) ?? env('ARK_IMAGE_SIZE')
-  const size = configuredSize && configuredSize.trim() ? configuredSize.trim() : mapSize(sizeHint)
+  const size =
+    configuredSize && configuredSize.trim()
+      ? configuredSize.trim()
+      : mode === 'i2i'
+        ? DEFAULT_I2I_SIZE
+        : mapSize(sizeHint)
 
   const responseFormat = (env(`${prefix}RESPONSE_FORMAT`) ?? env('ARK_IMAGE_RESPONSE_FORMAT') ?? 'url').trim()
   const sequentialImageGeneration = (env(`${prefix}SEQUENTIAL`) ?? env('ARK_IMAGE_SEQUENTIAL') ?? 'disabled').trim()
@@ -139,12 +156,25 @@ async function requestArkImage(cfg: ArkConfig, body: any): Promise<{ bytes: Uint
   return await decodeResult(json)
 }
 
+function hasResolvedArkTriple(mode: ArkMode): boolean {
+  const prefix = mode === 't2i' ? 'ARK_T2I_' : 'ARK_I2I_'
+  const apiKey = env(`${prefix}API_KEY`) ?? env('ARK_IMAGE_API_KEY') ?? env('ARK_API_KEY')
+  const model =
+    env(`${prefix}MODEL`) ??
+    env('ARK_IMAGE_MODEL') ??
+    env('ARK_MODEL') ??
+    (mode === 'i2i' ? DEFAULT_I2I_MODEL : undefined)
+  let base = env(`${prefix}BASE_URL`) ?? env('ARK_IMAGE_BASE_URL') ?? env('ARK_BASE_URL')
+  if (!base && apiKey && model) base = DEFAULT_VOLC_ARK_BASE
+  return Boolean(apiKey && model && base)
+}
+
 export function isArkTextToImageConfigured(): boolean {
-  return Boolean((env('ARK_T2I_API_KEY') ?? env('ARK_IMAGE_API_KEY')) && (env('ARK_T2I_MODEL') ?? env('ARK_IMAGE_MODEL')) && (env('ARK_T2I_BASE_URL') ?? env('ARK_IMAGE_BASE_URL')))
+  return hasResolvedArkTriple('t2i')
 }
 
 export function isArkImageToImageConfigured(): boolean {
-  return Boolean(env('ARK_I2I_API_KEY') || env('ARK_IMAGE_API_KEY')) && Boolean(env('ARK_I2I_MODEL') || env('ARK_IMAGE_MODEL')) && Boolean(env('ARK_I2I_BASE_URL') || env('ARK_IMAGE_BASE_URL'))
+  return hasResolvedArkTriple('i2i')
 }
 
 export function isArkImageConfigured(): boolean {

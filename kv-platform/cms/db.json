@@ -65,252 +65,81 @@
   },
   "kvs": [
     {
-      "id": "1773200769432wz3",
-      "published": false,
-      "title": "Rising Star - MY",
-      "date": "2026-03-11",
-      "designer": "Yangqing",
-      "region": "MY",
-      "level": "TOP",
-      "imageUrl": "http://localhost:3001/uploads/1773200627723-ulh4vo.png",
-      "isIP": false,
-      "type": "Key Visual",
-      "gameplay": "",
-      "figmaUrl": "https://www.figma.com/file/PyYlZeYQxL6tUBEHlC6esA",
-      "categories": {
-        "theme": "",
-        "style": "3DCartoon",
-        "colorTone": "Dark",
-        "vibe": "Colorful",
-        "element": "Character",
-        "size": "",
-        "collaboration": "Non collaborate",
-        "ipCampaign": "NonIP"
-      },
-      "images": {
-        "kv": [
-          {
-            "id": "mmlhvixm72yf4",
-            "url": "http://localhost:3001/uploads/1773200627723-ulh4vo.png"
-          },
-          {
-            "id": "mmlhvykcekjll",
-            "url": "http://localhost:3001/uploads/1773200653687-ge0ocq.png"
-          }
-        ],
-        "h5": [
-          {
-            "id": "mmlhw4co2qrry",
-            "url": "http://localhost:3001/uploads/1773200655806-o2nj5m.png"
-          }
-        ],
-        "banner1029x276": [
-          {
-            "id": "mmlhw7xg78vno",
-            "url": "http://localhost:3001/uploads/1773200663306-l3tlaf.png"
-          }
-        ],
-        "banner750x500": [
-          {
-            "id": "mmlhwbqicwsgd",
-            "url": "http://localhost:3001/api/local-file?path=D%3A%5Ctrae%5Ckv-platform%5CAssets_Library%5C.....%5Cbanner%5C....._%E5%90%B8%E5%BA%95_224-6838.png",
-            "badgeText": "本地"
-          },
-          {
-            "id": "mmlhweusfg4bo",
-            "url": "http://localhost:3001/uploads/1773200674163-m07g7j.png"
-          }
-        ],
-        "avatarFrame": [],
-        "icons": []
-      }
-    },
-    {
-      "id": "177271663461276r",
-      "published": true,
-      "title": "Shiny Night - TH",
-      "date": "2025-02-27",
-      "designer": "Jiacheng Cheng",
-      "region": "TH",
-      "level": "TOP",
-      "imageUrl": "http://localhost:3001/uploads/1772716322151-9kcc0i.png",
-      "isIP": false,
-      "type": "Key Visual",
-      "gameplay": "",
-      "figmaUrl": "https://www.figma.com/file/Xtguv0zA1JNEEr6MrATFK3",
-      "categories": {
-        "theme": "钻石",
-        "style": "3DPremium",
-        "colorTone": "Dark",
-        "vibe": "Premium",
-        "element": "Diamond",
-        "size": "750",
-        "collaboration": "collaborate",
-        "ipCampaign": "NonIP"
-      },
-      "images": {
-        "kv": [
-          {
-            "id": "mmdhj8clv42nf",
-            "url": "http://localhost:3001/uploads/1772716322151-9kcc0i.png"
-          },
-          {
-            "id": "mmdhj97lixah8",
-            "url": "http://localhost:3001/api/local-file?path=D%3A%5Ctrae%5Ckv-platform%5CAssets_Library%5CLIVE%20to%20SEA%20GAMES%20-%20TH%5CAvatarFrame%5CLIVE%20to%20SEA%20GAMES%20-%20TH_Creator_LV1_1_15-17350.png",
-            "badgeText": "本地"
-          },
-          {
-            "id": "mmdhjd4cw3yst",
-            "url": "http://localhost:3001/uploads/1772716333666-wu9hiz.png"
-          }
-        ],
-        "h5": [
-          {
-            "id": "mmdhjg8v7bd56",
-            "url": "http://localhost:3001/uploads/1772716338735-v0h7r1.png"
-          }
-        ],
-        "banner1029x276": [
-          {
-            "id": "mmdhjhty52r28",
-            "url": "http://localhost:3001/uploads/1772716342785-lmpf58.png"
-          }
-        ],
-        "banner750x500": [
-          {
-            "id": "mmdhjirq5etub",
-            "url": "http://localhost:3001/api/local-file?path=D%3A%5Ctrae%5Ckv-platform%5CAssets_Library%5C.....%5Cbanner%5C....._%E5%90%B8%E5%BA%95_224-6838.png",
-            "badgeText": "本地"
-          },
-          {
-            "id": "mmdhjjnbhy1yi",
-            "url": "http://localhost:3001/uploads/1772716346054-jd0lpd.png"
-          },
-          {
-            "id": "mmdhjl4swgrh7",
-            "url": "http://localhost:3001/uploads/1772716348103-6b513u.png"
-          }
-        ],
-        "avatarFrame": [
-          {
-            "id": "mmdhjm8prstv8",
-            "url": "http://localhost:3001/api/local-file?path=D%3A%5Ctrae%5Ckv-platform%5CAssets_Library%5C.....%5CAvatarFrame%5C....._Creator_LV3%264_Lv2_138-26858.png",
-            "type": "Viewer",
-            "level": "LV3&4",
-            "badgeText": "本地"
-          },
-          {
-            "id": "mmdhjmqkws0zm",
-            "url": "http://localhost:3001/api/local-file?path=D%3A%5Ctrae%5Ckv-platform%5CAssets_Library%5CLIVE%20to%20SEA%20GAMES%20-%20TH%5CAvatarFrame%5CLIVE%20to%20SEA%20GAMES%20-%20TH_Viewer_LV2_1_16-17473.png",
-            "type": "Viewer",
-            "level": "LV3&4",
-            "badgeText": "本地"
-          },
-          {
-            "id": "mmdhjn7wllp8y",
-            "url": "http://localhost:3001/api/local-file?path=D%3A%5Ctrae%5Ckv-platform%5CAssets_Library%5CWonder%20Thai%20Festival%20%20-%20TH%5CAvatarFrame%5CWonder%20Thai%20Festival%20%20-%20TH_Viewer_LV2_2_24-2931.png",
-            "type": "Viewer",
-            "level": "LV2",
-            "badgeText": "本地"
-          },
-          {
-            "id": "mmdhjos4ruqu3",
-            "url": "http://localhost:3001/uploads/1772716352415-ap3u17.png",
-            "type": "Viewer",
-            "level": "LV3&4"
-          },
-          {
-            "id": "mmdhjqijwekwc",
-            "url": "http://localhost:3001/uploads/1772716354563-5wu984.png",
-            "type": "Viewer",
-            "level": "LV3&4"
-          }
-        ],
-        "icons": []
-      }
-    },
-    {
-      "id": "1772716151807brq",
+      "id": "17744283958312hr",
       "published": true,
       "title": "LIVE to SEA GAMES - TH",
       "date": "2025-11-14",
       "designer": "Jiacheng Cheng",
       "region": "TH",
       "level": "TOP",
-      "imageUrl": "http://localhost:3001/api/local-file?path=D%3A%5Ctrae%5Ckv-platform%5CAssets_Library%5CLIVE%20to%20SEA%20GAMES%20-%20TH%5CKV%5CLIVE%20to%20SEA%20GAMES%20-%20TH_Frame%202119910491_15-2295.png",
+      "imageUrl": "http://localhost:3001/api/local-file?path=%2FUsers%2Fbytedance%2FDocuments%2Fdesign%20hub%2FDesign-Hub%2Fkv-platform%2FAssets_Library%2FLIVE%20to%20SEA%20GAMES%20-%20TH%2FKV%2FLIVE%20to%20SEA%20GAMES%20-%20TH_Frame%202119910491_15-2295.png",
       "isIP": false,
       "type": "Key Visual",
       "gameplay": "",
       "figmaUrl": "https://www.figma.com/file/DCy8QHpgTmzGGd6fTDTXnQ",
       "categories": {
-        "theme": "",
-        "style": "3DCartoon",
-        "colorTone": "Bright",
-        "vibe": "Happy",
-        "element": "Character",
-        "size": "750",
-        "collaboration": "collaborate",
+        "size": "900",
         "ipCampaign": "NonIP"
       },
       "images": {
         "kv": [
           {
-            "id": "mmdh6v9jnklzx",
-            "url": "http://localhost:3001/api/local-file?path=D%3A%5Ctrae%5Ckv-platform%5CAssets_Library%5CLIVE%20to%20SEA%20GAMES%20-%20TH%5CKV%5CLIVE%20to%20SEA%20GAMES%20-%20TH_Frame%202119910491_15-2295.png",
+            "id": "mn5ss5w9i6w7v",
+            "url": "http://localhost:3001/api/local-file?path=%2FUsers%2Fbytedance%2FDocuments%2Fdesign%20hub%2FDesign-Hub%2Fkv-platform%2FAssets_Library%2FLIVE%20to%20SEA%20GAMES%20-%20TH%2FKV%2FLIVE%20to%20SEA%20GAMES%20-%20TH_Frame%202119910491_15-2295.png",
             "badgeText": "本地"
           }
         ],
         "h5": [
           {
-            "id": "mmdh72ijnu4le",
-            "url": "http://localhost:3001/api/local-file?path=D%3A%5Ctrae%5Ckv-platform%5CAssets_Library%5CLIVE%20to%20SEA%20GAMES%20-%20TH%5CH5%5CLIVE%20to%20SEA%20GAMES%20-%20TH_PK%E9%A1%B5UI_15-5060.png",
+            "id": "mn5ssazyzc7ol",
+            "url": "http://localhost:3001/api/local-file?path=%2FUsers%2Fbytedance%2FDocuments%2Fdesign%20hub%2FDesign-Hub%2Fkv-platform%2FAssets_Library%2FLIVE%20to%20SEA%20GAMES%20-%20TH%2FH5%2FLIVE%20to%20SEA%20GAMES%20-%20TH_PK%E9%A1%B5UI_15-5060.png",
             "badgeText": "本地"
           },
           {
-            "id": "mmdh740ebi1gl",
-            "url": "http://localhost:3001/api/local-file?path=D%3A%5Ctrae%5Ckv-platform%5CAssets_Library%5CLIVE%20to%20SEA%20GAMES%20-%20TH%5CH5%5CLIVE%20to%20SEA%20GAMES%20-%20TH_PK%20Container_15-5059.png",
+            "id": "mn5sscqxlw2ec",
+            "url": "http://localhost:3001/api/local-file?path=%2FUsers%2Fbytedance%2FDocuments%2Fdesign%20hub%2FDesign-Hub%2Fkv-platform%2FAssets_Library%2FLIVE%20to%20SEA%20GAMES%20-%20TH%2FH5%2FLIVE%20to%20SEA%20GAMES%20-%20TH_PK%20Container_15-5059.png",
             "badgeText": "本地"
           }
         ],
         "banner1029x276": [
           {
-            "id": "mmdh777g8fo06",
-            "url": "http://localhost:3001/api/local-file?path=D%3A%5Ctrae%5Ckv-platform%5CAssets_Library%5CLIVE%20to%20SEA%20GAMES%20-%20TH%5Cbanner%5CLIVE%20to%20SEA%20GAMES%20-%20TH_1029_276_15-5169.png",
+            "id": "mn5ssgajtimca",
+            "url": "http://localhost:3001/api/local-file?path=%2FUsers%2Fbytedance%2FDocuments%2Fdesign%20hub%2FDesign-Hub%2Fkv-platform%2FAssets_Library%2FLIVE%20to%20SEA%20GAMES%20-%20TH%2Fbanner%2FLIVE%20to%20SEA%20GAMES%20-%20TH_1029_276_15-5169.png",
             "badgeText": "本地"
           }
         ],
         "banner750x500": [
           {
-            "id": "mmdh78ndq4fyh",
-            "url": "http://localhost:3001/api/local-file?path=D%3A%5Ctrae%5Ckv-platform%5CAssets_Library%5CLIVE%20to%20SEA%20GAMES%20-%20TH%5Cbanner%5CLIVE%20to%20SEA%20GAMES%20-%20TH_750_200_15-5241.png",
+            "id": "mn5sshoo73h7f",
+            "url": "http://localhost:3001/api/local-file?path=%2FUsers%2Fbytedance%2FDocuments%2Fdesign%20hub%2FDesign-Hub%2Fkv-platform%2FAssets_Library%2FLIVE%20to%20SEA%20GAMES%20-%20TH%2Fbanner%2FLIVE%20to%20SEA%20GAMES%20-%20TH_750_200_15-5241.png",
             "badgeText": "本地"
           }
         ],
         "avatarFrame": [
           {
-            "id": "mmdh78xg980to",
-            "url": "http://localhost:3001/api/local-file?path=D%3A%5Ctrae%5Ckv-platform%5CAssets_Library%5CLIVE%20to%20SEA%20GAMES%20-%20TH%5CAvatarFrame%5CLIVE%20to%20SEA%20GAMES%20-%20TH_Creator_LV1_1_15-17350.png",
+            "id": "mn5sshy0sdclt",
+            "url": "http://localhost:3001/api/local-file?path=%2FUsers%2Fbytedance%2FDocuments%2Fdesign%20hub%2FDesign-Hub%2Fkv-platform%2FAssets_Library%2FShiny%20Night%20-%20TH%2FKV%2FShiny%20Night%20-%20TH_Version2_78-337.png",
             "type": "Creator",
             "level": "LV1",
             "badgeText": "本地"
           },
           {
-            "id": "mmdh79lrvy04t",
-            "url": "http://localhost:3001/api/local-file?path=D%3A%5Ctrae%5Ckv-platform%5CAssets_Library%5CLIVE%20to%20SEA%20GAMES%20-%20TH%5CAvatarFrame%5CLIVE%20to%20SEA%20GAMES%20-%20TH_Viewer_LV3%264_3_15-17398.png",
+            "id": "mn5ssij37ay8g",
+            "url": "http://localhost:3001/api/local-file?path=%2FUsers%2Fbytedance%2FDocuments%2Fdesign%20hub%2FDesign-Hub%2Fkv-platform%2FAssets_Library%2FLIVE%20to%20the%20MAX%20-%20%E6%95%99%E8%82%B2%2FAvatarFrame%2FLIVE%20to%20the%20MAX%20-%20%E6%95%99%E8%82%B2_Creator_LV3%264_3_61-3422.png",
             "type": "Viewer",
             "level": "LV3&4",
             "badgeText": "本地"
           },
           {
-            "id": "mmdh7a3x6b0su",
-            "url": "http://localhost:3001/api/local-file?path=D%3A%5Ctrae%5Ckv-platform%5CAssets_Library%5CLIVE%20to%20SEA%20GAMES%20-%20TH%5CAvatarFrame%5CLIVE%20to%20SEA%20GAMES%20-%20TH_Viewer_LV2_1_16-17473.png",
+            "id": "mn5ssisrafojk",
+            "url": "http://localhost:3001/api/local-file?path=%2FUsers%2Fbytedance%2FDocuments%2Fdesign%20hub%2FDesign-Hub%2Fkv-platform%2FAssets_Library%2FShiny%20Night%20-%20TH%2FAvatarFrame%2FShiny%20Night%20-%20TH_Viewer_LV3%264_1_39-34670.png",
             "type": "Viewer",
             "level": "LV2",
             "badgeText": "本地"
           },
           {
-            "id": "mmdh7b8znccxx",
-            "url": "http://localhost:3001/api/local-file?path=D%3A%5Ctrae%5Ckv-platform%5CAssets_Library%5CLIVE%20to%20SEA%20GAMES%20-%20TH%5CAvatarFrame%5CLIVE%20to%20SEA%20GAMES%20-%20TH_Viewer_LV3%264_3_16-17511.png",
+            "id": "mn5ssjf3zu7vf",
+            "url": "http://localhost:3001/api/local-file?path=%2FUsers%2Fbytedance%2FDocuments%2Fdesign%20hub%2FDesign-Hub%2Fkv-platform%2FAssets_Library%2FLIVE%20to%20SEA%20GAMES%20-%20TH%2FAvatarFrame%2FLIVE%20to%20SEA%20GAMES%20-%20TH_Viewer_LV3%264_3_16-17511.png",
             "type": "Viewer",
             "level": "LV3&4",
             "badgeText": "本地"
@@ -320,55 +149,356 @@
       }
     },
     {
-      "id": "1772625616552",
-      "title": "1",
-      "date": "2026-03-12",
-      "region": "GLOBAL",
+      "id": "ga-1774267022846-gc8182",
+      "published": true,
+      "designer": "",
+      "title": "Wonder Thai Festival  - TH",
+      "date": "2026-03-23",
+      "region": "SEA",
       "level": "TOP",
-      "imageUrl": "http://localhost:3001/uploads/1772625600051-jxj19q.png",
+      "imageUrl": "http://localhost:3001/uploads/ga-1774267022812-8k7ph53g.png",
       "isIP": false,
       "type": "Key Visual",
       "gameplay": "",
       "figmaUrl": "",
       "categories": {
-        "theme": "节日",
-        "style": "2DFlat",
-        "colorTone": "Warm",
-        "vibe": "Happy",
-        "element": "Star",
-        "size": "900",
+        "theme": "",
+        "style": "",
+        "colorTone": "",
+        "vibe": "",
+        "element": "",
+        "size": "",
         "ipCampaign": "NonIP",
         "collaboration": "Non collaborate"
       },
       "images": {
         "kv": [
           {
-            "id": "mmbziipjaw79n",
-            "url": "http://localhost:3001/uploads/1772625600051-jxj19q.png"
+            "id": "mn34rwma051dy3yvuw",
+            "url": "http://localhost:3001/uploads/ga-1774267022812-8k7ph53g.png"
+          },
+          {
+            "id": "mn34rwmflg8tdlufaz",
+            "url": "http://localhost:3001/uploads/ga-1774267022818-aqs5uwo0.png"
           }
         ],
         "h5": [
           {
-            "id": "mmbzikzeg70lm",
-            "url": "http://localhost:3001/uploads/1772625602998-9h8yww.png"
+            "id": "mn34rwmm8wp3rt8wmm",
+            "url": "http://localhost:3001/uploads/ga-1774267022823-nmh99cmg.png"
           }
         ],
         "banner1029x276": [
           {
-            "id": "mmbzimli1fjbm",
-            "url": "http://localhost:3001/uploads/1772625605091-r614ff.png"
+            "id": "mn34rwn024n0sj65mq",
+            "url": "http://localhost:3001/uploads/ga-1774267022830-w9kkeegs.png"
+          }
+        ],
+        "banner750x500": [],
+        "avatarFrame": [
+          {
+            "id": "mn34rwn23uua8sjvek",
+            "url": "http://localhost:3001/uploads/ga-1774267022844-fkhpsh8s.png",
+            "type": "Viewer",
+            "level": "LV2"
+          }
+        ],
+        "icons": []
+      }
+    },
+    {
+      "id": "ga-1774267022809-u21h67",
+      "published": false,
+      "designer": "",
+      "title": "TT LIVE Visual Template_ 团播音乐GroupLIVEMusic",
+      "date": "2026-03-23",
+      "region": "GLOBAL",
+      "level": "TOP",
+      "imageUrl": "http://localhost:3001/uploads/ga-1774267022761-uxp97fto.png",
+      "isIP": false,
+      "type": "Key Visual",
+      "gameplay": "",
+      "figmaUrl": "",
+      "categories": {
+        "theme": "",
+        "style": "",
+        "colorTone": "",
+        "vibe": "",
+        "element": "",
+        "size": "",
+        "ipCampaign": "NonIP",
+        "collaboration": "Non collaborate"
+      },
+      "images": {
+        "kv": [
+          {
+            "id": "mn34rwksycn71hhr7d",
+            "url": "http://localhost:3001/uploads/ga-1774267022761-uxp97fto.png"
+          },
+          {
+            "id": "mn34rwkwg1wcosyjok",
+            "url": "http://localhost:3001/uploads/ga-1774267022764-aq00azlt.png"
+          },
+          {
+            "id": "mn34rwl0jaqgygpvu3",
+            "url": "http://localhost:3001/uploads/ga-1774267022769-sp04rcv5.png"
+          },
+          {
+            "id": "mn34rwl3d0daldfukt",
+            "url": "http://localhost:3001/uploads/ga-1774267022772-0x1djncz.png"
+          }
+        ],
+        "h5": [
+          {
+            "id": "mn34rwl9gb8rttakxo",
+            "url": "http://localhost:3001/uploads/ga-1774267022775-03ey9h0b.png"
+          },
+          {
+            "id": "mn34rwlermypoiahyt",
+            "url": "http://localhost:3001/uploads/ga-1774267022781-5k6co45w.png"
+          },
+          {
+            "id": "mn34rwlil4a99731vn",
+            "url": "http://localhost:3001/uploads/ga-1774267022786-y1shdxs8.png"
+          },
+          {
+            "id": "mn34rwln11pti35p1w",
+            "url": "http://localhost:3001/uploads/ga-1774267022790-a7lkkc9c.png"
+          },
+          {
+            "id": "mn34rwlr6c161ccnio",
+            "url": "http://localhost:3001/uploads/ga-1774267022795-turpxypd.png"
+          },
+          {
+            "id": "mn34rwlwl7kpfg60hm",
+            "url": "http://localhost:3001/uploads/ga-1774267022799-sbmwpujm.png"
+          }
+        ],
+        "banner1029x276": [
+          {
+            "id": "mn34rwlyjdce7syla5",
+            "url": "http://localhost:3001/uploads/ga-1774267022804-fl6p51p6.png"
           }
         ],
         "banner750x500": [
           {
-            "id": "mmbziokeh04d9",
-            "url": "http://localhost:3001/uploads/1772625607643-wj2va2.png"
+            "id": "mn34rwm15nzhpzx47o",
+            "url": "http://localhost:3001/uploads/ga-1774267022807-dr61wmvc.png"
           }
         ],
         "avatarFrame": [],
         "icons": []
+      }
+    },
+    {
+      "id": "ga-1774267022759-6572o1",
+      "published": false,
+      "designer": "",
+      "title": "Shiny Night - TH",
+      "date": "2026-03-23",
+      "region": "SEA",
+      "level": "TOP",
+      "imageUrl": "http://localhost:3001/uploads/ga-1774267022703-wal3hl8k.png",
+      "isIP": false,
+      "type": "Key Visual",
+      "gameplay": "",
+      "figmaUrl": "",
+      "categories": {
+        "theme": "",
+        "style": "",
+        "colorTone": "",
+        "vibe": "",
+        "element": "",
+        "size": "",
+        "ipCampaign": "NonIP",
+        "collaboration": "Non collaborate"
       },
-      "published": true
+      "images": {
+        "kv": [
+          {
+            "id": "mn34rwj7s7rnl7cb4k",
+            "url": "http://localhost:3001/uploads/ga-1774267022703-wal3hl8k.png"
+          },
+          {
+            "id": "mn34rwjce6po3p79q4",
+            "url": "http://localhost:3001/uploads/ga-1774267022707-abilqglw.png"
+          }
+        ],
+        "h5": [
+          {
+            "id": "mn34rwjid7943fu97t",
+            "url": "http://localhost:3001/uploads/ga-1774267022712-8jq5tr01.png"
+          }
+        ],
+        "banner1029x276": [
+          {
+            "id": "mn34rwjlo0uegkf5ag",
+            "url": "http://localhost:3001/uploads/ga-1774267022718-i70w8rtr.png"
+          }
+        ],
+        "banner750x500": [
+          {
+            "id": "mn34rwjotzqns0xhwt",
+            "url": "http://localhost:3001/uploads/ga-1774267022721-1k3o14fp.png"
+          },
+          {
+            "id": "mn34rwkk09cqfihavz",
+            "url": "http://localhost:3001/uploads/ga-1774267022754-48xt3t3e.png"
+          }
+        ],
+        "avatarFrame": [
+          {
+            "id": "mn34rwkmntngqjl7oh",
+            "url": "http://localhost:3001/uploads/ga-1774267022756-rap1enxj.png",
+            "type": "Viewer",
+            "level": "LV3&4"
+          },
+          {
+            "id": "mn34rwknkq8c0zuift",
+            "url": "http://localhost:3001/uploads/ga-1774267022758-19lvcc6d.png",
+            "type": "Viewer",
+            "level": "LV3&4"
+          }
+        ],
+        "icons": []
+      }
+    },
+    {
+      "id": "ga-1774267022701-4shcpv",
+      "published": false,
+      "designer": "",
+      "title": "Rising Star - MY",
+      "date": "2026-03-23",
+      "region": "SEA",
+      "level": "TOP",
+      "imageUrl": "http://localhost:3001/uploads/ga-1774267022687-acm4vvvl.png",
+      "isIP": false,
+      "type": "Key Visual",
+      "gameplay": "",
+      "figmaUrl": "",
+      "categories": {
+        "theme": "",
+        "style": "",
+        "colorTone": "",
+        "vibe": "",
+        "element": "",
+        "size": "",
+        "ipCampaign": "NonIP",
+        "collaboration": "Non collaborate"
+      },
+      "images": {
+        "kv": [
+          {
+            "id": "mn34rwiqq4lhpwsp0m",
+            "url": "http://localhost:3001/uploads/ga-1774267022687-acm4vvvl.png"
+          },
+          {
+            "id": "mn34rwisqrkr2vu2nr",
+            "url": "http://localhost:3001/uploads/ga-1774267022690-xtm9fep9.png"
+          }
+        ],
+        "h5": [
+          {
+            "id": "mn34rwiwjkmstlvbz1",
+            "url": "http://localhost:3001/uploads/ga-1774267022692-0wszepy3.png"
+          }
+        ],
+        "banner1029x276": [
+          {
+            "id": "mn34rwiz7m6nfc3t03",
+            "url": "http://localhost:3001/uploads/ga-1774267022696-jl3iv6sg.png"
+          }
+        ],
+        "banner750x500": [
+          {
+            "id": "mn34rwj19g13ew4v6w",
+            "url": "http://localhost:3001/uploads/ga-1774267022699-m4vtni9f.png"
+          }
+        ],
+        "avatarFrame": [],
+        "icons": []
+      }
+    },
+    {
+      "id": "ga-1774267022686-xbrktd",
+      "published": false,
+      "designer": "",
+      "title": "LIVE to SEA GAMES - TH",
+      "date": "2026-03-23",
+      "region": "SEA",
+      "level": "TOP",
+      "imageUrl": "http://localhost:3001/uploads/ga-1774267022664-hvs1hu63.png",
+      "isIP": false,
+      "type": "Key Visual",
+      "gameplay": "",
+      "figmaUrl": "",
+      "categories": {
+        "theme": "",
+        "style": "",
+        "colorTone": "",
+        "vibe": "",
+        "element": "",
+        "size": "",
+        "ipCampaign": "NonIP",
+        "collaboration": "Non collaborate"
+      },
+      "images": {
+        "kv": [
+          {
+            "id": "mn34rwi3a559flvr2v",
+            "url": "http://localhost:3001/uploads/ga-1774267022664-hvs1hu63.png"
+          }
+        ],
+        "h5": [
+          {
+            "id": "mn34rwi7ezzsck4bj5",
+            "url": "http://localhost:3001/uploads/ga-1774267022667-8hnedwhw.png"
+          },
+          {
+            "id": "mn34rwicv843vr4c73",
+            "url": "http://localhost:3001/uploads/ga-1774267022671-42whl9kv.png"
+          }
+        ],
+        "banner1029x276": [
+          {
+            "id": "mn34rwifk2atkf83mj",
+            "url": "http://localhost:3001/uploads/ga-1774267022676-m01dmasz.png"
+          }
+        ],
+        "banner750x500": [
+          {
+            "id": "mn34rwihhhbhh4tovz",
+            "url": "http://localhost:3001/uploads/ga-1774267022679-3upek2od.png"
+          }
+        ],
+        "avatarFrame": [
+          {
+            "id": "mn34rwii591ef4z8gj",
+            "url": "http://localhost:3001/uploads/ga-1774267022681-58ffhe23.png",
+            "type": "Creator",
+            "level": "LV1"
+          },
+          {
+            "id": "mn34rwij1w6u65k5a5",
+            "url": "http://localhost:3001/uploads/ga-1774267022682-bms3eook.png",
+            "type": "Viewer",
+            "level": "LV2"
+          },
+          {
+            "id": "mn34rwilgj4b9liyzu",
+            "url": "http://localhost:3001/uploads/ga-1774267022683-nnl7zi7h.png",
+            "type": "Viewer",
+            "level": "LV3&4"
+          },
+          {
+            "id": "mn34rwimqerjqzw980",
+            "url": "http://localhost:3001/uploads/ga-1774267022685-8gi8hctx.png",
+            "type": "Viewer",
+            "level": "LV3&4"
+          }
+        ],
+        "icons": []
+      }
     },
     {
       "id": "1",
@@ -442,51 +572,6 @@
         ]
       },
       "published": false
-    },
-    {
-      "id": "2",
-      "title": "Summer Music Festival 2026",
-      "date": "2026-06-20",
-      "region": "US",
-      "level": "MATURE",
-      "imageUrl": "https://images.unsplash.com/photo-1540039155732-68473678d4dd?q=80&w=2000&auto=format&fit=crop",
-      "isIP": false,
-      "type": "Key Visual",
-      "gameplay": "Vote for favorite musicians to boost their rankings.",
-      "figmaUrl": "https://www.figma.com",
-      "categories": {
-        "theme": "团播",
-        "style": "3DCartoon",
-        "colorTone": "Cold",
-        "vibe": "Colorful",
-        "element": "Star",
-        "size": "750",
-        "ipCampaign": "NonIP",
-        "collaboration": "Non collaborate"
-      },
-      "images": {
-        "kv": [
-          {
-            "id": "kv2a",
-            "url": "https://images.unsplash.com/photo-1540039155732-68473678d4dd?q=80&w=2000&auto=format&fit=crop"
-          }
-        ],
-        "h5": [
-          {
-            "id": "h52a",
-            "url": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800&auto=format&fit=crop"
-          }
-        ],
-        "banner1029x276": [
-          {
-            "id": "b3a",
-            "url": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1029&auto=format&fit=crop"
-          }
-        ],
-        "banner750x500": [],
-        "avatarFrame": [],
-        "icons": []
-      }
     },
     {
       "id": "3",
@@ -609,61 +694,6 @@
           }
         ],
         "icons": []
-      }
-    },
-    {
-      "id": "5",
-      "title": "Winter Wonderland",
-      "date": "2026-12-25",
-      "region": "NEA",
-      "level": "MATURE",
-      "imageUrl": "https://images.unsplash.com/photo-1518204642646-0b3cb1ce1577?q=80&w=2000&auto=format&fit=crop",
-      "isIP": false,
-      "type": "Key Visual",
-      "gameplay": "Collect snowflakes to decorate virtual trees.",
-      "figmaUrl": "https://www.figma.com",
-      "categories": {
-        "theme": "旅行",
-        "style": "2DIllustration",
-        "colorTone": "Bright",
-        "vibe": "Simple",
-        "element": "Scenery",
-        "size": "500",
-        "ipCampaign": "NonIP",
-        "collaboration": "Non collaborate"
-      },
-      "images": {
-        "kv": [
-          {
-            "id": "kv5a",
-            "url": "https://images.unsplash.com/photo-1518204642646-0b3cb1ce1577?q=80&w=2000&auto=format&fit=crop"
-          }
-        ],
-        "h5": [
-          {
-            "id": "h55a",
-            "url": "https://images.unsplash.com/photo-1477346611705-65d1883cee1e?q=80&w=800&auto=format&fit=crop"
-          }
-        ],
-        "banner1029x276": [
-          {
-            "id": "b9a",
-            "url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1029&auto=format&fit=crop"
-          }
-        ],
-        "banner750x500": [
-          {
-            "id": "b10a",
-            "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=750&auto=format&fit=crop"
-          }
-        ],
-        "avatarFrame": [],
-        "icons": [
-          {
-            "id": "ic5a",
-            "url": "https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?q=80&w=200&auto=format&fit=crop"
-          }
-        ]
       }
     }
   ]

@@ -1,3 +1,5 @@
+import type { BannerSizePresetRow } from "@/config/bannerSizePresets";
+
 type ParamsPanelProps = {
   prompt: string;
   setPrompt: (v: string) => void;
@@ -7,6 +9,8 @@ type ParamsPanelProps = {
   setChainConsistency: (v: boolean) => void;
   watermark: boolean;
   setWatermark: (v: boolean) => void;
+  /** 有展示行时优先用（含比例说明 + 像素下限说明） */
+  sizeRows?: BannerSizePresetRow[];
   sizeOptions: string[];
   disabled?: boolean;
 };
@@ -22,11 +26,14 @@ export default function ParamsPanel(props: ParamsPanelProps) {
         <div className="grid gap-3">
           <div className="text-xs font-medium text-zinc-200">输出尺寸（可多选）</div>
           <div className="flex flex-wrap gap-2">
-            {props.sizeOptions.map((s) => {
-              const checked = props.selectedSizes.includes(s);
+            {(props.sizeRows?.length
+              ? props.sizeRows.map((r) => ({ size: r.size, sub: r.label }))
+              : props.sizeOptions.map((s) => ({ size: s, sub: "" }))
+            ).map(({ size, sub }) => {
+              const checked = props.selectedSizes.includes(size);
               return (
                 <label
-                  key={s}
+                  key={size}
                   className={
                     checked
                       ? "flex cursor-pointer items-center gap-2 rounded-md border border-indigo-500/40 bg-indigo-500/10 px-3 py-2 text-xs text-indigo-100"
@@ -37,21 +44,28 @@ export default function ParamsPanel(props: ParamsPanelProps) {
                     type="checkbox"
                     className="h-4 w-4 accent-indigo-500"
                     checked={checked}
-                    onChange={() => props.toggleSize(s)}
+                    onChange={() => props.toggleSize(size)}
                     disabled={props.disabled}
                   />
-                  {s}
+                  <span className="flex flex-col gap-0.5 leading-tight">
+                    <span className="font-medium">{size}</span>
+                    {sub ? <span className="text-[10px] font-normal text-zinc-500">{sub} · 像素下限档</span> : null}
+                  </span>
                 </label>
               );
             })}
           </div>
-          <div className="text-xs text-zinc-500">建议全选；生成会按顺序串行执行</div>
+          <div className="text-xs text-zinc-500">
+            各比例已按「方舟最小总像素」取整到不过分大于下限；生成仍按顺序串行，多选则总耗时叠加
+          </div>
         </div>
 
         <label className="flex items-center justify-between rounded-md border border-white/10 bg-white/5 px-3 py-2">
           <div>
-            <div className="text-sm font-medium text-zinc-100">保持一致（链式参考图）</div>
-            <div className="text-xs text-zinc-400">每个尺寸用上一个结果作为参考图，尽量统一画面</div>
+            <div className="text-sm font-medium text-zinc-100">链式参考（默认关）</div>
+            <div className="text-xs text-zinc-400">
+              开启后同组内下一尺寸以上一张结果为参考，画风更一致，但每步多一次参考图更新、总耗时略增；追求速度请保持关闭
+            </div>
           </div>
           <input
             type="checkbox"

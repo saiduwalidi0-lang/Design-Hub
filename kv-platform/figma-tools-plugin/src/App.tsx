@@ -1,7 +1,7 @@
 import React from 'react';
 import Home from "@/pages/Home";
 import { tools } from "@/tools/registry";
-import { useHashPath } from '@/router';
+import { NavigationProvider, useNavigation } from '@/router';
 
 class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { error: string | null }> {
   state = { error: null };
@@ -24,15 +24,18 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { err
   }
 }
 
-export default function App() {
-  const { path } = useHashPath();
+function AppRoutes() {
+  const { path } = useNavigation();
   const tool = tools.find(t => t.route === path);
+  return tool ? <tool.Component /> : <Home />;
+}
 
-  const element = tool ? <tool.Component /> : <Home />;
-
+export default function App() {
   return (
     <ErrorBoundary>
-      {element}
+      <NavigationProvider>
+        <AppRoutes />
+      </NavigationProvider>
     </ErrorBoundary>
   );
 }

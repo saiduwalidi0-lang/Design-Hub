@@ -1,5 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { AvatarFrameElement, AvatarFrameElementId, AvatarFrameResultState } from "@/types/avatarFrameTool";
+import type {
+  AvatarFrameCutoutMethod,
+  AvatarFrameElement,
+  AvatarFrameElementId,
+  AvatarFrameResultState,
+} from "@/types/avatarFrameTool";
 import { renderAvatarFrameDataUrls } from "@/utils/avatarFrameRender";
 import { createDefaultAvatarPlaceholderDataUrl } from "@/utils/defaultAvatarPlaceholder";
 import { downloadDataUrl } from "@/utils/downloadDataUrl";
@@ -64,7 +69,7 @@ export function useAvatarFrameComposer() {
   const [costMs, setCostMs] = useState<number | null>(null);
 
   const [autoCutout, setAutoCutout] = useState(true);
-  const [cutoutMethod, setCutoutMethod] = useState<"threshold" | "comfyuiRmbg" | "byteArtist">("comfyuiRmbg");
+  const [cutoutMethod, setCutoutMethod] = useState<AvatarFrameCutoutMethod>("rmbgLocal");
   const [cutoutThreshold, setCutoutThreshold] = useState(12);
 
   const [saliencyEndpoint, setSaliencyEndpoint] = useState(

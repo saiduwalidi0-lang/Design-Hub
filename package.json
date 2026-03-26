@@ -1,0 +1,8 @@
+{
+  "name": "design-hub",
+  "private": true,
+  "description": "Monorepo shortcuts — run from repo root",
+  "scripts": {
+    "avatar-frame-api": "npm run dev:avatar-frame-api --prefix ai-design-platform"
+  }
+}
