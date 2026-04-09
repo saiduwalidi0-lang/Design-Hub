@@ -2,11 +2,11 @@
  * 头像框生成 HTTP 契约 — 与 `kv-platform/figma-tools-plugin` 中
  * `KvToAvatarFramePage`（HTTP 模式）请求体、响应字段一致。
  *
- * 入口：POST `{baseUrl}/api/avatar-frame/generate`
+ * 入口：POST `{baseUrl}/api/avatar-frame/generate`；可选 GET `{baseUrl}/api/avatar-frame/default-config` 返回 `defaults.json`（与网页默认元素组一致）
  * 默认 baseUrl：`http://localhost:3004`（`npm run dev:avatar-frame-api`）
  *
  * 服务端流程（配置 Ark 后）：
- * 1. 读取默认模板 PNG（main / surround / top，来自 banner-expand-tool/public/avatar-frame-defaults）
+ * 1. 读取默认模板 PNG：未传 `defaultTemplates` 时为 `main.png` / `surround.png` / `top.png`；若传了则为相对 `avatar-frame-defaults/` 的路径（与 `defaults.json` 中各组的 `src` 一致）
  * 2. 三次 Ark 图生图：KV + 各模板 → element1/2/3 原始图
  * 3. 若未关闭抠图：每张图 POST 到 RMBG 本地服务 `RMBG_LOCAL_URL/cutout`（默认 127.0.0.1:8765）
  * 4. 按 spec 将三元素合成 compositeDataUrl（层级：环绕 → 主元素 → 顶部在上；再经裁切后的图层）
@@ -18,6 +18,12 @@
 export type AvatarFrameGenerateRequestBody = {
   kvPngDataUrl: string
   prompts?: Partial<{
+    element1: string
+    element2: string
+    element3: string
+  }>
+  /** 相对 `banner-expand-tool/public/avatar-frame-defaults/` 的文件路径，如 `main.png`、`sets/group-2/surround.png` */
+  defaultTemplates?: Partial<{
     element1: string
     element2: string
     element3: string

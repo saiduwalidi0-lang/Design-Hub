@@ -6,9 +6,12 @@ type DropzoneProps = {
   disabled?: boolean;
   previewDataUrl?: string;
   onFileSelected: (file: File | null) => void;
+  /** 头像框等场景：缩小预览与占位高度，节省纵向空间 */
+  variant?: "default" | "compact";
 };
 
-export default function Dropzone({ disabled, previewDataUrl, onFileSelected }: DropzoneProps) {
+export default function Dropzone({ disabled, previewDataUrl, onFileSelected, variant = "default" }: DropzoneProps) {
+  const compact = variant === "compact";
   const id = useId();
   const [dragOver, setDragOver] = useState(false);
 
@@ -53,9 +56,13 @@ export default function Dropzone({ disabled, previewDataUrl, onFileSelected }: D
       />
 
       {previewDataUrl ? (
-        <div className="grid gap-3 p-3">
+        <div className={cn("grid gap-3", compact ? "gap-2 p-2" : "p-3")}>
           <div className="overflow-hidden rounded-md border border-white/10 bg-zinc-950">
-            <img src={previewDataUrl} alt="upload" className="max-h-[260px] w-full object-contain" />
+            <img
+              src={previewDataUrl}
+              alt="upload"
+              className={cn("w-full object-contain", compact ? "max-h-[120px]" : "max-h-[260px]")}
+            />
           </div>
           <div className="flex items-center justify-between gap-2">
             <label
@@ -85,15 +92,23 @@ export default function Dropzone({ disabled, previewDataUrl, onFileSelected }: D
         <label
           htmlFor={id}
           className={cn(
-            "flex h-[220px] cursor-pointer flex-col items-center justify-center gap-2 px-4 text-center transition",
+            "flex cursor-pointer flex-col items-center justify-center gap-2 px-4 text-center transition",
+            compact ? "min-h-[100px] gap-1.5 py-4" : "h-[220px] gap-2",
             disabled && "cursor-not-allowed"
           )}
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5">
-            <Upload className="h-5 w-5 text-zinc-200" />
+          <div
+            className={cn(
+              "flex items-center justify-center rounded-full border border-white/10 bg-white/5",
+              compact ? "h-8 w-8" : "h-10 w-10"
+            )}
+          >
+            <Upload className={cn("text-zinc-200", compact ? "h-4 w-4" : "h-5 w-5")} />
           </div>
-          <div className="text-sm text-zinc-200">拖拽图片到此处，或点击选择文件</div>
-          <div className="text-xs text-zinc-500">支持 PNG/JPG/WebP 等常见格式</div>
+          <div className={cn("text-zinc-200", compact ? "text-xs" : "text-sm")}>
+            拖拽图片到此处，或点击选择文件
+          </div>
+          <div className={cn("text-zinc-500", compact ? "text-[11px]" : "text-xs")}>支持 PNG/JPG/WebP 等常见格式</div>
         </label>
       )}
     </div>

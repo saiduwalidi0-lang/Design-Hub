@@ -7,7 +7,7 @@ function sendJson(res, statusCode, obj) {
     'Content-Type': 'application/json; charset=utf-8',
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   });
   res.end(body);
 }
@@ -136,14 +136,81 @@ function makeCompositePng(targetSize, boxesLogical, images, scaleFromFigma = { w
 // 与 cms-admin / CMS 的 3001 错开；插件默认 baseUrl 为 http://localhost:3010
 const PORT = 3010;
 
+/** 与 banner-expand-tool/public/avatar-frame-defaults/defaults.json 对齐（供 GET default-config） */
+const EMBEDDED_DEFAULT_CONFIG = {
+  defaultGroupId: 'group-1',
+  groups: [
+    {
+      id: 'group-1',
+      name: '默认组（奖杯）',
+      thumbnail: 'thumbs/group-1.png',
+      order: ['element2', 'element3', 'element1'],
+      elements: {
+        element1: { src: 'main.png' },
+        element2: { src: 'surround.png' },
+        element3: { src: 'top.png' },
+      },
+    },
+    {
+      id: 'group-2',
+      name: '第二组',
+      thumbnail: 'thumbs/group-2.png',
+      order: ['element2', 'element3', 'element1'],
+      elements: {
+        element1: { src: 'main.png' },
+        element2: { src: 'sets/group-2/surround.png' },
+        element3: { src: 'sets/group-2/top.png' },
+      },
+    },
+    {
+      id: 'group-3',
+      name: '第三组',
+      thumbnail: 'thumbs/group-3.png',
+      order: ['element2', 'element3', 'element1'],
+      elements: {
+        element1: { src: 'main.png' },
+        element2: { src: 'sets/group-3/surround.png' },
+        element3: { src: 'sets/group-3/top.png' },
+      },
+    },
+    {
+      id: 'group-4',
+      name: '第四组',
+      thumbnail: 'thumbs/group-4.png',
+      order: ['element2', 'element3', 'element1'],
+      elements: {
+        element1: { src: 'main.png' },
+        element2: { src: 'sets/group-4/surround.png' },
+        element3: { src: 'sets/group-4/top.png' },
+      },
+    },
+    {
+      id: 'group-5',
+      name: '第五组',
+      thumbnail: 'thumbs/group-5.png',
+      order: ['element2', 'element3', 'element1'],
+      elements: {
+        element1: { src: 'main.png' },
+        element2: { src: 'sets/group-5/surround.png' },
+        element3: { src: 'sets/group-5/top.png' },
+      },
+    },
+  ],
+};
+
 const server = http.createServer(async (req, res) => {
   if (req.method === 'OPTIONS') {
     res.writeHead(204, {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
     });
     res.end();
+    return;
+  }
+
+  if (req.method === 'GET' && req.url === '/api/avatar-frame/default-config') {
+    sendJson(res, 200, EMBEDDED_DEFAULT_CONFIG);
     return;
   }
 

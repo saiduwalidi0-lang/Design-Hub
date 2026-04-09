@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { cn } from "@/lib/utils";
 import PageShell from "@/components/PageShell";
 import Dropzone from "@/components/Dropzone";
 import ParamsPanel from "@/components/ParamsPanel";
@@ -18,11 +19,14 @@ import {
   ensureDataUrl,
   getImageSizeFromSrc,
   trimTransparentBounds,
-  fitImageIntoBox,
   removeNearBlackBackgroundToTransparent,
   resizeImageDataUrlExact,
 } from "@/utils/image";
-import { AVATAR_FRAME_FIGMA_ALIGN, AVATAR_FRAME_FIGMA_TARGET_FRAME, getScaledFigmaBoxes } from "@/utils/avatarFrameFigmaSpec";
+import { AVATAR_FRAME_FIGMA_TARGET_FRAME } from "@/utils/avatarFrameFigmaSpec";
+import {
+  avatarFrameTrimAlphaThreshold,
+  buildFigmaFillsForElementFromTrimmed,
+} from "@/utils/avatarFrameLevelSpec";
 import { cutoutWithByteArtistAFr } from "@/utils/byteArtistCutout";
 import { cutoutWithComfyUiRmbg } from "@/utils/comfyuiRmbgCutout";
 import { cutoutWithRmbgLocalServer } from "@/utils/rmbgLocalCutout";
@@ -31,7 +35,7 @@ import { generateBannerSet } from "@/utils/bannerGenerate";
 import { makeBannerFilename } from "@/utils/filenames";
 import { useAvatarFrameComposer } from "@/hooks/useAvatarFrameComposer";
 import { arkGenerateImage } from "@/utils/ark";
-import type { AvatarFrameElementId } from "@/types/avatarFrameTool";
+import type { AvatarFrameElement, AvatarFrameElementId } from "@/types/avatarFrameTool";
 
 const DEFAULT_PROMPT =
   "向左扩图成 3000×800 banner，主体内容保持在右侧，左侧保持干净留白或纯背景，不要出现任何新元素/人物/文字；左右过渡自然；去除图中 logo 和标题；整体风格与原图一致，细节真实。";
@@ -295,13 +299,16 @@ export default function Home({ initialAvatarFrame = false }: HomeProps) {
       return await removeNearBlackBackgroundToTransparent(resizedDataUrl, avatar.cutoutThreshold);
     })();
 
-    const trimmed = await trimTransparentBounds(dataUrl);
-    const figmaBoxes = getScaledFigmaBoxes(AVATAR_FRAME_FIGMA_TARGET_FRAME.width);
-    const figmaBox = figmaBoxes[id];
-    const figmaAlign = AVATAR_FRAME_FIGMA_ALIGN[id];
-    const figmaFill = await fitImageIntoBox(trimmed.dataUrl, figmaBox.width, figmaBox.height, figmaAlign, {
-      allowScaleUp: false,
-    });
+    const trimmed = await trimTransparentBounds(dataUrl, avatarFrameTrimAlphaThreshold(id));
+    const [figmaFillByLevel, figmaFillByLevelViewer] = await Promise.all([
+      buildFigmaFillsForElementFromTrimmed(trimmed.dataUrl, id, AVATAR_FRAME_FIGMA_TARGET_FRAME.width, {
+        layout: "anchor",
+      }),
+      buildFigmaFillsForElementFromTrimmed(trimmed.dataUrl, id, AVATAR_FRAME_FIGMA_TARGET_FRAME.width, {
+        layout: "viewer",
+      }),
+    ]);
+    const figmaFillL = figmaFillByLevel.L;
 
     avatar.setElements((prev) =>
       prev.map((e) =>
@@ -312,8 +319,13 @@ export default function Home({ initialAvatarFrame = false }: HomeProps) {
               generatedHistory: [dataUrl, ...(e.generatedHistory ?? [])].slice(0, 12),
               croppedDataUrl: trimmed.dataUrl,
               croppedHistory: [trimmed.dataUrl, ...(e.croppedHistory ?? [])].slice(0, 12),
-              figmaFillDataUrl: figmaFill,
-              figmaFillHistory: [figmaFill, ...(e.figmaFillHistory ?? [])].slice(0, 12),
+              figmaFillDataUrl: figmaFillL ?? e.figmaFillDataUrl,
+              figmaFillByLevel: { ...(e.figmaFillByLevel ?? {}), ...figmaFillByLevel },
+              figmaFillByLevelViewer: { ...(e.figmaFillByLevelViewer ?? {}), ...figmaFillByLevelViewer },
+              figmaFillHistory:
+                figmaFillL != null
+                  ? [figmaFillL, ...(e.figmaFillHistory ?? [])].slice(0, 12)
+                  : e.figmaFillHistory,
               naturalWidth: w,
               naturalHeight: h,
               visible: true,
@@ -321,6 +333,55 @@ export default function Home({ initialAvatarFrame = false }: HomeProps) {
           : e
       )
     );
+  }
+
+  /**
+   * 不调模型：用各槽当前 `dataUrl`（默认素材即可）裁透明边后，按主播/观众槽位生成 Figma 填充并刷新下方预览。
+   */
+  async function quickFigmaSlotPreviewFromAssets(): Promise<{ ok: true } | { ok: false; message: string }> {
+    const targets = avatar.elements.filter((e) => Boolean(e.dataUrl?.trim()));
+    if (targets.length === 0) {
+      return { ok: false, message: "没有已加载的底图，请先选择默认套或确认素材路径" };
+    }
+    try {
+      const patchById = new Map<
+        AvatarFrameElementId,
+        Pick<AvatarFrameElement, "figmaFillDataUrl" | "figmaFillByLevel" | "figmaFillByLevelViewer">
+      >();
+
+      await Promise.all(
+        targets.map(async (el) => {
+          const base = await ensureDataUrl(el.dataUrl!);
+          const trimmedDataUrl = el.croppedDataUrl
+            ? el.croppedDataUrl
+            : (await trimTransparentBounds(base, avatarFrameTrimAlphaThreshold(el.id))).dataUrl;
+          const [figmaFillByLevel, figmaFillByLevelViewer] = await Promise.all([
+            buildFigmaFillsForElementFromTrimmed(trimmedDataUrl, el.id, AVATAR_FRAME_FIGMA_TARGET_FRAME.width, {
+              layout: "anchor",
+            }),
+            buildFigmaFillsForElementFromTrimmed(trimmedDataUrl, el.id, AVATAR_FRAME_FIGMA_TARGET_FRAME.width, {
+              layout: "viewer",
+            }),
+          ]);
+          const figmaFillL = figmaFillByLevel.L;
+          patchById.set(el.id, {
+            figmaFillDataUrl: figmaFillL ?? el.figmaFillDataUrl,
+            figmaFillByLevel: { ...(el.figmaFillByLevel ?? {}), ...figmaFillByLevel },
+            figmaFillByLevelViewer: { ...(el.figmaFillByLevelViewer ?? {}), ...figmaFillByLevelViewer },
+          });
+        })
+      );
+
+      avatar.setElements((prev) =>
+        prev.map((e) => {
+          const p = patchById.get(e.id);
+          return p ? { ...e, ...p } : e;
+        })
+      );
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, message: e instanceof Error ? e.message : String(e) };
+    }
   }
 
   function bannerItemsForDownload() {
@@ -363,15 +424,24 @@ export default function Home({ initialAvatarFrame = false }: HomeProps) {
     setBannerDownloadTotalMs(Math.round(performance.now() - startAll));
   }
 
+  const avatarOnlyLayout = outputAvatarFrame && !outputBanner;
+
   return (
     <PageShell title="制作">
-      <div className="grid gap-4 lg:grid-cols-2">
-        <div className="grid gap-4">
-          <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-            <div className="mb-3 flex items-center justify-between">
+      <div className={cn("grid xl:grid-cols-[minmax(0,1fr)_420px]", avatarOnlyLayout ? "gap-3" : "gap-4")}>
+        <div className={cn("min-w-0 grid", avatarOnlyLayout ? "gap-3" : "gap-4")}>
+          <div
+            className={cn(
+              "rounded-xl border border-white/10 bg-white/5",
+              avatarOnlyLayout ? "p-3" : "p-4"
+            )}
+          >
+            <div className={cn("flex items-center justify-between", avatarOnlyLayout ? "mb-2" : "mb-3")}>
               <div>
                 <div className="text-sm font-semibold">上传头图</div>
-                <div className="mt-0.5 text-xs text-zinc-400">支持拖拽或点击选择</div>
+                <div className="mt-0.5 text-xs text-zinc-400">
+                  {avatarOnlyLayout ? "KV 参考图，用于图生图" : "支持拖拽或点击选择"}
+                </div>
               </div>
               {upload.status === "ready" ? (
                 <div className="text-xs text-zinc-400">
@@ -383,6 +453,7 @@ export default function Home({ initialAvatarFrame = false }: HomeProps) {
               onFileSelected={onFileSelected}
               disabled={result.status === "loading"}
               previewDataUrl={upload.status === "ready" ? upload.dataUrl : undefined}
+              variant={avatarOnlyLayout ? "compact" : "default"}
             />
             {upload.status === "ready" ? (
               <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-zinc-400">
@@ -414,6 +485,10 @@ export default function Home({ initialAvatarFrame = false }: HomeProps) {
           ) : null}
           {outputAvatarFrame ? (
             <AvatarFrameEditorPanel
+              defaultGroups={avatar.defaultGroups}
+              selectedDefaultSuiteId={avatar.selectedDefaultSuiteId}
+              selectedDefaultGroupKind={avatar.selectedDefaultGroupKind}
+              onSelectDefaultSuite={avatar.applyDefaultSuite}
               elements={avatar.elements}
               order={avatar.order}
               setOrder={avatar.setOrder}
@@ -448,6 +523,7 @@ export default function Home({ initialAvatarFrame = false }: HomeProps) {
 
               onComposeAvatarFrame={avatar.generate}
               onShowAvatarResult={() => setActiveResultTab("avatar")}
+              onQuickFigmaSlotPreview={quickFigmaSlotPreviewFromAssets}
 
               disabled={false}
             />
@@ -469,18 +545,20 @@ export default function Home({ initialAvatarFrame = false }: HomeProps) {
             onOpenSettings={() => nav("/settings")}
           />
         </div>
-        <ResultPanel
-          result={result}
-          avatarResult={avatar.result}
-          activeTab={activeResultTab}
-          setActiveTab={setActiveResultTab}
-          onDownloadOne={onDownloadOne}
-          onDownloadAll={onDownloadAll}
-          onDownloadAvatar={onDownloadAvatar}
-          bannerGenerateTotalMs={bannerCostMs}
-          bannerDownloadTotalMs={bannerDownloadTotalMs}
-          bannerDownloadMsBySize={bannerDownloadMsBySize}
-        />
+        <div className="min-w-0 xl:sticky xl:top-6 xl:self-start">
+          <ResultPanel
+            result={result}
+            avatarResult={avatar.result}
+            activeTab={activeResultTab}
+            setActiveTab={setActiveResultTab}
+            onDownloadOne={onDownloadOne}
+            onDownloadAll={onDownloadAll}
+            onDownloadAvatar={onDownloadAvatar}
+            bannerGenerateTotalMs={bannerCostMs}
+            bannerDownloadTotalMs={bannerDownloadTotalMs}
+            bannerDownloadMsBySize={bannerDownloadMsBySize}
+          />
+        </div>
       </div>
     </PageShell>
   );

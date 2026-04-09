@@ -2,8 +2,7 @@
  * 主播头像框三档（S/M/L）在 **交付 Frame 270×270** 下的元素框位（左上角原点）。
  *
  * - **L 档**：固定为历史默认，请勿改。
- * - **S / M 档**：只改下面 `M_ELEMENT*`、`S_ELEMENT*` 共 8 个数字（主元素 + 环绕各一组 x,y,width,height）。
- *   无顶部图层；`element3` 仅在 L 使用。
+ * - **S / M 档**：仅主元素 + 环绕；**无顶饰**（LV1/LV2 规范）。与 `banner-expand-tool` `avatarFrameLevelSpec` 一致。
  */
 
 export type AvatarFrameLevel = 'S' | 'M' | 'L';
@@ -101,7 +100,12 @@ export function getWriteBoxesForLevel(level: AvatarFrameLevel): {
 } {
   const spec = buildAvatarFrameSpecForLevel(level);
   const b = spec.boxes as Record<string, AvatarFrameElementBox & { align?: string }>;
-  if (!('element3' in b) || !b.element3) {
+  if (
+    !('element3' in b) ||
+    !b.element3 ||
+    b.element3.width <= 0 ||
+    b.element3.height <= 0
+  ) {
     return {
       element1: { x: b.element1.x, y: b.element1.y, width: b.element1.width, height: b.element1.height },
       element2: { x: b.element2.x, y: b.element2.y, width: b.element2.width, height: b.element2.height },

@@ -15,6 +15,16 @@ function patch(elements: AvatarFrameElement[], id: AvatarFrameElementId, p: Part
   return elements.map((e) => (e.id === id ? { ...e, ...p } : e));
 }
 
+/** 观众框等：保持圆环在最底层，只重排其余图层 */
+function composeOrderWithRing(
+  baseOrder: AvatarFrameElementId[],
+  layerOrder: AvatarFrameElementId[]
+): AvatarFrameElementId[] {
+  if (!baseOrder.includes("element4")) return layerOrder;
+  const rest = layerOrder.filter((id) => id !== "element4");
+  return ["element4", ...rest] as AvatarFrameElementId[];
+}
+
 export function buildAvatarFrameCandidates(
   elements: AvatarFrameElement[],
   order: AvatarFrameElementId[],
@@ -35,19 +45,19 @@ export function buildAvatarFrameCandidates(
       id: "order1",
       name: "方案 B（顶部覆盖）",
       elements: cloneElements(elements),
-      order: ["element2", "element1", "element3"],
+      order: composeOrderWithRing(order, ["element2", "element1", "element3"]),
     });
     candidates.push({
       id: "order2",
       name: "方案 C（环绕覆盖）",
       elements: cloneElements(elements),
-      order: ["element1", "element3", "element2"],
+      order: composeOrderWithRing(order, ["element1", "element3", "element2"]),
     });
     candidates.push({
       id: "order3",
       name: "方案 D（主元素覆盖）",
       elements: cloneElements(elements),
-      order: ["element2", "element3", "element1"],
+      order: composeOrderWithRing(order, ["element2", "element3", "element1"]),
     });
   } else {
     candidates.push({
@@ -77,7 +87,7 @@ export function buildAvatarFrameCandidates(
         y: 22,
         scale: 1.02,
       }),
-      order: ["element2", "element1", "element3"],
+      order: composeOrderWithRing(order, ["element2", "element1", "element3"]),
     });
   }
 

@@ -15,6 +15,24 @@ export type ArkGenerateInput = {
   referenceImageDataUrl?: string | string[];
 };
 
+/**
+ * 开发环境下将火山 Ark 绝对地址改为走 Vite 同源代理（`vite.config` 中 `/api/volc-ark`），避免浏览器 CORS 导致 Failed to fetch。
+ * 生产构建仍使用设置里填写的完整 URL（需自行解决跨域或走服务端）。
+ */
+export function resolveArkEndpointForBrowser(endpoint: string): string {
+  const e = endpoint.trim()
+  if (!import.meta.env.DEV) return e
+  try {
+    const u = new URL(e)
+    if (/volces\.com|volcengine\.com/i.test(u.hostname)) {
+      return `/api/volc-ark${u.pathname}${u.search}`
+    }
+  } catch {
+    /* 已是相对路径等 */
+  }
+  return e
+}
+
 function asRecord(v: unknown): Record<string, unknown> | null {
   if (!v || typeof v !== "object") return null;
   return v as Record<string, unknown>;
@@ -95,14 +113,25 @@ export async function arkGenerateImage(input: ArkGenerateInput) {
     }
   }
 
-  const res = await fetch(input.endpoint, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${input.apiKey}`,
-    },
-    body: JSON.stringify(payload),
-  });
+  const fetchUrl = resolveArkEndpointForBrowser(input.endpoint)
+  let res: Response
+  try {
+    res = await fetch(fetchUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${input.apiKey}`,
+      },
+      body: JSON.stringify(payload),
+    })
+  } catch (err) {
+    const raw = err instanceof Error ? err.message : String(err)
+    const hint =
+      import.meta.env.DEV && /failed to fetch|networkerror|load failed/i.test(raw)
+        ? "（开发环境已启用 /api/volc-ark 代理；若仍失败请重启 dev 并确认设置里为火山 Ark 完整地址）"
+        : ""
+    throw new Error(`${raw}${hint ? ` ${hint}` : ""}`)
+  }
 
   const text = await res.text();
   const data = text ? safeJsonParse(text) : null;
@@ -112,11 +141,11 @@ export async function arkGenerateImage(input: ArkGenerateInput) {
     throw new Error(msg);
   }
 
-  const url = pickUrlFromResponse(data);
+  const imageUrl = pickUrlFromResponse(data);
   const b64Json = pickB64FromResponse(data);
-  if (!url && !b64Json) throw new Error("未获取到结果图片");
+  if (!imageUrl && !b64Json) throw new Error("未获取到结果图片");
 
-  return { url: url ?? undefined, b64Json: b64Json ?? undefined, raw: data };
+  return { url: imageUrl ?? undefined, b64Json: b64Json ?? undefined, raw: data };
 }
 
 function safeJsonParse(text: string) {

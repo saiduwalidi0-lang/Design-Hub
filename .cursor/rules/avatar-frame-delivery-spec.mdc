@@ -1,0 +1,13 @@
+---
+description: 头像框（主播/观众）交付档位与图层规范，避免误加圆环或 LV1/LV2 顶饰
+globs: "**/avatarFrame*.{ts,tsx,js,mjs}", "**/kvToAvatarFrame/**", "**/avatarFrameLevelSpec.ts", "**/avatarFrameLevelPreviews.ts", "**/avatar-frame-defaults/**"
+alwaysApply: false
+---
+
+# 头像框交付规范（产品约定）
+
+- **主播头像框**：不包含 **圆环**（`element4`）。槽位、默认组、Figma 合成与 UI 卡片均按「无圆环」处理；不要将观众用 `ring.png` 自动套给主播组。
+- **档位与顶饰**：**仅 LV3（L 档）** 有 **顶部元素**（`element3`）。**LV1（S）、LV2（M）没有顶部元素**——槽位尺寸应为 0×0 或 spec 中省略 `element3`，合成顺序与 `avatarFrameLevelIncludesTop` 须与之一致。
+- **观众头像框**：保留 **圆环**（`element4`）；S/M 仍 **无** 顶饰，L 档有顶饰（含观众 LV3 特殊摆位/旋转时在 `viewer` layout 中处理）。网页 **成套点选** 某风格时，应 **同时合并** 同 `suiteId` 下 `preset: viewer` 的 `ring.png` 作为 `element4` 底图供 AI；**图层顺序仍用主播组**（不含 `element4`），主画布预览不叠圆环，**仅「观众」Figma 合成预览** 使用圆环（`figmaLayout: "viewer"`）。
+
+实现上需与 **`banner-expand-tool` `avatarFrameLevelSpec.ts`**、**`ai-design-platform` `avatarFrameLevelPreviews.ts`**、**Figma 插件 `kvToAvatarFrame/avatarFrameLevelLayout.ts`** 保持同步。

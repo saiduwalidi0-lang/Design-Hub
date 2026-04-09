@@ -1,3 +1,12 @@
+import avatarFramePreviewBasePng from "@/assets/avatar-frame-preview-base.png";
+
+/**
+ * 内置示例头像底图（打包为稳定 URL，避免依赖 `public/` 根路径在代理/子路径下 404，
+ * 也不会退回旧版 SVG 渐变占位）。
+ */
+export const AVATAR_FRAME_DEFAULT_PLACEHOLDER_SRC: string = avatarFramePreviewBasePng;
+
+/** 无静态资源时的 SVG 渐变圆占位（开发与回退） */
 export function createDefaultAvatarPlaceholderDataUrl(size = 320) {
   const r = Math.floor(size * 0.34);
   const cx = size / 2;

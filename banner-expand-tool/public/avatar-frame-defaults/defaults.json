@@ -1,15 +1,136 @@
 {
-  "order": ["element1", "element2", "element3"],
-  "elements": {
-    "element1": {
-      "dataUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMB/1k8b9cAAAAASUVORK5CYII="
+  "defaultGroupId": "group-1",
+  "groups": [
+    {
+      "id": "group-1",
+      "name": "第一组",
+      "suiteId": "1",
+      "thumbnail": "thumbs/group-1.png",
+      "order": ["element2", "element3", "element1"],
+      "elements": {
+        "element1": { "src": "main.png" },
+        "element2": { "src": "surround.png" },
+        "element3": { "src": "top.png" }
+      }
     },
-    "element2": {
-      "dataUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMB/1k8b9cAAAAASUVORK5CYII="
+    {
+      "id": "group-2",
+      "name": "第二组",
+      "suiteId": "2",
+      "thumbnail": "thumbs/group-2.png",
+      "order": ["element2", "element3", "element1"],
+      "elements": {
+        "element1": { "src": "main.png" },
+        "element2": { "src": "sets/group-2/surround.png" },
+        "element3": { "src": "sets/group-2/top.png" }
+      }
     },
-    "element3": {
-      "dataUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMB/1k8b9cAAAAASUVORK5CYII="
+    {
+      "id": "group-3",
+      "name": "第三组",
+      "suiteId": "3",
+      "thumbnail": "thumbs/group-3.png",
+      "order": ["element2", "element3", "element1"],
+      "elements": {
+        "element1": { "src": "main.png" },
+        "element2": { "src": "sets/group-3/surround.png" },
+        "element3": { "src": "sets/group-3/top.png" }
+      }
+    },
+    {
+      "id": "group-4",
+      "name": "第四组",
+      "suiteId": "4",
+      "thumbnail": "thumbs/group-4.png",
+      "order": ["element2", "element3", "element1"],
+      "elements": {
+        "element1": { "src": "main.png" },
+        "element2": { "src": "sets/group-4/surround.png" },
+        "element3": { "src": "sets/group-4/top.png" }
+      }
+    },
+    {
+      "id": "group-5",
+      "name": "第五组",
+      "suiteId": "5",
+      "thumbnail": "thumbs/group-5.png",
+      "order": ["element2", "element3", "element1"],
+      "elements": {
+        "element1": { "src": "main.png" },
+        "element2": { "src": "sets/group-5/surround.png" },
+        "element3": { "src": "sets/group-5/top.png" }
+      }
+    },
+    {
+      "id": "group-viewer",
+      "name": "观众头像框",
+      "suiteId": "1",
+      "preset": "viewer",
+      "thumbnail": "thumbs/group-viewer-1.png",
+      "order": ["element4", "element2", "element3", "element1"],
+      "elements": {
+        "element4": { "src": "sets/viewer/ring.png" },
+        "element1": { "src": "main.png" },
+        "element2": { "src": "surround.png" },
+        "element3": { "src": "top.png" }
+      }
+    },
+    {
+      "id": "group-viewer-2",
+      "name": "观众头像框",
+      "suiteId": "2",
+      "preset": "viewer",
+      "thumbnail": "thumbs/group-viewer-2.png",
+      "order": ["element4", "element2", "element3", "element1"],
+      "elements": {
+        "element4": { "src": "sets/viewer/ring.png" },
+        "element1": { "src": "main.png" },
+        "element2": { "src": "sets/group-2/surround.png" },
+        "element3": { "src": "sets/group-2/top.png" }
+      }
+    },
+    {
+      "id": "group-viewer-3",
+      "name": "观众头像框",
+      "suiteId": "3",
+      "preset": "viewer",
+      "thumbnail": "thumbs/group-viewer-3.png",
+      "order": ["element4", "element2", "element3", "element1"],
+      "elements": {
+        "element4": { "src": "sets/viewer/ring.png" },
+        "element1": { "src": "main.png" },
+        "element2": { "src": "sets/group-3/surround.png" },
+        "element3": { "src": "sets/group-3/top.png" }
+      }
+    },
+    {
+      "id": "group-viewer-4",
+      "name": "观众头像框",
+      "suiteId": "4",
+      "preset": "viewer",
+      "thumbnail": "thumbs/group-viewer-4.png",
+      "order": ["element4", "element2", "element3", "element1"],
+      "elements": {
+        "element4": { "src": "sets/viewer/ring.png" },
+        "element1": { "src": "main.png" },
+        "element2": { "src": "sets/group-4/surround.png" },
+        "element3": { "src": "sets/group-4/top.png" }
+      }
+    },
+    {
+      "id": "group-viewer-5",
+      "name": "观众头像框",
+      "suiteId": "5",
+      "preset": "viewer",
+      "thumbnail": "thumbs/group-viewer-5.png",
+      "order": ["element4", "element2", "element3", "element1"],
+      "elements": {
+        "element4": { "src": "sets/viewer/ring.png" },
+        "element1": { "src": "main.png" },
+        "element2": { "src": "sets/group-5/surround.png" },
+        "element3": { "src": "sets/group-5/top.png" }
+      }
     }
-  }
+  ]
 }
 

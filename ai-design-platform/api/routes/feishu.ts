@@ -27,6 +27,10 @@ import {
 } from '../services/feishuConversation.js'
 import { generateArkImage, isArkImageConfigured } from '../services/arkImageProvider.js'
 import { analyzeImageWithAI } from '../services/aiProvider.js'
+import {
+  feishuReplyAvatarFrameResult,
+  isFeishuAvatarFrameImageModeEnabled,
+} from '../services/feishuAvatarFrameBot.js'
 
 function enrichRequirementWithImageInsight(draft: { requirementText: string; imageInsight?: string }): string {
   const base = draft.requirementText?.trim() ?? ''
@@ -75,6 +79,28 @@ router.post('/event', async (req: Request, res: Response): Promise<void> => {
 
   if (messageType === 'post' && typeof contentRaw === 'string') {
     const post = parsePostContent(contentRaw)
+
+    if (
+      isFeishuAvatarFrameImageModeEnabled() &&
+      post.imageKeys.length > 0 &&
+      !post.text.trim()
+    ) {
+      const first = post.imageKeys[0]
+      res.status(200).json({ success: true })
+      void (async () => {
+        const img = await downloadImageBytes({ imageKey: first }).catch(() => null)
+        if (!img) {
+          await replyTextMessage({ messageId, text: '图片下载失败，可能权限不足或图片过期。' }).catch(() => {})
+          return
+        }
+        await feishuReplyAvatarFrameResult({
+          messageId,
+          kvBytes: img.bytes,
+          contentType: img.contentType,
+        })
+      })()
+      return
+    }
 
     if (post.imageKeys.length > 0) {
       await replyTextMessage({
@@ -144,6 +170,23 @@ router.post('/event', async (req: Request, res: Response): Promise<void> => {
     if (!imageKey) {
       await replyTextMessage({ messageId, text: '我收到了图片消息，但没有解析到 image_key。你可以再发一次。' }).catch(() => {})
       res.status(200).json({ success: true })
+      return
+    }
+
+    if (isFeishuAvatarFrameImageModeEnabled()) {
+      res.status(200).json({ success: true })
+      void (async () => {
+        const img = await downloadImageBytes({ imageKey }).catch(() => null)
+        if (!img) {
+          await replyTextMessage({ messageId, text: '图片下载失败，可能权限不足或图片过期。' }).catch(() => {})
+          return
+        }
+        await feishuReplyAvatarFrameResult({
+          messageId,
+          kvBytes: img.bytes,
+          contentType: img.contentType,
+        })
+      })()
       return
     }
 

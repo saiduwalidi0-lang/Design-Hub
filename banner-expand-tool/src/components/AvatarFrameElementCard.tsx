@@ -1,8 +1,19 @@
-import { useState } from "react";
+import { type CSSProperties } from "react";
 import { ChevronDown, ChevronUp, Copy, RotateCcw, Sparkles } from "lucide-react";
 import Button from "@/components/Button";
-import type { AvatarFrameElement } from "@/types/avatarFrameTool";
+import type { AvatarFrameElement, AvatarFrameLevel } from "@/types/avatarFrameTool";
+import { avatarFrameLevelIncludesTop } from "@/utils/avatarFrameLevelSpec";
 import { dataUrlToBlob } from "@/utils/image";
+
+function pickPrimaryFigmaFillUrl(el: AvatarFrameElement): string | undefined {
+  const order: AvatarFrameLevel[] = ["L", "M", "S"];
+  for (const level of order) {
+    if (el.id === "element3" && !avatarFrameLevelIncludesTop(level)) continue;
+    const url = el.figmaFillByLevel?.[level] ?? (level === "L" ? el.figmaFillDataUrl : undefined);
+    if (url) return url;
+  }
+  return undefined;
+}
 
 type AvatarFrameElementCardProps = {
   el: AvatarFrameElement;
@@ -39,42 +50,39 @@ function formatNumber(n: number) {
   return s.length > 12 ? n.toFixed(2) : s;
 }
 
+const checkerboardStyle: CSSProperties = {
+  backgroundImage:
+    "linear-gradient(45deg, rgba(255,255,255,0.08) 25%, transparent 25%), linear-gradient(-45deg, rgba(255,255,255,0.08) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.08) 75%), linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.08) 75%)",
+  backgroundSize: "18px 18px",
+  backgroundPosition: "0 0, 0 9px, 9px -9px, -9px 0px",
+};
+
 export default function AvatarFrameElementCard(props: AvatarFrameElementCardProps) {
-  const [copyHint, setCopyHint] = useState<string | null>(null);
+  const primaryFigmaFill = pickPrimaryFigmaFillUrl(props.el);
 
   async function copyImage(dataUrl: string) {
     try {
       if (!navigator.clipboard || !window.ClipboardItem) throw new Error("复制失败");
       const blob = dataUrlToBlob(dataUrl);
       await navigator.clipboard.write([new ClipboardItem({ [blob.type || "image/png"]: blob })]);
-      setCopyHint("已复制到剪贴板");
-      window.setTimeout(() => setCopyHint(null), 1600);
     } catch {
-      setCopyHint("复制失败");
-      window.setTimeout(() => setCopyHint(null), 2000);
+      // ignore
     }
   }
 
   return (
-    <div className="rounded-lg border border-white/10 bg-zinc-950/40">
+    <div className="rounded-lg border border-white/10 bg-zinc-950/40 text-xs">
       <div className="flex w-full items-center justify-between gap-2 px-3 py-2">
         <button type="button" className="min-w-0 flex-1 text-left" onClick={props.onExpand}>
-          <div className="truncate text-sm font-medium text-zinc-100">
+          <div className="truncate text-xs font-medium text-zinc-100">
             {props.el.label}
             {props.el.required ? <span className="ml-2 text-xs text-rose-200">必填</span> : null}
             {props.aiDone ? <span className="ml-2 text-xs text-emerald-200">已 AI</span> : null}
           </div>
-          <div className="mt-0.5 text-xs text-zinc-500">
-            {props.el.dataUrl ? "默认素材" : "未设置"}
-            {props.el.generatedDataUrl ? " · 已生成" : ""}
-            {typeof props.el.naturalWidth === "number" && typeof props.el.naturalHeight === "number"
-              ? ` · ${props.el.naturalWidth}×${props.el.naturalHeight}`
-              : ""}
-          </div>
         </button>
 
         <div className="flex items-center gap-2">
-          <label className="flex cursor-pointer items-center gap-2 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-zinc-200">
+          <label className="flex cursor-pointer items-center gap-2 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-[11px] text-zinc-200">
             <input
               type="checkbox"
               className="h-4 w-4 accent-indigo-500"
@@ -106,208 +114,36 @@ export default function AvatarFrameElementCard(props: AvatarFrameElementCardProp
       </div>
 
       {props.expanded ? (
-        <div className="grid gap-3 border-t border-white/10 px-3 py-3">
-          <div className="grid gap-2 sm:grid-cols-2">
-            <div>
-              <div className="mb-1 text-xs font-medium text-zinc-200">底图（默认）</div>
-              <div
-                className="overflow-hidden rounded-md border border-white/10"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(45deg, rgba(255,255,255,0.08) 25%, transparent 25%), linear-gradient(-45deg, rgba(255,255,255,0.08) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.08) 75%), linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.08) 75%)",
-                  backgroundSize: "18px 18px",
-                  backgroundPosition: "0 0, 0 9px, 9px -9px, -9px 0px",
-                }}
-              >
-                {props.el.dataUrl ? (
-                  <img src={props.el.dataUrl} alt="default" className="block h-auto w-full" />
-                ) : (
-                  <div className="px-3 py-6 text-center text-xs text-zinc-500">未加载默认素材</div>
-                )}
-              </div>
-            </div>
-
-            <div>
-              <div className="mb-1 text-xs font-medium text-zinc-200">生成结果</div>
-              <div
-                className="overflow-hidden rounded-md border border-white/10"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(45deg, rgba(255,255,255,0.08) 25%, transparent 25%), linear-gradient(-45deg, rgba(255,255,255,0.08) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.08) 75%), linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.08) 75%)",
-                  backgroundSize: "18px 18px",
-                  backgroundPosition: "0 0, 0 9px, 9px -9px, -9px 0px",
-                }}
-              >
-                {props.el.generatedDataUrl ? (
-                  <img src={props.el.generatedDataUrl} alt="generated" className="block h-auto w-full" />
-                ) : (
-                  <div className="px-3 py-6 text-center text-xs text-zinc-500">未生成</div>
-                )}
-              </div>
-
-              {props.el.generatedHistory && props.el.generatedHistory.length > 1 ? (
-                <div className="mt-2">
-                  <div className="mb-1 text-xs text-zinc-500">历史（点击切换）</div>
-                  <div className="flex flex-wrap gap-2">
-                    {props.el.generatedHistory.map((u, idx) => {
-                      const active = u === props.el.generatedDataUrl;
-                      return (
-                        <button
-                          key={`${idx}`}
-                          type="button"
-                          className={
-                            active
-                              ? "h-12 w-12 overflow-hidden rounded-md border border-indigo-500/50 bg-indigo-500/10"
-                              : "h-12 w-12 overflow-hidden rounded-md border border-white/10 bg-white/5 hover:bg-white/10"
-                          }
-                          onClick={() => props.onSelectGenerated(u)}
-                          disabled={props.disabled}
-                          title={active ? "当前" : "点击切换"}
-                        >
-                          <img src={u} alt="history" className="block h-full w-full object-cover" />
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
+        <div className="grid gap-2 border-t border-white/10 px-3 py-2">
+          <div>
+            <div className="mb-1 text-xs font-medium text-zinc-200">Figma 填充</div>
+            <div
+              className="mx-auto flex aspect-square w-full max-w-[200px] items-center justify-center overflow-hidden rounded-md border border-white/10"
+              style={checkerboardStyle}
+              title={primaryFigmaFill ? "点击预览" : "未生成"}
+            >
+              {primaryFigmaFill ? (
+                <button
+                  type="button"
+                  className="flex h-full w-full items-center justify-center p-0.5"
+                  onClick={() => window.open(primaryFigmaFill, "_blank", "noopener,noreferrer")}
+                  disabled={props.disabled}
+                >
+                  <img src={primaryFigmaFill} alt="" className="max-h-full max-w-full object-contain" />
+                </button>
               ) : null}
             </div>
-          </div>
-
-          <div>
-            <div className="mb-1 text-xs font-medium text-zinc-200">裁剪后素材（像素边界）</div>
-            <div
-              className="overflow-hidden rounded-md border border-white/10"
-              style={{
-                backgroundImage:
-                  "linear-gradient(45deg, rgba(255,255,255,0.08) 25%, transparent 25%), linear-gradient(-45deg, rgba(255,255,255,0.08) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.08) 75%), linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.08) 75%)",
-                backgroundSize: "18px 18px",
-                backgroundPosition: "0 0, 0 9px, 9px -9px, -9px 0px",
-              }}
-            >
-              {props.el.croppedDataUrl ? (
-                <button
-                  type="button"
-                  className="block w-full"
-                  onClick={() => window.open(props.el.croppedDataUrl, "_blank", "noopener,noreferrer")}
-                  disabled={props.disabled}
-                >
-                  <img src={props.el.croppedDataUrl} alt="cropped" className="block h-auto w-full" />
-                </button>
-              ) : (
-                <div className="px-3 py-6 text-center text-xs text-zinc-500">未生成</div>
-              )}
-            </div>
             <div className="mt-2 flex items-center gap-2">
               <Button
                 variant="ghost"
                 type="button"
-                disabled={props.disabled || !props.el.croppedDataUrl}
-                onClick={() => props.el.croppedDataUrl && void copyImage(props.el.croppedDataUrl)}
-              >
-                <Copy className="h-4 w-4" />
-                复制裁剪图
-              </Button>
-              <Button
-                variant="ghost"
-                type="button"
-                disabled={props.disabled || !props.el.generatedDataUrl}
-                onClick={() => props.el.generatedDataUrl && void copyImage(props.el.generatedDataUrl)}
-              >
-                <Copy className="h-4 w-4" />
-                复制生成图
-              </Button>
-            </div>
-            {props.el.croppedHistory && props.el.croppedHistory.length > 1 ? (
-              <div className="mt-2">
-                <div className="mb-1 text-xs text-zinc-500">历史（点击切换）</div>
-                <div className="flex flex-wrap gap-2">
-                  {props.el.croppedHistory.map((u, idx) => {
-                    const active = u === props.el.croppedDataUrl;
-                    return (
-                      <button
-                        key={`${idx}`}
-                        type="button"
-                        className={
-                          active
-                            ? "h-12 w-12 overflow-hidden rounded-md border border-indigo-500/50 bg-indigo-500/10"
-                            : "h-12 w-12 overflow-hidden rounded-md border border-white/10 bg-white/5 hover:bg-white/10"
-                        }
-                        onClick={() => props.onSelectCropped(u)}
-                        disabled={props.disabled}
-                        title={active ? "当前" : "点击切换"}
-                      >
-                        <img src={u} alt="cropped_history" className="block h-full w-full object-cover" />
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            ) : null}
-          </div>
-
-          <div>
-            <div className="mb-1 text-xs font-medium text-zinc-200">Figma 填充素材（Fit / 270 比例 / 1024 分辨率）</div>
-            <div
-              className="overflow-hidden rounded-md border border-white/10"
-              style={{
-                backgroundImage:
-                  "linear-gradient(45deg, rgba(255,255,255,0.08) 25%, transparent 25%), linear-gradient(-45deg, rgba(255,255,255,0.08) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.08) 75%), linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.08) 75%)",
-                backgroundSize: "18px 18px",
-                backgroundPosition: "0 0, 0 9px, 9px -9px, -9px 0px",
-              }}
-            >
-              {props.el.figmaFillDataUrl ? (
-                <button
-                  type="button"
-                  className="block w-full"
-                  onClick={() => window.open(props.el.figmaFillDataUrl, "_blank", "noopener,noreferrer")}
-                  disabled={props.disabled}
-                >
-                  <img src={props.el.figmaFillDataUrl} alt="figma_fill" className="block h-auto w-full" />
-                </button>
-              ) : (
-                <div className="px-3 py-6 text-center text-xs text-zinc-500">未生成</div>
-              )}
-            </div>
-            <div className="mt-2 flex items-center gap-2">
-              <Button
-                variant="ghost"
-                type="button"
-                disabled={props.disabled || !props.el.figmaFillDataUrl}
-                onClick={() => props.el.figmaFillDataUrl && void copyImage(props.el.figmaFillDataUrl)}
+                disabled={props.disabled || !primaryFigmaFill}
+                onClick={() => primaryFigmaFill && void copyImage(primaryFigmaFill)}
               >
                 <Copy className="h-4 w-4" />
                 复制填充图
               </Button>
-              {copyHint ? <div className="text-xs text-zinc-400">{copyHint}</div> : null}
             </div>
-            {props.el.figmaFillHistory && props.el.figmaFillHistory.length > 1 ? (
-              <div className="mt-2">
-                <div className="mb-1 text-xs text-zinc-500">历史（点击切换）</div>
-                <div className="flex flex-wrap gap-2">
-                  {props.el.figmaFillHistory.map((u, idx) => {
-                    const active = u === props.el.figmaFillDataUrl;
-                    return (
-                      <button
-                        key={`${idx}`}
-                        type="button"
-                        className={
-                          active
-                            ? "h-12 w-12 overflow-hidden rounded-md border border-indigo-500/50 bg-indigo-500/10"
-                            : "h-12 w-12 overflow-hidden rounded-md border border-white/10 bg-white/5 hover:bg-white/10"
-                        }
-                        onClick={() => props.onSelectFigmaFill(u)}
-                        disabled={props.disabled}
-                        title={active ? "当前" : "点击切换"}
-                      >
-                        <img src={u} alt="figma_fill_history" className="block h-full w-full object-cover" />
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            ) : null}
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
@@ -369,23 +205,20 @@ export default function AvatarFrameElementCard(props: AvatarFrameElementCardProp
                 />
               </label>
             </div>
-          ) : (
-            <div className="text-xs text-zinc-500">严格锁定已开启：不提供位置/缩放/旋转调整</div>
-          )}
+          ) : null}
 
           <div className="grid gap-2">
-            <div className="text-xs font-medium text-zinc-200">AI 编辑（图生图）</div>
-            <div className="text-xs text-zinc-500">参考图：图 1 = KV；图 2 固定为底图（默认），不会用合成预览或生成结果</div>
+            <div className="text-xs font-medium text-zinc-200">描述词</div>
             <textarea
               value={props.aiPrompt}
               onChange={(e) => props.setAiPrompt(e.target.value)}
               rows={3}
               disabled={props.disabled}
               className="w-full rounded-md border border-white/15 bg-zinc-950 px-3 py-2 text-sm text-zinc-50 outline-none transition focus:border-indigo-500/60"
-              placeholder="例如：把材质改成金属霓虹风，保留形状与透明背景"
+              placeholder=""
             />
-            <div className="flex flex-wrap items-center gap-2">
-              {!props.batchOnly ? (
+            {!props.batchOnly ? (
+              <div className="flex flex-wrap items-center gap-2">
                 <Button
                   variant="secondary"
                   type="button"
@@ -401,11 +234,8 @@ export default function AvatarFrameElementCard(props: AvatarFrameElementCardProp
                   <Sparkles className="h-4 w-4" />
                   {props.aiLoading ? "编辑中…" : "AI 编辑并回填"}
                 </Button>
-              ) : (
-                <div className="text-xs text-zinc-500">此处不单独生成，请使用顶部“一键生成三元素并合成”</div>
-              )}
-              {!props.aiEnabled ? <div className="text-xs text-zinc-500">请先在设置页配置 API Key</div> : null}
-            </div>
+              </div>
+            ) : null}
             {props.aiError ? (
               <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-200">
                 {props.aiError}

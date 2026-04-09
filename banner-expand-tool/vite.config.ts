@@ -11,6 +11,8 @@ export default defineConfig(({ mode }) => {
   const saliencyAppKey = (env.VITE_SALIENCY_SEG_APP_KEY ?? '').trim()
   const saliencyAppSecret = (env.VITE_SALIENCY_SEG_APP_SECRET ?? '').trim()
   const rmbgLocalServer = (env.VITE_RMBG_LOCAL_SERVER ?? 'http://127.0.0.1:8765').trim()
+  /** 浏览器直连火山 Ark 常触发 CORS → Failed to fetch；开发时走同源代理 */
+  const arkProxyTarget = (env.VITE_ARK_PROXY_TARGET ?? 'https://ark.cn-beijing.volces.com').trim()
 
   const proxyRules: Record<string, unknown> = {}
 
@@ -53,6 +55,21 @@ export default defineConfig(({ mode }) => {
     } catch {
       // ignore invalid saliency URL
     }
+  }
+
+  try {
+    const arkUrl = new URL(arkProxyTarget)
+    proxyRules['/api/volc-ark'] = {
+      target: `${arkUrl.protocol}//${arkUrl.host}`,
+      changeOrigin: true,
+      secure: true,
+      rewrite: (path: string) => {
+        const next = path.replace(/^\/api\/volc-ark/, '')
+        return next.length > 0 ? next : '/'
+      },
+    }
+  } catch {
+    // ignore invalid Ark proxy URL
   }
 
   try {

@@ -11,6 +11,15 @@ import {
   getWriteBoxesForLevel,
 } from '@/tools/kvToAvatarFrame/avatarFrameLevelLayout';
 import { generateAvatarFrameMock } from '@/tools/kvToAvatarFrame/mockGenerate';
+import {
+  type SlotFillsForLevel,
+  computeAllLevelSlotFills,
+} from '@/tools/kvToAvatarFrame/computeAllLevelSlotFills';
+import { AVATAR_FRAME_DEFAULT_PROMPTS } from '@/tools/kvToAvatarFrame/avatarFramePrompts';
+import {
+  EMBEDDED_AVATAR_FRAME_DEFAULTS,
+  type AvatarFrameDefaultsFile,
+} from '@/tools/kvToAvatarFrame/embeddedAvatarFrameDefaults';
 
 type NodeMeta = {
   id: string;
@@ -21,11 +30,20 @@ type NodeMeta = {
 };
 
 type GenResult = {
+  /** 抠图后透明底（调试用） */
   element1DataUrl: string;
   element2DataUrl: string;
   element3DataUrl: string;
+  /** LV1/LV2/LV3 槽位贴图（同一次生成、按槽位缩放，无额外出图） */
+  fillsByLevel: Record<AvatarFrameLevel, SlotFillsForLevel>;
   /** 服务端合成预览；可能为空 */
   compositeDataUrl?: string;
+};
+
+const LEVEL_PREVIEW_LABEL: Record<AvatarFrameLevel, string> = {
+  S: 'LV1',
+  M: 'LV2',
+  L: 'LV3',
 };
 
 function bytesToDataUrl(bytes: Uint8Array, contentType: string) {
@@ -64,88 +82,6 @@ async function ensureDataUrl(src: string) {
   return await blobToDataUrl(blob);
 }
 
-async function trimTransparentBounds(inputSrc: string, alphaThreshold = 1) {
-  const dataUrl = await ensureDataUrl(inputSrc);
-  const img = new Image();
-  const imgLoaded = new Promise<void>((resolve, reject) => {
-    img.onload = () => resolve();
-    img.onerror = () => reject(new Error('load_image_failed'));
-  });
-  img.crossOrigin = 'anonymous';
-  img.src = dataUrl;
-  await imgLoaded;
-
-  const w = Math.max(1, Math.floor(img.width));
-  const h = Math.max(1, Math.floor(img.height));
-  const canvas = document.createElement('canvas');
-  canvas.width = w;
-  canvas.height = h;
-  const ctx = canvas.getContext('2d');
-  if (!ctx) throw new Error('canvas_not_supported');
-  ctx.clearRect(0, 0, w, h);
-  ctx.drawImage(img, 0, 0, w, h);
-  const data = ctx.getImageData(0, 0, w, h).data;
-
-  let minX = w;
-  let minY = h;
-  let maxX = -1;
-  let maxY = -1;
-  for (let y = 0; y < h; y += 1) {
-    for (let x = 0; x < w; x += 1) {
-      const a = data[(y * w + x) * 4 + 3];
-      if (a >= alphaThreshold) {
-        if (x < minX) minX = x;
-        if (y < minY) minY = y;
-        if (x > maxX) maxX = x;
-        if (y > maxY) maxY = y;
-      }
-    }
-  }
-
-  if (maxX < minX || maxY < minY) return dataUrl;
-  const cropW = Math.max(1, maxX - minX + 1);
-  const cropH = Math.max(1, maxY - minY + 1);
-  const out = document.createElement('canvas');
-  out.width = cropW;
-  out.height = cropH;
-  const outCtx = out.getContext('2d');
-  if (!outCtx) throw new Error('canvas_not_supported');
-  outCtx.drawImage(canvas, minX, minY, cropW, cropH, 0, 0, cropW, cropH);
-  return out.toDataURL('image/png');
-}
-
-async function removeNearBlackBackgroundToTransparent(inputSrc: string, threshold = 10) {
-  const dataUrl = await ensureDataUrl(inputSrc);
-  const img = new Image();
-  const imgLoaded = new Promise<void>((resolve, reject) => {
-    img.onload = () => resolve();
-    img.onerror = () => reject(new Error('load_image_failed'));
-  });
-  img.crossOrigin = 'anonymous';
-  img.src = dataUrl;
-  await imgLoaded;
-
-  const w = Math.max(1, Math.floor(img.width));
-  const h = Math.max(1, Math.floor(img.height));
-  const canvas = document.createElement('canvas');
-  canvas.width = w;
-  canvas.height = h;
-  const ctx = canvas.getContext('2d');
-  if (!ctx) throw new Error('canvas_not_supported');
-  ctx.clearRect(0, 0, w, h);
-  ctx.drawImage(img, 0, 0, w, h);
-  const imageData = ctx.getImageData(0, 0, w, h);
-  const data = imageData.data;
-  for (let i = 0; i < data.length; i += 4) {
-    const r = data[i];
-    const g = data[i + 1];
-    const b = data[i + 2];
-    if (r <= threshold && g <= threshold && b <= threshold) data[i + 3] = 0;
-  }
-  ctx.putImageData(imageData, 0, 0);
-  return canvas.toDataURL('image/png');
-}
-
 function joinUrl(baseUrl: string, path: string) {
   const b = baseUrl.replace(/\/+$/, '');
   const p = path.startsWith('/') ? path : `/${path}`;
@@ -154,6 +90,32 @@ function joinUrl(baseUrl: string, path: string) {
 
 function asRecord(v: unknown): Record<string, unknown> | null {
   return v && typeof v === 'object' ? (v as Record<string, unknown>) : null;
+}
+
+function isDefaultsFile(v: unknown): v is AvatarFrameDefaultsFile {
+  const o = asRecord(v);
+  if (!o || typeof o.defaultGroupId !== 'string') return false;
+  if (!Array.isArray(o.groups)) return false;
+  return o.groups.every((g) => {
+    const gr = asRecord(g);
+    return gr && typeof gr.id === 'string' && typeof gr.name === 'string' && gr.elements && typeof gr.elements === 'object';
+  });
+}
+
+function defaultTemplatesFromGroup(group: AvatarFrameDefaultsFile['groups'][number]) {
+  const el = group.elements || {};
+  return {
+    element1: typeof el.element1?.src === 'string' ? el.element1.src : 'main.png',
+    element2: typeof el.element2?.src === 'string' ? el.element2.src : 'surround.png',
+    element3: typeof el.element3?.src === 'string' ? el.element3.src : 'top.png',
+  };
+}
+
+function groupThumbnailUrl(group: AvatarFrameDefaultsFile['groups'][number], assetsRoot: string): string | null {
+  const thumb = typeof group.thumbnail === 'string' ? group.thumbnail.trim() : '';
+  const root = assetsRoot.trim().replace(/\/+$/, '');
+  if (!thumb || !root) return null;
+  return joinUrl(root, `avatar-frame-defaults/${thumb.replace(/^\/+/, '')}`);
 }
 
 const FIGMA_FRAME_PREVIEW = 270;
@@ -168,13 +130,8 @@ async function loadImageForPreview(src: string): Promise<HTMLImageElement> {
   });
 }
 
-/** 与 Figma 回写同一套框位：270×270，层级 环绕→主→顶（仅 L 有顶） */
-async function composeFigmaFramePreview270(
-  level: AvatarFrameLevel,
-  element1DataUrl: string,
-  element2DataUrl: string,
-  element3DataUrl: string
-): Promise<string> {
+/** 与 Figma 回写同一套框位：270×270，使用已按槽位 fit 的贴图 */
+async function composeFigmaFramePreview270(level: AvatarFrameLevel, fills: SlotFillsForLevel): Promise<string> {
   const wb = getWriteBoxesForLevel(level);
   const canvas = document.createElement('canvas');
   canvas.width = FIGMA_FRAME_PREVIEW;
@@ -183,11 +140,8 @@ async function composeFigmaFramePreview270(
   if (!ctx) throw new Error('canvas_not_supported');
   ctx.clearRect(0, 0, FIGMA_FRAME_PREVIEW, FIGMA_FRAME_PREVIEW);
 
-  const [i1, i2, i3] = await Promise.all([
-    loadImageForPreview(element1DataUrl),
-    loadImageForPreview(element2DataUrl),
-    loadImageForPreview(element3DataUrl),
-  ]);
+  const i2 = await loadImageForPreview(fills.element2);
+  const i1 = await loadImageForPreview(fills.element1);
 
   const draw = (img: HTMLImageElement, box: { x: number; y: number; width: number; height: number }) => {
     if (box.width < 1 || box.height < 1) return;
@@ -196,14 +150,22 @@ async function composeFigmaFramePreview270(
 
   draw(i2, wb.element2);
   draw(i1, wb.element1);
-  if (wb.element3) {
+  if (fills.element3 && wb.element3 && wb.element3.width >= 1 && wb.element3.height >= 1) {
+    const i3 = await loadImageForPreview(fills.element3);
     draw(i3, wb.element3);
   }
 
   return canvas.toDataURL('image/png');
 }
 
-function parseGenResponse(data: unknown): GenResult {
+type ParsedGenResponse = {
+  element1DataUrl: string;
+  element2DataUrl: string;
+  element3DataUrl: string;
+  compositeDataUrl?: string;
+};
+
+function parseGenResponse(data: unknown): ParsedGenResponse {
   const d = asRecord(data);
   const root = asRecord(d?.result) ?? d;
   const get = (...keys: string[]) => {
@@ -240,47 +202,91 @@ type UiState =
 
 export function KvToAvatarFramePage() {
   const { navigate } = useNavigation();
-  const { mode, baseUrl, token, generatePath, setMode, setBaseUrl, setToken, setGeneratePath } = useAvatarFrameSettings();
-  const [frameLevel, setFrameLevel] = useState<AvatarFrameLevel>('L');
+  const {
+    mode,
+    baseUrl,
+    assetsBaseUrl,
+    token,
+    generatePath,
+    setMode,
+    setBaseUrl,
+    setAssetsBaseUrl,
+    setToken,
+    setGeneratePath,
+  } = useAvatarFrameSettings();
   const [state, setState] = useState<UiState>({ status: 'idle' });
   const [kvMeta, setKvMeta] = useState<NodeMeta | null>(null);
   const [kvPngDataUrl, setKvPngDataUrl] = useState<string | null>(null);
   const [kvJsonText, setKvJsonText] = useState<string>('');
   const [result, setResult] = useState<GenResult | null>(null);
-  /** 按当前档位框位在 270 画布上合成，与回写 Frame 一致 */
-  const [framePreviewUrl, setFramePreviewUrl] = useState<string | null>(null);
+  const [framePreviewByLevel, setFramePreviewByLevel] = useState<Partial<Record<AvatarFrameLevel, string>>>({});
   const [framePreviewBusy, setFramePreviewBusy] = useState(false);
   const kvJsonRef = useRef<unknown>(null);
+  const [defaultsConfig, setDefaultsConfig] = useState<AvatarFrameDefaultsFile>(EMBEDDED_AVATAR_FRAME_DEFAULTS);
+  const [selectedGroupId, setSelectedGroupId] = useState<string>(EMBEDDED_AVATAR_FRAME_DEFAULTS.defaultGroupId);
 
   const canRun = state.status === 'idle' || state.status === 'success' || state.status === 'error';
 
+  const selectedDefaultGroup = useMemo(() => {
+    const g = defaultsConfig.groups.find((x) => x.id === selectedGroupId);
+    return g ?? defaultsConfig.groups[0] ?? null;
+  }, [defaultsConfig.groups, selectedGroupId]);
+
   useEffect(() => {
-    if (!result) {
-      setFramePreviewUrl(null);
+    const ids = new Set(defaultsConfig.groups.map((x) => x.id));
+    setSelectedGroupId((prev) => (ids.has(prev) ? prev : defaultsConfig.defaultGroupId));
+  }, [defaultsConfig.defaultGroupId, defaultsConfig.groups]);
+
+  useEffect(() => {
+    if (mode !== 'http' || !baseUrl.trim()) return;
+    let cancelled = false;
+    void (async () => {
+      try {
+        const url = joinUrl(baseUrl, '/api/avatar-frame/default-config');
+        const res = await fetch(url);
+        if (!res.ok) return;
+        const data: unknown = await res.json();
+        if (cancelled || !isDefaultsFile(data)) return;
+        setDefaultsConfig(data);
+      } catch {
+        // 保留内嵌 defaults
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [mode, baseUrl]);
+
+  useEffect(() => {
+    if (!result?.fillsByLevel) {
+      setFramePreviewByLevel({});
       setFramePreviewBusy(false);
       return;
     }
     let cancelled = false;
     setFramePreviewBusy(true);
-    composeFigmaFramePreview270(
-      frameLevel,
-      result.element1DataUrl,
-      result.element2DataUrl,
-      result.element3DataUrl
-    )
-      .then((url) => {
-        if (!cancelled) setFramePreviewUrl(url);
-      })
-      .catch(() => {
-        if (!cancelled) setFramePreviewUrl(null);
-      })
-      .finally(() => {
+    void (async () => {
+      try {
+        const levels = ['L', 'M', 'S'] as const;
+        const entries = await Promise.all(
+          levels.map(async (lv) => {
+            const url = await composeFigmaFramePreview270(lv, result.fillsByLevel[lv]);
+            return [lv, url] as const;
+          })
+        );
+        if (!cancelled) {
+          setFramePreviewByLevel(Object.fromEntries(entries) as Record<AvatarFrameLevel, string>);
+        }
+      } catch {
+        if (!cancelled) setFramePreviewByLevel({});
+      } finally {
         if (!cancelled) setFramePreviewBusy(false);
-      });
+      }
+    })();
     return () => {
       cancelled = true;
     };
-  }, [result, frameLevel]);
+  }, [result]);
 
   useEffect(() => {
     return onPluginMessage((msg) => {
@@ -328,17 +334,21 @@ export function KvToAvatarFramePage() {
 
       setState({ status: 'generating' });
 
-      const specPayload = buildAvatarFrameSpecForLevel(frameLevel);
+      const specPayload = buildAvatarFrameSpecForLevel('L');
 
       if (mode === 'mock') {
-        const mockSpec = buildMockSpecBoxesForLevel(frameLevel);
+        const mockSpec = buildMockSpecBoxesForLevel('L');
         const mock = await generateAvatarFrameMock({
           figmaFrame: mockSpec.figmaFrame,
           targetFrame: mockSpec.targetFrame,
           boxes: mockSpec.boxes,
         });
-        // 本地模拟图已是透明底示意，不再做去黑边/裁剪，避免把占位色抠坏
-        setResult(mock);
+        const fillsByLevel = await computeAllLevelSlotFills(
+          mock.element1DataUrl,
+          mock.element2DataUrl,
+          mock.element3DataUrl
+        );
+        setResult({ ...mock, fillsByLevel });
         setState({ status: 'idle' });
         return;
       }
@@ -352,10 +362,14 @@ export function KvToAvatarFramePage() {
       if (t) headers['Authorization'] = t.startsWith('Bearer ') ? t : `Bearer ${t}`;
 
       const url = joinUrl(baseUrl, generatePath);
+      const defaultTemplates = selectedDefaultGroup
+        ? defaultTemplatesFromGroup(selectedDefaultGroup)
+        : { element1: 'main.png', element2: 'surround.png', element3: 'top.png' };
       const payload = {
         kvPngDataUrl: kvDataUrl,
         kvJson: kvJsonRef.current,
-        prompts: {},
+        prompts: { ...AVATAR_FRAME_DEFAULT_PROMPTS },
+        defaultTemplates,
         spec: specPayload,
       };
 
@@ -372,16 +386,17 @@ export function KvToAvatarFramePage() {
       }
       const parsed = parseGenResponse(data as unknown);
 
-      const [e1, e2, e3] = await Promise.all([
-        removeNearBlackBackgroundToTransparent(parsed.element1DataUrl, 10).then((v) => trimTransparentBounds(v)),
-        removeNearBlackBackgroundToTransparent(parsed.element2DataUrl, 10).then((v) => trimTransparentBounds(v)),
-        removeNearBlackBackgroundToTransparent(parsed.element3DataUrl, 10).then((v) => trimTransparentBounds(v)),
-      ]);
+      // 服务端已抠图并裁透明边，避免二次「去黑底」损伤边缘
+      const e1 = parsed.element1DataUrl;
+      const e2 = parsed.element2DataUrl;
+      const e3 = parsed.element3DataUrl;
 
+      const fillsByLevel = await computeAllLevelSlotFills(e1, e2, e3);
       setResult({
         element1DataUrl: e1,
         element2DataUrl: e2,
         element3DataUrl: e3,
+        fillsByLevel,
         ...(parsed.compositeDataUrl ? { compositeDataUrl: parsed.compositeDataUrl } : {}),
       });
       setState({ status: 'idle' });
@@ -396,24 +411,26 @@ export function KvToAvatarFramePage() {
     }
   };
 
-  const writeBack = () => {
-    if (!result) {
+  const writeBack = (level: AvatarFrameLevel) => {
+    if (!result?.fillsByLevel?.[level]) {
       setState({ status: 'error', message: '没有可回写的结果' });
       return;
     }
     setState({ status: 'writing' });
-    const wb = getWriteBoxesForLevel(frameLevel);
+    const fills = result.fillsByLevel[level];
+    const wb = getWriteBoxesForLevel(level);
     const images: {
       element1Png: Uint8Array;
       element2Png: Uint8Array;
       element3Png?: Uint8Array;
     } = {
-      element1Png: dataUrlToBytes(result.element1DataUrl),
-      element2Png: dataUrlToBytes(result.element2DataUrl),
+      element1Png: dataUrlToBytes(fills.element1),
+      element2Png: dataUrlToBytes(fills.element2),
     };
-    if (wb.element3 && avatarFrameLevelIncludesTop(frameLevel)) {
-      images.element3Png = dataUrlToBytes(result.element3DataUrl);
+    if (wb.element3 && fills.element3 && avatarFrameLevelIncludesTop(level)) {
+      images.element3Png = dataUrlToBytes(fills.element3);
     }
+    const tag = LEVEL_PREVIEW_LABEL[level];
     postToPlugin({
       type: 'WRITE_AVATARFRAME_TO_CANVAS',
       frameSize: 270,
@@ -425,7 +442,7 @@ export function KvToAvatarFramePage() {
       },
       images,
       names: {
-        frame: kvMeta?.name ? `AvatarFrame_${kvMeta.name}` : 'AvatarFrame',
+        frame: kvMeta?.name ? `AvatarFrame_${tag}_${kvMeta.name}` : `AvatarFrame_${tag}`,
         element1: '主元素',
         element2: '环绕元素',
         element3: '顶部元素',
@@ -460,22 +477,40 @@ export function KvToAvatarFramePage() {
       </div>
 
       <div className="p-4 space-y-4">
+        <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-[11px] text-amber-950 leading-relaxed">
+          <strong>仍看到「交付档位」下拉、或没有「默认元素组」？</strong>
+          说明 Figma 加载的是旧版 UI：<code className="mx-0.5 rounded bg-white/80 px-1">dist/</code>
+          未重新构建且不入库。请在终端执行{' '}
+          <code className="rounded bg-white/80 px-1">
+            cd kv-platform/figma-tools-plugin &amp;&amp; npm run build
+          </code>
+          ，再用本目录的 <code className="rounded bg-white/80 px-1">manifest.json</code> 在 Figma
+          里<strong>重新导入</strong>插件。
+        </div>
+
         <div className="rounded-xl border border-gray-200 p-3">
-          <div className="mb-2">
-            <label className="text-[11px] text-gray-700 block">
-              交付档位（Frame 固定 270×270，主/环绕框位随档位变化；仅 L 含顶部图层）
-              <select
-                value={frameLevel}
-                onChange={(e) => setFrameLevel(e.target.value as AvatarFrameLevel)}
-                className="mt-1 w-full h-9 px-2 rounded-lg border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          <div className="text-xs font-semibold text-gray-900">三档槽位（270×270，无下拉）</div>
+          <p className="mt-1 text-[11px] text-gray-500 leading-relaxed">
+            与网页一致：<strong>一次</strong>按 <strong>L 档（含顶部）</strong>走模型；LV1 / LV2 / LV3 的框位贴图在本地<strong>并行</strong>算好，预览区与三个「回写」按钮始终为三列。
+          </p>
+          <div className="mt-3 grid grid-cols-3 gap-2">
+            {(
+              [
+                { lv: 'S' as const, title: 'LV1', sub: '主+环绕（小框），无顶饰' },
+                { lv: 'M' as const, title: 'LV2', sub: '主+环绕（中框），无顶饰' },
+                { lv: 'L' as const, title: 'LV3', sub: '主+环绕+顶饰（与出图 spec 一致）' },
+              ] as const
+            ).map((row) => (
+              <div
+                key={row.lv}
+                className="rounded-lg border border-gray-200 bg-gray-50/80 px-2 py-2 text-center min-w-0"
               >
-                <option value="S">S（LV1）</option>
-                <option value="M">M（LV2）</option>
-                <option value="L">L（LV3–4）</option>
-              </select>
-            </label>
+                <div className="text-[11px] font-bold text-gray-900">{row.title}</div>
+                <div className="mt-1 text-[10px] text-gray-600 leading-snug">{row.sub}</div>
+              </div>
+            ))}
           </div>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
             <div className="text-xs font-semibold text-gray-900">当前选择</div>
             <button
               type="button"
@@ -498,6 +533,77 @@ export function KvToAvatarFramePage() {
         </div>
 
         <div className="rounded-xl border border-gray-200 p-3">
+          <div className="text-xs font-semibold text-gray-900">
+            默认元素组（共 {defaultsConfig.groups.length} 组，全部展示）
+          </div>
+          <p className="text-[11px] text-gray-500 mt-1 leading-relaxed">
+            与 <code className="bg-gray-100 px-1 rounded">defaults.json</code> 一致；HTTP 会拉取{' '}
+            <code className="bg-gray-100 px-1 rounded">GET …/default-config</code>。宽屏下一行 5 张正方形缩略图（完整显示、不裁切）。缩略图需填「素材静态根」并起{' '}
+            <code className="bg-gray-100 px-1 rounded">banner-expand-tool</code> 的 dev（默认 5173）。
+          </p>
+          <div className="mt-2">
+            <div className="text-[11px] text-gray-600 mb-1">素材静态根（缩略图，可选）</div>
+            <input
+              value={assetsBaseUrl}
+              onChange={(e) => setAssetsBaseUrl(e.target.value)}
+              className="w-full h-9 px-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="http://localhost:5173"
+            />
+          </div>
+          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-5">
+            {defaultsConfig.groups.map((g, idx) => {
+              const on = g.id === selectedGroupId;
+              const tpl = defaultTemplatesFromGroup(g);
+              const thumbSrc = groupThumbnailUrl(g, assetsBaseUrl);
+              return (
+                <button
+                  key={g.id}
+                  type="button"
+                  onClick={() => setSelectedGroupId(g.id)}
+                  className={`min-w-0 rounded-lg border p-1.5 text-left transition ${
+                    on ? 'border-blue-500 bg-blue-50 ring-1 ring-blue-200' : 'border-gray-200 hover:bg-gray-50'
+                  }`}
+                >
+                  <div
+                    className="relative aspect-square w-full overflow-hidden rounded-md border border-gray-200 bg-gray-100"
+                    aria-hidden
+                  >
+                    {thumbSrc ? (
+                      <img
+                        src={thumbSrc}
+                        alt=""
+                        className="h-full w-full object-contain object-center"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <>
+                        <div
+                          className="aspect-square h-full w-full"
+                          style={{
+                            background:
+                              'radial-gradient(circle at 20% 75%, rgba(59,130,246,0.35) 0%, transparent 45%), radial-gradient(circle at 78% 20%, rgba(168,85,247,0.35) 0%, transparent 45%), linear-gradient(135deg, #f4f4f5 0%, #e4e4e7 100%)',
+                          }}
+                        />
+                        <div className="pointer-events-none absolute inset-0 flex items-center justify-center text-[10px] font-medium text-gray-500">
+                          组 {idx + 1}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                  <div className="mt-2 flex items-center justify-between gap-2">
+                    <div className="text-[11px] font-semibold text-gray-900 truncate">{g.name}</div>
+                    {on ? <span className="shrink-0 text-[10px] text-blue-700">当前</span> : null}
+                  </div>
+                  <div className="mt-0.5 text-[10px] text-gray-500 leading-snug break-all">
+                    {tpl.element1} · {tpl.element2} · {tpl.element3}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-gray-200 p-3">
           <div className="text-xs font-semibold text-gray-900">生成服务</div>
           <p className="text-[11px] text-gray-500 mt-1 leading-relaxed">
             <strong>本地模拟</strong>：流程全在插件内完成，无需起服务（占位图，用于对齐 Figma 回写位置）。
@@ -505,7 +611,7 @@ export function KvToAvatarFramePage() {
           </p>
           <div className="mt-2 grid grid-cols-2 gap-2">
             <label className="text-[11px] text-gray-700">
-              模式
+              运行模式<span className="text-gray-400 font-normal">（非 LV 档位）</span>
               <select
                 value={mode}
                 onChange={(e) => setMode(e.target.value === 'mock' ? 'mock' : 'http')}
@@ -574,33 +680,48 @@ export function KvToAvatarFramePage() {
           ) : (
             <div className="mt-3 space-y-3">
               <div>
-                <div className="text-[11px] text-gray-600 mb-1">
-                  交付 Frame 预览（{FIGMA_FRAME_PREVIEW}×{FIGMA_FRAME_PREVIEW}，与 Figma 框位 / 缩放一致；随档位变化）
+                <div className="text-[11px] text-gray-600 mb-2">
+                  交付 Frame 预览（{FIGMA_FRAME_PREVIEW}×{FIGMA_FRAME_PREVIEW}，与回写一致）—{' '}
+                  <span className="font-medium text-gray-800">LV1 · LV2 · LV3 同次生成，一行三列</span>
                 </div>
                 {framePreviewBusy ? (
                   <div className="flex h-40 items-center justify-center rounded-lg border border-dashed border-gray-300 text-[11px] text-gray-500">
                     <Loader2 size={20} className="animate-spin text-gray-400" />
                   </div>
-                ) : framePreviewUrl ? (
-                  <div
-                    className="mx-auto w-full max-w-[270px] rounded-lg border border-gray-300 overflow-hidden shadow-sm"
-                    style={{
-                      backgroundImage:
-                        'linear-gradient(45deg, #d1d5db 25%, transparent 25%), linear-gradient(-45deg, #d1d5db 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #d1d5db 75%), linear-gradient(-45deg, transparent 75%, #d1d5db 75%)',
-                      backgroundSize: '16px 16px',
-                      backgroundPosition: '0 0, 0 8px, 8px -8px, -8px 0px',
-                    }}
-                  >
-                    <img
-                      src={framePreviewUrl}
-                      alt="frame preview"
-                      width={FIGMA_FRAME_PREVIEW}
-                      height={FIGMA_FRAME_PREVIEW}
-                      className="block w-full h-auto aspect-square object-fill"
-                    />
-                  </div>
                 ) : (
-                  <div className="rounded-lg border border-dashed border-gray-300 p-3 text-[11px] text-gray-500">无法生成 Frame 预览</div>
+                  <div className="grid grid-cols-3 gap-2 min-w-0">
+                    {(['S', 'M', 'L'] as const).map((lv) => {
+                      const url = framePreviewByLevel[lv];
+                      return (
+                        <div key={lv} className="min-w-0">
+                          <div className="text-[11px] font-medium text-gray-700 mb-1">{LEVEL_PREVIEW_LABEL[lv]}</div>
+                          {url ? (
+                            <div
+                              className="rounded-lg border border-gray-300 overflow-hidden shadow-sm"
+                              style={{
+                                backgroundImage:
+                                  'linear-gradient(45deg, #d1d5db 25%, transparent 25%), linear-gradient(-45deg, #d1d5db 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #d1d5db 75%), linear-gradient(-45deg, transparent 75%, #d1d5db 75%)',
+                                backgroundSize: '16px 16px',
+                                backgroundPosition: '0 0, 0 8px, 8px -8px, -8px 0px',
+                              }}
+                            >
+                              <img
+                                src={url}
+                                alt={`preview ${lv}`}
+                                width={FIGMA_FRAME_PREVIEW}
+                                height={FIGMA_FRAME_PREVIEW}
+                                className="block w-full h-auto aspect-square object-fill"
+                              />
+                            </div>
+                          ) : (
+                            <div className="rounded-lg border border-dashed border-gray-300 p-3 text-[11px] text-gray-500">
+                              无预览
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
                 )}
               </div>
 
@@ -616,10 +737,7 @@ export function KvToAvatarFramePage() {
                 </div>
                 <div className="rounded-lg border border-gray-200 overflow-hidden">
                   <div className="px-2 py-1 text-[11px] text-gray-600 border-b border-gray-200">
-                    顶部元素
-                    {!avatarFrameLevelIncludesTop(frameLevel) ? (
-                      <span className="text-gray-400">（S/M 不落档，仅预览）</span>
-                    ) : null}
+                    顶部元素（抠图后；仅 LV3 槽位使用）
                   </div>
                   <img src={result.element3DataUrl} alt="e3" className="block w-full h-auto" />
                 </div>
@@ -635,16 +753,19 @@ export function KvToAvatarFramePage() {
                 )}
               </div>
 
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  disabled={!canRun}
-                  onClick={writeBack}
-                  className="flex-1 h-9 rounded-lg bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white text-sm font-semibold inline-flex items-center justify-center gap-2"
-                >
-                  {state.status === 'writing' ? <Loader2 size={16} className="animate-spin" /> : <Check size={16} />}
-                  回写为分图层 Frame
-                </button>
+              <div className="grid grid-cols-3 gap-2">
+                {(['S', 'M', 'L'] as const).map((lv) => (
+                  <button
+                    key={lv}
+                    type="button"
+                    disabled={!canRun || !result.fillsByLevel[lv]}
+                    onClick={() => writeBack(lv)}
+                    className="h-9 rounded-lg bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white text-xs font-semibold inline-flex items-center justify-center gap-1"
+                  >
+                    {state.status === 'writing' ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
+                    回写 {LEVEL_PREVIEW_LABEL[lv]}
+                  </button>
+                ))}
               </div>
 
               {state.status === 'success' ? (
